@@ -1,0 +1,1 @@
+{"version":3,"file":"custom-api-error.d.ts","sourceRoot":"","sources":["../../../src/utils/errors/custom-api-error.ts"],"names":[],"mappings":"AAAA,qBAAa,cAAe,SAAQ,KAAK;IAC9B,WAAW,EAAE,MAAM,CAAA;gBACd,OAAO,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM;CAIlD"}

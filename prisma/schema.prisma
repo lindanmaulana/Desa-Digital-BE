@@ -1,0 +1,279 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  HEAD_OF_FAMILY
+  RESIDENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Marital {
+  SINGLE
+  MARRIED
+}
+
+enum Relation {
+  WIFE
+  CHILD
+  HUSBAND
+}
+
+enum StatusDevelopment {
+  ONGOING
+  COMPLETED
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+  EXPIRED
+  REFUNDED
+}
+
+enum CategorySocialAssistance {
+  STAPLE
+  CASH
+  SUBSIDIZED_FUEL
+  HEALTH
+}
+
+enum Bank {
+  BRI
+  BNI
+  BCA
+  MANDIRI
+}
+
+model User {
+  id String @id @default(uuid())
+  name String @db.VarChar(100)
+  email String @db.VarChar(100) @unique
+  password String @db.VarChar(100)
+  role UserRole @default(RESIDENT)
+  is_active Boolean @db.Boolean @default(false)
+  is_first_login Boolean @db.Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  head_of_family HeadOfFamily?
+  family_member FamilyMember?
+  development_applicant DevelopmentApplicant[]
+
+  @@map("users")
+}
+
+model HeadOfFamily {
+  id String @id @default(uuid())
+  user_id String @unique
+  profile_picture String? @db.VarChar(150)
+  identity_number String? @db.VarChar(20)
+  gender Gender @default(MALE)
+  date_of_birth DateTime? @db.Date
+  phone_number String? @db.VarChar()
+  occupation String? @db.VarChar()
+  marital_status Marital @default(SINGLE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  family_member FamilyMember[]
+  sosial_assistance_recipient SocialAssistanceRecipient[]
+  event_participant EventParticipant[]
+
+  @@index([user_id])
+  @@map("head_of_families")
+}
+
+model FamilyMember {
+  id String @id @default(uuid())
+  head_of_family_id String
+  user_id String @unique
+  profile_picture String? @db.VarChar()
+  identity_number String? @db.VarChar(20)
+  gender Gender @default(MALE)
+  date_of_birth DateTime? @db.Date
+  phone_number String? @db.VarChar()
+  occupation String? @db.VarChar()
+  marital_status Marital @default(SINGLE)
+  relation Relation @default(CHILD)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([user_id])
+  @@map("family_members")
+}
+
+model Development {
+  id String @id @default(uuid())
+  thumbnail String @db.VarChar()
+  name String @db.VarChar()
+  description String @db.Text
+  person_in_charge String @db.VarChar()
+  start_date DateTime @db.Date
+  end_date DateTime @db.Date
+  amount Decimal @db.Decimal(10, 2)
+  status StatusDevelopment @default(ONGOING)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  development_applicant DevelopmentApplicant[]
+
+
+  @@map("developments")
+}
+
+model DevelopmentApplicant {
+  id String @id @default(uuid())
+  development_id String
+  user_id String
+  status Status @default(PENDING)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  development Development @relation(fields: [development_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("development_applicants")
+}
+
+
+model Event {
+  id String @id @default(uuid())
+  thumbnail String @db.VarChar()
+  name String @db.VarChar()
+  description String @db.Text
+  price Decimal @db.Decimal(10, 2)
+  date DateTime @db.Date
+  time DateTime @db.Time()
+  is_active Boolean @db.Boolean
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  event EventParticipant[]
+
+  @@map("events")
+}
+
+model EventParticipant {
+  id String @id @default(uuid())
+  event_id String
+  head_of_family_id String
+  quantity Int
+  total_price Decimal @db.Decimal(10, 2)
+  payment_status PaymentStatus @default(PENDING)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  event Event @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade)
+
+  @@map("event_participants")
+}
+
+model Profile {
+  id String @id @default(uuid())
+  thumbnail String @db.VarChar()
+  name String @db.VarChar()
+  about String @db.Text
+  headman String @db.VarChar()
+  people Int @db.Integer
+  agricultural_area Decimal @db.Decimal(10, 2)
+  total_area Decimal @db.Decimal(10, 2)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile_image ProfileImage[]
+
+  @@map("profiles")
+}
+
+model ProfileImage {
+  id String @id @default(uuid())
+  profile_id String
+  image String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("profile_images")
+}
+
+
+model SocialAssistance {
+  id String @id @default(uuid())
+  thumbnail String @db.VarChar()
+  name String @db.VarChar()
+  category CategorySocialAssistance
+  amount Decimal @db.Decimal(10, 2)
+  provider String @db.VarChar()
+  description String @db.Text
+  is_active Boolean @db.Boolean
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  sosial_assistance_recipient SocialAssistanceRecipient[]
+
+  @@map("social_assistance")
+}
+
+
+model SocialAssistanceRecipient {
+  id String @id @default(uuid())
+  social_assistance_id String
+  head_of_family_id String
+  amount Decimal @db.Decimal(10, 2)
+  reason String @db.Text
+  bank Bank
+  account_number String @db.VarChar(20)
+  proof String @db.VarChar()
+  status Status @default(PENDING)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  sosial_assistance SocialAssistance @relation(fields: [social_assistance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("social_assistance_recipient")
+}
