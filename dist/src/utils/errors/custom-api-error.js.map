@@ -1,0 +1,1 @@
+{"version":3,"file":"custom-api-error.js","sourceRoot":"","sources":["../../../../src/utils/errors/custom-api-error.ts"],"names":[],"mappings":";;;AAAA,MAAa,cAAe,SAAQ,KAAK;IAErC,YAAY,OAAe,EAAE,UAAkB;QAC3C,KAAK,CAAC,OAAO,CAAC,CAAA;QACd,IAAI,CAAC,WAAW,GAAG,UAAU,CAAA;IACjC,CAAC;CACJ;AAND,wCAMC"}

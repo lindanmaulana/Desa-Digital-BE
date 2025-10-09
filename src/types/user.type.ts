@@ -6,6 +6,7 @@ export interface UserResponse {
     name: string
     email: string
     role: UserRole
+	otp_code?: string | null
 	is_active: boolean
     is_first_login: boolean
     created_at: Date
@@ -16,6 +17,7 @@ export interface UserSignupRequest {
 	name: string
 	email: string
 	password: string
+	otp_code?: string
 }
 
 export interface UserSigninRequest {
@@ -25,4 +27,9 @@ export interface UserSigninRequest {
 
 export interface UserSigninResponse extends UserResponse {
     token: string
+}
+
+export interface ChangePasswordRequest {
+	password: string
+	confirmPassword: string
 }

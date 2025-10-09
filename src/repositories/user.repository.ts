@@ -5,30 +5,61 @@ export class UserRepository {
 	static async findByEmail(email: string) {
 		const user = await prismaClient.user.findUnique({
 			where: {
-				email: email
+				email: email,
+			},
+		});
+
+		return user;
+	}
+
+	static async findAll() {
+		return prismaClient.user.findMany();
+	}
+
+	static async findById(id: string) {
+		return prismaClient.user.findUnique({
+			where: {
+				id,
+			},
+		});
+	}
+
+	static async create(data: UserSignupRequest) {
+		return prismaClient.user.create({
+			data,
+		});
+	}
+
+	static async updatePassword(id: string, password: string) {
+		return prismaClient.user.update({
+			where: {
+				id
+			},
+			data: {
+				password
 			}
 		})
+	}
 
-		return user
+	static async deleteAll() {
+		return prismaClient.user.deleteMany()
+	}
+
+	static async deleteById(id: string) {
+		return prismaClient.user.delete({
+			where: {
+				id,
+			},
+		});
 	}
 
 	static async isEmailTaken(email: string) {
 		const count = await prismaClient.user.count({
 			where: {
-				email
-			}
-		})
+				email,
+			},
+		});
 
-		return count > 0
-	}
-
-	static async create(data: UserSignupRequest) {
-		return prismaClient.user.create({
-			data
-		})
-	}
-
-	static async findAll() {
-		return prismaClient.user.findMany()
+		return count > 0;
 	}
 }

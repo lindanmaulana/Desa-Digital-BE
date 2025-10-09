@@ -76,6 +76,8 @@ model User {
   email String @db.VarChar(100) @unique
   password String @db.VarChar(100)
   role UserRole @default(RESIDENT)
+
+  otp_code String? @db.VarChar()
   is_active Boolean @db.Boolean @default(false)
   is_first_login Boolean @db.Boolean @default(true)
 
