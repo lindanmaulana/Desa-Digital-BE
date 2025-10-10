@@ -13,13 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.comparePassword = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const unauthorized_1 = require("../errors/unauthorized");
-const comparePassword = (password, requestPassword) => __awaiter(void 0, void 0, void 0, function* () {
-    const isPasswordValid = yield bcrypt_1.default.compare(requestPassword, password);
-    if (!isPasswordValid)
-        throw new unauthorized_1.UnauthorizedError("Invalid credentials");
-    return isPasswordValid;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const comparePassword = (requestPassword, hashPassword) => __awaiter(void 0, void 0, void 0, function* () {
+    return bcryptjs_1.default.compare(requestPassword, hashPassword);
 });
 exports.comparePassword = comparePassword;
 //# sourceMappingURL=compare-password.js.map

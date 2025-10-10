@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient, UserRole } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { prismaClient } from "../src/db";
 import { logger } from "../src/logging";
 
@@ -15,7 +15,9 @@ async function main() {
 			name: "Admin Indonesia",
 			email: "admin@gmail.com",
 			password: hashPassword,
-			is_active: true
+			role: UserRole.ADMIN,
+			is_active: true,
+			is_first_login: false
 		}
 	})
 }

@@ -1,9 +1,24 @@
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
-import { UserSignupRequest } from "../types/user.type";
+import { UserSignupRequest } from "../models/user.model";
 
 export class UserRepository {
+	static async findAll(whereCondition: Prisma.UserWhereInput) {
+		return prismaClient.user.findMany({
+			where: whereCondition
+		});
+	}
+
+	static async findById(id: string) {
+		return prismaClient.user.findUnique({
+			where: {
+				id,
+			},
+		});
+	}
+
 	static async findByEmail(email: string) {
-		const user = await prismaClient.user.findUnique({
+		const user = await prismaClient.user.findFirst({
 			where: {
 				email: email,
 			},
@@ -12,15 +27,10 @@ export class UserRepository {
 		return user;
 	}
 
-	static async findAll() {
-		return prismaClient.user.findMany();
-	}
-
-	static async findById(id: string) {
+	static async findUserForActivation(id: string) {
 		return prismaClient.user.findUnique({
-			where: {
-				id,
-			},
+			where: { id, is_active: false },
+			select: { id: true, is_active: true, otp_code: true },
 		});
 	}
 
@@ -33,16 +43,33 @@ export class UserRepository {
 	static async updatePassword(id: string, password: string) {
 		return prismaClient.user.update({
 			where: {
-				id
+				id,
 			},
 			data: {
-				password
-			}
-		})
+				password,
+			},
+		});
+	}
+
+	static async updateIsFirstLogin(id: string) {
+		return prismaClient.user.update({
+			where: { id, is_first_login: true },
+			data: { is_first_login: false },
+		});
+	}
+
+	static async updateIsActive(id: string) {
+		return prismaClient.user.update({
+			where: { id, is_active: false },
+			data: {
+				is_active: true,
+				otp_code: null,
+			},
+		});
 	}
 
 	static async deleteAll() {
-		return prismaClient.user.deleteMany()
+		return prismaClient.user.deleteMany();
 	}
 
 	static async deleteById(id: string) {

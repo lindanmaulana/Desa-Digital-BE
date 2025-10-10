@@ -18,6 +18,11 @@ export class UserValidation {
 
 	static readonly CHANGEPASSWORD = z.object({
 		password: z.string().min(8, "Password minimal 8 karakter"),
-		confirmPassword: z.string().min(8, "Confirm Password minimal 8 karakter")
+		confirm_password: z.string().min(8, "Confirm Password minimal 8 karakter")
+	})
+
+	static readonly ACTIVATION = z.object({
+		email: z.email({error: "Format email tidak valid"}).nonempty({error: "Email tidak boleh kosong"}),
+		otp_code: z.string().nonempty({error: "Kode OTP tidak boleh kosong"})
 	})
 }

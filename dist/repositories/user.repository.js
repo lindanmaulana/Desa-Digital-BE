@@ -12,19 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const db_1 = require("../db");
 class UserRepository {
-    static findByEmail(email) {
+    static findAll(whereCondition) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield db_1.prismaClient.user.findUnique({
-                where: {
-                    email: email,
-                },
+            return db_1.prismaClient.user.findMany({
+                where: whereCondition
             });
-            return user;
-        });
-    }
-    static findAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.user.findMany();
         });
     }
     static findById(id) {
@@ -36,10 +28,59 @@ class UserRepository {
             });
         });
     }
+    static findByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield db_1.prismaClient.user.findFirst({
+                where: {
+                    email: email,
+                },
+            });
+            return user;
+        });
+    }
+    static findUserForActivation(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.findUnique({
+                where: { id, is_active: false },
+                select: { id: true, is_active: true, otp_code: true },
+            });
+        });
+    }
     static create(data) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.create({
                 data,
+            });
+        });
+    }
+    static updatePassword(id, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: {
+                    id,
+                },
+                data: {
+                    password,
+                },
+            });
+        });
+    }
+    static updateIsFirstLogin(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id, is_first_login: true },
+                data: { is_first_login: false },
+            });
+        });
+    }
+    static updateIsActive(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id, is_active: false },
+                data: {
+                    is_active: true,
+                    otp_code: null,
+                },
             });
         });
     }

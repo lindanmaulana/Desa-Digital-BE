@@ -31,5 +31,10 @@ export interface UserSigninResponse extends UserResponse {
 
 export interface ChangePasswordRequest {
 	password: string
-	confirmPassword: string
+	confirm_password: string
+}
+
+export interface ActivationRequest {
+	email: string
+	otp_code: string
 }

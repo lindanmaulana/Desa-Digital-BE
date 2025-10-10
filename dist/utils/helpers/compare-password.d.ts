@@ -1,2 +1,2 @@
-export declare const comparePassword: (password: string, requestPassword: string) => Promise<boolean>;
+export declare const comparePassword: (requestPassword: string, hashPassword: string) => Promise<boolean>;
 //# sourceMappingURL=compare-password.d.ts.map

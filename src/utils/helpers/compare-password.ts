@@ -1,10 +1,5 @@
-import bcrypt from "bcrypt"
-import { UnauthorizedError } from "../errors/unauthorized"
+import bcrypt from "bcryptjs"
 
-export const comparePassword = async (password: string, requestPassword: string): Promise<boolean> => {
-	const isPasswordValid = await bcrypt.compare(requestPassword, password)
-
-	if (!isPasswordValid) throw new UnauthorizedError("Invalid credentials")
-
-	return isPasswordValid
+export const comparePassword = async (requestPassword: string, hashPassword: string): Promise<boolean> => {
+	return bcrypt.compare(requestPassword, hashPassword)
 }

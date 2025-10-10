@@ -8,49 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
-const user_service_1 = require("../../../services/user.service");
 const http_status_codes_1 = require("http-status-codes");
-const response_message_type_1 = require("../../../utils/response-message.type");
 const logging_1 = require("../../../logging");
+const services_1 = __importDefault(require("../../../services"));
+const response_message_type_1 = require("../../../utils/response-message.type");
 class UserController {
-    static signup(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield user_service_1.UserService.signup(req.body);
-                res.status(http_status_codes_1.StatusCodes.CREATED).json({
-                    status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
-                    message: "Pendaftaran berhasil",
-                    data: result,
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
-    static signin(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield user_service_1.UserService.signin(req.body);
-                res.status(http_status_codes_1.StatusCodes.OK).json({
-                    status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
-                    message: "Login berhasil",
-                    data: result,
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
     static getUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield user_service_1.UserService.getAll();
+                const token = req.user;
+                const result = yield services_1.default.UserService.getAll(token);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -67,7 +39,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const params = req.params;
-                const result = yield user_service_1.UserService.getById(params.id);
+                const result = yield services_1.default.UserService.getById(params.id);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -85,7 +57,7 @@ class UserController {
             try {
                 const params = req.params;
                 logging_1.logger.info(req.params);
-                const result = yield user_service_1.UserService.delete(params.id);
+                const result = yield services_1.default.UserService.delete(params.id);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,

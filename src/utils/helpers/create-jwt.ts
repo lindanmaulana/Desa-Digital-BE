@@ -5,11 +5,11 @@ import { BadrequestError } from "../errors";
 import { logger } from "../../logging";
 import { UnauthenticatedError } from "../errors/unauthenticated";
 
-interface CreateJwtParams {
+export interface CreateJwtParams {
 	payload: Token;
 }
 
-const createJwt = ({ payload }: CreateJwtParams): string => {
+export const createJwt = ({ payload }: CreateJwtParams): string => {
 	if (!JWTSECRETKEY) {
 		logger.error("jwt secret key is not defined");
 		throw new BadrequestError("Server Error");
@@ -22,7 +22,7 @@ const createJwt = ({ payload }: CreateJwtParams): string => {
 	return token;
 };
 
-const isTokenValid = ({ token }: { token: string }) => {
+export const isTokenValid = ({ token }: { token: string }) => {
 	if (!JWTSECRETKEY) {
 		logger.error("jwt secret key is not defined");
 
@@ -55,5 +55,3 @@ const isTokenValid = ({ token }: { token: string }) => {
 		throw new UnauthenticatedError(errorMessage);
 	}
 };
-
-export { createJwt, isTokenValid };

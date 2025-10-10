@@ -5,13 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const rateLimit_1 = require("../../../middlewares/rateLimit");
-const user_controller_1 = require("../controllers/user.controller");
-const apicache_1 = __importDefault(require("apicache"));
+const controllers_1 = __importDefault(require("../controllers"));
+const auth_1 = require("../../../middlewares/auth");
+const client_1 = require("@prisma/client");
 const route = (0, express_1.Router)();
-route.post("/auth/signup", rateLimit_1.publicRateLimit, user_controller_1.UserController.signup);
-route.post("/auth/signin", rateLimit_1.publicRateLimit, user_controller_1.UserController.signin);
-route.get("/users", apicache_1.default.middleware("5 minutes"), rateLimit_1.publicRateLimit, user_controller_1.UserController.getUsers);
-route.get("/users/:id", apicache_1.default.middleware("5 minutes"), rateLimit_1.publicRateLimit, user_controller_1.UserController.getUserById);
-route.delete("/users/:id", user_controller_1.UserController.deleteUser);
+route.get("/", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUsers);
+route.get("/:id", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUserById);
+route.delete("/:id", auth_1.authenticatedUser, (0, auth_1.authorizedRoles)(client_1.UserRole.ADMIN), controllers_1.default.UserController.deleteUser);
 exports.default = route;
 //# sourceMappingURL=user.routes.js.map

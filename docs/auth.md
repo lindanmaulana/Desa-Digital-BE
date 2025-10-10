@@ -1,0 +1,134 @@
+# User API Spec
+Definisi struktur data yang digunakan dalam respons API.
+
+## UserResponse Object
+Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi atau pengambilan data profil.
+
+| Properti | Tipe Data | Deskripsi | Catatan |
+| :--- | :--- | :--- | :--- |
+| `id` | `string` | ID unik pengguna. | UUID |
+| `name` | `string` | Nama lengkap pengguna. | |
+| `email` | `string` | Alamat email unik. | |
+| `role` | `string` | Peran pengguna (misalnya RESIDENT, ADMIN). | |
+| `is_active` | `boolean` | Status akun aktif/tidak aktif. | |
+| `is_first_login` | `boolean` | Status apakah pengguna pertama kali login. | |
+| `created_at` | `string` | Tanggal pembuatan akun. | ISO 8601 |
+| `updated_at` | `string` | Tanggal pembaruan terakhir. | ISO 8601 |
+
+**Catatan:** Dalam respons API sebenarnya, properti sensitif seperti `otp_code` dan `password` **TIDAK** boleh disertakan.
+
+## 1. SIGNUP user
+  Membuat akun pengguna baru. Akun akan di buat dengan `is_active: false` dan `is_first_login: true`, dan kode OTP akan dikirim via email
+  Endpoint : POST /api/v1/auth/signup
+
+  Request Body
+  ```json
+  {
+    "name": "Jhon Doe",
+    "email": "jhondoe@gmail.com",
+    "password": "jhondoe123"
+  }
+  ```
+
+  Response Body  (Success)
+  ```json
+  {
+    "data": {
+      /* Lihat Skema "UserResponse Object" di Bagian 1 */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "Email telah di gunakan"
+  }
+  ```
+
+## 2. SIGNIN user
+  Endpoint : POST /api/v1/auth/signin
+
+  Request Body
+  ```json
+  {
+    "email": "jhondoe@gmail.com",
+    "password": "jhondoe123"
+  }
+  ```
+
+  Response Body (Success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "Invalid credentials"
+  }
+  ```
+
+## 3. CHANGEPASSWORD user
+  Endpoint : PATCH /api/v1/auth/me/password
+
+  Request Header :
+  - Authorization : Bearer token
+
+  Request Body
+  ```json
+  {
+    "password": "change123",
+    "confirm_password": "change123"
+  }
+  ```
+
+  Response Body (Success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (Failed)
+  ```json
+  {
+    "errors": "Message error"
+  }
+  ```
+
+
+## 4. ACTIVATION user
+  Endpoint : POST /api/v1/auth/verify-account
+
+  Request Header :
+  - Authorization : Bearer token
+
+  Request Body
+  ```json
+  {
+    "otp_code": "278788"
+  }
+  ```
+
+  Response Body (Success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (Failed)
+  ```json
+  {
+    "errors": "Message Error"
+  }
+  ```

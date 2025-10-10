@@ -20,7 +20,7 @@
   "dependencies": {
     "@prisma/client": "^6.17.0",
     "apicache": "^1.6.3",
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -37,7 +37,6 @@
     "@babel/preset-typescript": "^7.27.1",
     "@jest/globals": "^30.2.0",
     "@types/apicache": "^1.6.7",
-    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",

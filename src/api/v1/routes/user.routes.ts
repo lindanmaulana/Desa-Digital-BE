@@ -1,16 +1,15 @@
-import {Router} from "express"
-import { publicRateLimit } from "../../../middlewares/rateLimit"
-import { UserController } from "../controllers/user.controller"
 import apicache from "apicache"
+import { Router } from "express"
+import { publicRateLimit } from "../../../middlewares/rateLimit"
+import controllers from "../controllers"
+import { authenticatedUser, authorizedRoles } from "../../../middlewares/auth"
+import { UserRole } from "@prisma/client"
 
 const route = Router()
 
-route.post("/auth/signup", publicRateLimit, UserController.signup)
-route.post("/auth/signin", publicRateLimit, UserController.signin)
+route.get("/", authenticatedUser, publicRateLimit, controllers.UserController.getUsers)
+route.get("/:id", authenticatedUser, publicRateLimit, controllers.UserController.getUserById)
 
-route.get("/users", apicache.middleware("5 minutes"), publicRateLimit, UserController.getUsers)
-route.get("/users/:id", apicache.middleware("5 minutes"), publicRateLimit, UserController.getUserById)
-
-route.delete("/users/:id", UserController.deleteUser)
+route.delete("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), controllers.UserController.deleteUser)
 
 export default route

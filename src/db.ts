@@ -22,14 +22,22 @@ export const prismaClient = new PrismaClient({
     ]
 })
 
-prismaClient.$on("error", (e: any) => {
-    logger.error(e)
+const formatError = (e: any) => {
+	return typeof e === "object" ? JSON.stringify(e, null, 2) : String(e)
+}
+
+prismaClient.$on("error", (e) => {
+    logger.error(formatError(e))
 })
 
-prismaClient.$on("warn", (e: any) => {
-    logger.warn(e)
+prismaClient.$on("warn", (e) => {
+    logger.warn(formatError(e))
 })
 
-prismaClient.$on("info", (e: any) => {
-    logger.info(e)
+prismaClient.$on("info", (e) => {
+    logger.info(formatError(e))
+})
+
+prismaClient.$on("query", (e) => {
+	logger.info(formatError(e))
 })

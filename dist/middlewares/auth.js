@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorizedRoles = exports.authenticatedUser = void 0;
-const create_jwt_1 = require("../utils/helpers/create-jwt");
 const unauthenticated_1 = require("../utils/errors/unauthenticated");
+const helpers_1 = __importDefault(require("../utils/helpers"));
 const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let token;
@@ -21,7 +24,7 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authenticated invalid");
-        const payload = (0, create_jwt_1.isTokenValid)({ token });
+        const payload = helpers_1.default.isTokenValid({ token });
         req.user = {
             id: payload.id,
             name: payload.name,

@@ -1,14 +1,11 @@
 import { NextFunction, Response } from "express";
 import { CustomeRequest } from "../types/express.type";
 import { Token } from "../types/token.type";
-import { isTokenValid } from "../utils/helpers/create-jwt";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
+import helpers from "../utils/helpers";
+import { logger } from "../logging";
 
-const authenticatedUser = async (
-	req: CustomeRequest,
-	res: Response,
-	next: NextFunction
-) => {
+const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextFunction) => {
 	try {
 		let token;
 
@@ -19,7 +16,7 @@ const authenticatedUser = async (
 
 		if (!token) throw new UnauthenticatedError("Authenticated invalid");
 
-		const payload = isTokenValid({ token }) as Token;
+		const payload = helpers.isTokenValid({ token }) as Token;
 
 		req.user = {
 			id: payload.id,
@@ -37,8 +34,7 @@ const authenticatedUser = async (
 
 const authorizedRoles = (...roles: string[]) => {
 	return (req: CustomeRequest, res: Response, next: NextFunction) => {
-		if (!req.user?.role)
-			throw new UnauthenticatedError("unauthorized to access this route");
+		if (!req.user?.role) throw new UnauthenticatedError("unauthorized to access this route");
 
 		if (!roles.includes(req.user.role)) {
 			throw new UnauthenticatedError("Unauthorized to access this route");

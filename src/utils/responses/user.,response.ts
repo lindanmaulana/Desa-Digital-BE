@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
-import { UserResponse } from "../../../types/user.type";
-import { toUserRole } from "../user-role";
+import { UserResponse } from "../../models/user.model";
+import { toUserRole } from "../helpers/to-user-role";
 
 export const toUserResponse = (user: User): UserResponse => {
 	return {
@@ -8,9 +8,8 @@ export const toUserResponse = (user: User): UserResponse => {
 		name: user.name,
 		email: user.email,
 		role: toUserRole(user.role),
-		otp_code: user.otp_code ?? "",
-		is_first_login: user.is_first_login,
 		is_active: user.is_active,
+		is_first_login: user.is_first_login,
 		created_at: user.created_at,
 		updated_at: user.updated_at,
 	};
@@ -22,9 +21,8 @@ export const toUserResponses = (users: User[]): UserResponse[] => {
 		name: user.name,
 		email: user.email,
 		role: toUserRole(user.role),
-		otp_code: user.otp_code ?? "",
-		is_first_login: user.is_first_login,
 		is_active: user.is_active,
+		is_first_login: user.is_first_login,
 		created_at: user.created_at,
 		updated_at: user.updated_at,
 	}));

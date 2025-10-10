@@ -23,13 +23,19 @@ exports.prismaClient = new client_1.PrismaClient({
         },
     ]
 });
+const formatError = (e) => {
+    return typeof e === "object" ? JSON.stringify(e, null, 2) : String(e);
+};
 exports.prismaClient.$on("error", (e) => {
-    logging_1.logger.error(e);
+    logging_1.logger.error(formatError(e));
 });
 exports.prismaClient.$on("warn", (e) => {
-    logging_1.logger.warn(e);
+    logging_1.logger.warn(formatError(e));
 });
 exports.prismaClient.$on("info", (e) => {
-    logging_1.logger.info(e);
+    logging_1.logger.info(formatError(e));
+});
+exports.prismaClient.$on("query", (e) => {
+    logging_1.logger.info(formatError(e));
 });
 //# sourceMappingURL=db.js.map

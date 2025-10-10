@@ -10,30 +10,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorMiddleware = void 0;
+const client_1 = require("@prisma/client");
+const http_status_codes_1 = require("http-status-codes");
 const zod_1 = require("zod");
 const errors_1 = require("../utils/errors");
-const client_1 = require("@prisma/client");
 const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let statusCodes = http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR;
+    let errors = "Something went wrong, please try again later.";
+    let responseData = { errors };
     if (error instanceof zod_1.ZodError) {
-        res.status(400).json({
-            errors: error.issues.map(e => e.message)
-        });
+        statusCodes = http_status_codes_1.StatusCodes.NOT_FOUND;
+        errors = error.issues.map(e => e.message);
+        responseData = { errors };
     }
     else if (error instanceof errors_1.CustomAPIError) {
-        res.status(error.StatusCodes).json({
-            errors: error.message
-        });
+        statusCodes = error.StatusCodes;
+        errors = error.message;
+        responseData = { errors };
+        if (error.email) {
+            responseData.email = error.email;
+            responseData.status = "need_activation";
+        }
     }
     else if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-        res.status(400).json({
-            errors: `Database error ${error.message}`
-        });
+        statusCodes = http_status_codes_1.StatusCodes.NOT_FOUND;
+        errors = `Database error ${error.message}`;
     }
-    else {
-        res.status(500).json({
-            errors: "Something went wrong, please try again later."
-        });
-    }
+    res.status(statusCodes).json(responseData);
 });
 exports.errorMiddleware = errorMiddleware;
 //# sourceMappingURL=handler-error.js.map
