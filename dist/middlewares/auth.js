@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizedRoles = exports.authenticatedUser = void 0;
+exports.authorizedRoles = exports.authenticatedVerificationUser = exports.authenticatedUser = void 0;
 const unauthenticated_1 = require("../utils/errors/unauthenticated");
+const unauthorized_1 = require("../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../utils/helpers"));
 const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -39,6 +40,29 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.authenticatedUser = authenticatedUser;
+const authenticatedVerificationUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let token;
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith("Bearer"))
+            token = authHeader.split(" ")[1];
+        if (!token)
+            throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
+        const payload = helpers_1.default.isTokenValid({ token });
+        if (payload.purpose !== "password_reset")
+            throw new unauthorized_1.UnauthorizedError("Token is valid but not authorized for password reset.");
+        req.user = {
+            id: payload.id,
+            email: payload.email,
+            purpose: payload.purpose
+        };
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.authenticatedVerificationUser = authenticatedVerificationUser;
 const authorizedRoles = (...roles) => {
     return (req, res, next) => {
         var _a;

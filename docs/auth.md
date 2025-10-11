@@ -103,12 +103,8 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-
 ## 4. ACTIVATION user
   Endpoint : POST /api/v1/auth/verify-account
-
-  Request Header :
-  - Authorization : Bearer token
 
   Request Body
   ```json
@@ -130,5 +126,125 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   ```json
   {
     "errors": "Message Error"
+  }
+  ```
+
+## 5. RESENDOTP user
+  Endpoint : POST /api/v1/auth/resend-otp
+
+  Request Body
+  ```json
+  {
+    "data": {
+      "email": "emailAccount@gmail.com"
+    }
+  }
+  ```
+
+  Response Body (success)
+  ```json
+  {
+    "data": {
+      /* userResponse Object */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "errormessage"
+  }
+  ```
+
+## 6. FORGOTPASSWORD user
+  Endpoint : POST /api/v1/auth/forgot-password
+
+  Send Otp -> Email
+
+  Request Body
+  ```json
+  {
+    "data": {
+      "email": "jhondoe@gmail.com"
+    }
+  }
+  ```
+
+  Response Body (success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "errormessage"
+  }
+  ```
+
+## 7. VERIFYOTP user
+  Endpoint : POST /api/v1/auth/verify-otp
+
+  Request Body
+  ```json
+  {
+    "data": {
+      "email": "jhondoe@gmail.com",
+      "otp_code": "827831"
+    }
+  }
+  ```
+
+  Response Body (success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+      /* token */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "errormessage"
+  }
+  ```
+
+## 6. RESETPASSWORD user
+  Endpoint : POST /api/v1/auth/reset-password
+
+  Request Header :
+  - Authorization : Bearer token
+
+  Request Body
+  ```json
+  {
+    "data": {
+      "password": "newPassword",
+      "confirm_password": "newPassword"
+    }
+  }
+  ```
+
+  Response Body (success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (failed)
+  ```json
+  {
+    "errors": "errormessage"
   }
   ```

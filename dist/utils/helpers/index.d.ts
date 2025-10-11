@@ -2,7 +2,7 @@ declare const _default: {
     createJwt: ({ payload }: import("./create-jwt").CreateJwtParams) => string;
     isTokenValid: ({ token }: {
         token: string;
-    }) => import("../../types/token.type").Token;
+    }) => import("../../types/token.type").Token | import("../../types/token.type").TokenVerification;
     createToken: (user: import("@prisma/client").User) => string;
     generateOtp: () => string;
     toUserRole: (role: string) => import("@prisma/client").UserRole;

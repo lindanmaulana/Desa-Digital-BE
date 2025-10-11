@@ -1,0 +1,16 @@
+## PROGRES SPRINT 3 (Minggu 2) - Tanggal 14 Okt 2025
+
+### ✅ Selesai (DONE)
+[X] 1. USERS -> Api -> Activation
+[X] 2. USERS -> API -> ResendOtp
+
+### 📝 Akan Dikerjakan (TODO)
+[ ] 1. Forgot Password
+[ ] 2. Match Otp
+[ ] 3. Reset Password
+
+3 service di atas itu 1 fitur yaitu ketika user lupa sandi, dia forgotPw, lalu matchOtp, baru resetPw
+
+### 🚧 Blocking / Notes
+- [PRIO 1] PR dari Budi masih menunggu review.
+- Server staging down sejak pagi. Cek logs.

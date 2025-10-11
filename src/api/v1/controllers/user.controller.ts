@@ -26,8 +26,9 @@ export class UserController {
 	static async getUserById(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const params = req.params as { id: string };
+			const token = req.user as Token
 
-			const result = await services.UserService.getById(params.id);
+			const result = await services.UserService.getById(params.id, token!);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

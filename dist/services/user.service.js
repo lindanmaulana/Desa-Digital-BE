@@ -35,11 +35,14 @@ class UserService {
             return responses_1.default.toUserResponses(result);
         });
     }
-    static getById(id) {
+    static getById(id, user) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield user_repository_1.UserRepository.findById(id);
             if (!result)
                 throw new errors_1.NotfoundError(`Pengguna tidak ditemukan`);
+            if (user.role !== "ADMIN" && user.role !== "STAFF")
+                if (result.role === "ADMIN" || result.role === "STAFF")
+                    throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
             return responses_1.default.toUserResponse(result);
         });
     }
@@ -48,6 +51,8 @@ class UserService {
             const checkUser = yield user_repository_1.UserRepository.findById(id);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
+            if (checkUser.role === "ADMIN")
+                throw new errors_1.NotfoundError("Pengguna tidak dapat di hapus");
             const result = yield user_repository_1.UserRepository.deleteById(checkUser.id);
             return responses_1.default.toUserResponse(result);
         });

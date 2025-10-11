@@ -8,3 +8,10 @@ export interface Token {
 	is_active: boolean
     is_first_login: boolean
 }
+
+export interface TokenVerification {
+	id: string
+	email: string
+	purpose: string
+	role: UserRole
+}

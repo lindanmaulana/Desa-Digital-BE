@@ -1,12 +1,12 @@
 import { JWTSECRETKEY } from "../../config";
-import { Token } from "../../types/token.type";
+import { Token, TokenVerification } from "../../types/token.type";
 import jwt from "jsonwebtoken";
 import { BadrequestError } from "../errors";
 import { logger } from "../../logging";
 import { UnauthenticatedError } from "../errors/unauthenticated";
 
 export interface CreateJwtParams {
-	payload: Token;
+	payload: Token | TokenVerification;
 }
 
 export const createJwt = ({ payload }: CreateJwtParams): string => {
@@ -16,7 +16,7 @@ export const createJwt = ({ payload }: CreateJwtParams): string => {
 	}
 
 	const token = jwt.sign(payload, JWTSECRETKEY, {
-		expiresIn: "30m",
+		expiresIn: "24h"
 	});
 
 	return token;
@@ -30,7 +30,7 @@ export const isTokenValid = ({ token }: { token: string }) => {
 	}
 
 	try {
-		const isValid = jwt.verify(token, JWTSECRETKEY) as Token;
+		const isValid = jwt.verify(token, JWTSECRETKEY) as Token | TokenVerification;
 
 		return isValid;
 	} catch (err) {

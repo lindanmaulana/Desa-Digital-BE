@@ -15,7 +15,7 @@ const createJwt = ({ payload }) => {
         throw new errors_1.BadrequestError("Server Error");
     }
     const token = jsonwebtoken_1.default.sign(payload, config_1.JWTSECRETKEY, {
-        expiresIn: "30m",
+        expiresIn: "24h"
     });
     return token;
 };

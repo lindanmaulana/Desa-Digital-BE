@@ -84,6 +84,17 @@ class UserRepository {
             });
         });
     }
+    static updateOtp(id, otp_code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id },
+                data: {
+                    otp_code,
+                    otp_last_sen_at: new Date()
+                }
+            });
+        });
+    }
     static deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.deleteMany();

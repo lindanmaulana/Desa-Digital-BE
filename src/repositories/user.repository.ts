@@ -68,6 +68,16 @@ export class UserRepository {
 		});
 	}
 
+	static async updateOtp(id: string, otp_code: string) {
+		return prismaClient.user.update({
+			where: {id},
+			data: {
+				otp_code,
+				otp_last_sen_at: new Date()
+			}
+		})
+	}
+
 	static async deleteAll() {
 		return prismaClient.user.deleteMany();
 	}

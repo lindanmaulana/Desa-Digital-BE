@@ -11,6 +11,10 @@ const route = (0, express_1.Router)();
 route.post("/signup", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.signup);
 route.post("/signin", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.signin);
 route.post("/verify-account", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.activation);
+route.post("/resend-otp", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.resendOtp);
+route.post("/forgot-password", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.forgotPassword);
+route.post("/verify-otp", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.matchOtp);
+route.post("/reset-password", rateLimit_1.publicRateLimit, auth_1.authenticatedVerificationUser, controllers_1.default.AuthController.resetPassword);
 route.patch("/me/password", rateLimit_1.publicRateLimit, auth_1.authenticatedUser, controllers_1.default.AuthController.changePassword);
 exports.default = route;
 //# sourceMappingURL=auth.routes.js.map
