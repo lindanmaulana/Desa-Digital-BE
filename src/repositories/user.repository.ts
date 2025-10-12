@@ -90,6 +90,15 @@ export class UserRepository {
 		});
 	}
 
+	static async deleteOtp(id: string, is_active: boolean) {
+		return prismaClient.user.update({
+			where: {id},
+			data: {
+				otp_code: null
+			}
+		})
+	}
+
 	static async isEmailTaken(email: string) {
 		const count = await prismaClient.user.count({
 			where: {

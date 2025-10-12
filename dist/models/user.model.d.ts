@@ -43,6 +43,9 @@ export interface MatchOtpRequest {
     email: string;
     otp_code: string;
 }
+export interface MathOtpResponse {
+    verify_token: string;
+}
 export interface ResetPasswordRequest {
     password: string;
     confirm_password: string;

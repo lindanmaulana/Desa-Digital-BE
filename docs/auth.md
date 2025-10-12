@@ -204,8 +204,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   ```json
   {
     "data": {
-      /* UserResponse Object */
-      /* token */
+      "verify_token": "dhaidhe982984jdoajd"
     }
   }
   ```

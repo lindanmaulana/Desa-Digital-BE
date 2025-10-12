@@ -109,6 +109,16 @@ class UserRepository {
             });
         });
     }
+    static deleteOtp(id, is_active) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id },
+                data: {
+                    otp_code: null
+                }
+            });
+        });
+    }
     static isEmailTaken(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const count = yield db_1.prismaClient.user.count({

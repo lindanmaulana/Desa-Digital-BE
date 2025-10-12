@@ -124,6 +124,19 @@ export declare class UserRepository {
         created_at: Date;
         updated_at: Date;
     }>;
+    static deleteOtp(id: string, is_active: boolean): Promise<{
+        id: string;
+        name: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp_code: string | null;
+        otp_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
+    }>;
     static isEmailTaken(email: string): Promise<boolean>;
 }
 //# sourceMappingURL=user.repository.d.ts.map

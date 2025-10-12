@@ -147,7 +147,10 @@ class AuthService {
             if (validateFields.otp_code !== checkUser.otp_code)
                 throw new errors_1.BadrequestError("Kode OTP yang anda masukan salah");
             const token = (0, create_token_verification_1.createTokenVerification)({ id: checkUser.id, email: checkUser.email, role: checkUser.role });
-            return Object.assign(Object.assign({}, (0, user__response_1.toUserResponse)(checkUser)), { token });
+            yield user_repository_1.UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
+            return {
+                verify_token: token
+            };
         });
     }
     static resetPassword(req, user) {

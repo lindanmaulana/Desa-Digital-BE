@@ -1,5 +1,5 @@
 import services from ".";
-import { ActivationRequest, ChangePasswordRequest, ForgotPasswordRequest, MatchOtpRequest, ResendOtpRequest, ResetPasswordRequest, UserResponse, UserSigninRequest, UserSigninResponse, UserSignupRequest } from "../models/user.model";
+import { ActivationRequest, ChangePasswordRequest, ForgotPasswordRequest, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResetPasswordRequest, UserResponse, UserSigninRequest, UserSigninResponse, UserSignupRequest } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
 import { Token, TokenVerification } from "../types/token.type";
 import { BadrequestError, InternalServerError, NeedActivation, NotfoundError } from "../utils/errors";
@@ -167,7 +167,7 @@ export class AuthService {
 		return toUserResponse(result)
 	}
 
-	static async matchOtp(req: MatchOtpRequest): Promise<UserSigninResponse> {
+	static async matchOtp(req: MatchOtpRequest): Promise<MathOtpResponse> {
 		const validateFields = validation.validate(AuthValidation.MATCHOTP, req)
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email)
@@ -178,9 +178,10 @@ export class AuthService {
 
 		const token = createTokenVerification({id: checkUser.id, email: checkUser.email, role: checkUser.role})
 
+		await UserRepository.deleteOtp(checkUser.id, checkUser.is_active)
+
 		return {
-			...toUserResponse(checkUser),
-			token
+			verify_token: token
 		}
 	}
 
