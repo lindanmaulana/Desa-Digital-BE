@@ -10,6 +10,8 @@ import responses from "../utils/responses";
 import { UserValidation } from "../utils/validations/user.validation";
 import { validation } from "../utils/validations/validation";
 import { getPagination } from "../utils/helpers/get-pagination";
+import { ROLES } from "../utils/const/roles";
+import { Roles } from "../types/roles";
 
 export class UserService {
 	static async getProfile(user: Token): Promise<UserResponse> {
@@ -23,32 +25,65 @@ export class UserService {
 	static async getAll(req: GetAllRequest, user: Token): Promise<GetAllUserResponse> {
 		const validateFields = validation.validate(UserValidation.GETALL, req);
 
-		const count = await UserRepository.findCount();
-
-		if (!count) throw new InternalServerError("Terjadi kesalahan, please try again later");
-
-		const {totalPage, links, nextPage, prevPage, page, limit, currentPage} = getPagination({count, pageRequest: validateFields.page, limitRequest: validateFields.limit})
 		const hiddenRoles = [UserRole.ADMIN];
 		const fullAccess = user.role === UserRole.ADMIN;
 
 		let whereCondition: Prisma.UserWhereInput = {};
 
-		if (!fullAccess)
+		if (!fullAccess) {
 			whereCondition = {
+				...whereCondition,
 				role: {
 					notIn: hiddenRoles,
 				},
 			};
+		}
 
-		let Conditions: Prisma.UserFindManyArgs = {
+		if (validateFields.keyword) {
+			whereCondition = {
+				...whereCondition,
+				name: {
+					contains: validateFields.keyword,
+					mode: "insensitive",
+				},
+			};
+		}
+
+		if (validateFields.is_active) {
+			const isActive: boolean = validateFields.is_active === "true";
+
+			whereCondition = {
+				...whereCondition,
+				is_active: isActive,
+			};
+		}
+
+		if (validateFields.role && Object.values(UserRole).includes(validateFields.role as UserRole)) {
+			const searchRole = validateFields.role as UserRole;
+
+			whereCondition = {
+				...whereCondition,
+				role: searchRole,
+			};
+		}
+
+		let conditionsCount: Prisma.UserCountArgs = {where: whereCondition}
+
+		const count = await UserRepository.findCount(conditionsCount);
+
+		const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = helpers.getPagination({
+			count,
+			pageRequest: validateFields.page,
+			limitRequest: validateFields.limit,
+		});
+
+		let conditionsFindMany: Prisma.UserFindManyArgs = {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
 		};
 
-		console.log({page, limit})
-
-		const result = await UserRepository.findAll(Conditions);
+		const result = await UserRepository.findAll(conditionsFindMany);
 
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later!");
 
@@ -64,8 +99,6 @@ export class UserService {
 			},
 		};
 	}
-
-
 
 	static async getById(id: string, user: Token): Promise<UserResponse> {
 		const result = await UserRepository.findById(id);

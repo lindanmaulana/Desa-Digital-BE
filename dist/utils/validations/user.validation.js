@@ -10,8 +10,8 @@ class UserValidation {
 exports.UserValidation = UserValidation;
 UserValidation.GETALL = zod_1.default.object({
     keyword: zod_1.default.string().optional(),
-    role: zod_1.default.string().optional(),
-    is_active: zod_1.default.boolean().optional(),
+    role: zod_1.default.string().toUpperCase().optional(),
+    is_active: zod_1.default.string().optional(),
     page: zod_1.default.string().optional(),
     limit: zod_1.default.string().optional()
 });

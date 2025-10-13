@@ -3,7 +3,7 @@ export declare class UserValidation {
     static readonly GETALL: z.ZodObject<{
         keyword: z.ZodOptional<z.ZodString>;
         role: z.ZodOptional<z.ZodString>;
-        is_active: z.ZodOptional<z.ZodBoolean>;
+        is_active: z.ZodOptional<z.ZodString>;
         page: z.ZodOptional<z.ZodString>;
         limit: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>;

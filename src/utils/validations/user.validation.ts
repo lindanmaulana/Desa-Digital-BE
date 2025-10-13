@@ -1,10 +1,11 @@
+import { UserRole } from "@prisma/client";
 import z from "zod";
 
 export class UserValidation {
 	static readonly GETALL = z.object({
 		keyword: z.string().optional(),
-		role: z.string().optional(),
-		is_active: z.boolean().optional(),
+		role: z.string().toUpperCase().optional(),
+		is_active: z.string().optional(),
 		page: z.string().optional(),
 		limit: z.string().optional()
 	})

@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const db_1 = require("../db");
 class UserRepository {
-    static findCount() {
+    static findCount(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.user.count();
+            return db_1.prismaClient.user.count(args);
         });
     }
     static findAll(args) {

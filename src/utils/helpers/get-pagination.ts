@@ -1,6 +1,6 @@
 import paginationConst from "../const/pagination.const";
 
-interface getPaginationParams {
+export interface getPaginationParams {
 	count: number;
 	pageRequest: string | undefined
 	limitRequest: string | undefined

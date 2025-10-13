@@ -25,7 +25,7 @@ export interface PaginationRequest {
 export interface GetAllRequest {
     keyword?: string;
     role?: UserRole;
-    is_active?: boolean;
+    is_active?: string;
     page?: string;
     limit?: string;
 }

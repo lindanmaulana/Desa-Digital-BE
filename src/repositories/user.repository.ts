@@ -3,8 +3,8 @@ import { prismaClient } from "../db";
 import { SignupRequest } from "../models/auth.model";
 
 export class UserRepository {
-	static async findCount() {
-		return prismaClient.user.count()
+	static async findCount(args: Prisma.UserCountArgs) {
+		return prismaClient.user.count(args)
 	}
 
 	static async findAll(args: Prisma.UserFindManyArgs) {

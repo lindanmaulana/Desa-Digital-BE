@@ -34,26 +34,40 @@ class UserService {
     static getAll(req, user) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.GETALL, req);
-            const count = yield user_repository_1.UserRepository.findCount();
-            if (!count)
-                throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = (0, get_pagination_1.getPagination)({ count, pageRequest: validateFields.page, limitRequest: validateFields.limit });
             const hiddenRoles = [client_1.UserRole.ADMIN];
             const fullAccess = user.role === client_1.UserRole.ADMIN;
             let whereCondition = {};
             if (!fullAccess)
-                whereCondition = {
-                    role: {
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { role: {
                         notIn: hiddenRoles,
-                    },
-                };
-            let Conditions = {
+                    } });
+            if (validateFields.keyword)
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { name: {
+                        contains: validateFields.keyword,
+                        mode: "insensitive",
+                    } });
+            if (validateFields.is_active) {
+                const isActive = validateFields.is_active === "true";
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: isActive });
+            }
+            console.log({ Cek: validateFields.role });
+            if (validateFields.role && Object.values(client_1.UserRole).includes(validateFields.role)) {
+                const searchRole = validateFields.role;
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { role: searchRole });
+            }
+            let conditionsCount = { where: whereCondition };
+            const count = yield user_repository_1.UserRepository.findCount(conditionsCount);
+            const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = (0, get_pagination_1.getPagination)({
+                count,
+                pageRequest: validateFields.page,
+                limitRequest: validateFields.limit,
+            });
+            let conditionsFindMany = {
                 where: whereCondition,
                 skip: limit * (page - 1),
                 take: limit,
             };
-            console.log({ page, limit });
-            const result = yield user_repository_1.UserRepository.findAll(Conditions);
+            const result = yield user_repository_1.UserRepository.findAll(conditionsFindMany);
             if (!result)
                 throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
             return {
