@@ -1,7 +1,8 @@
 import services from ".";
-import { ActivationRequest, ChangePasswordRequest, ForgotPasswordRequest, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResetPasswordRequest, UserResponse, UserSigninRequest, UserSigninResponse, UserSignupRequest } from "../models/user.model";
+import { ActivationRequest, ForgotPasswordRequest, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResetPasswordRequest, SigninRequest, SigninResponse, SignupRequest } from "../models/auth.model";
+import { UserResponse } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
-import { Token, TokenVerification } from "../types/token.type";
+import { TokenVerification } from "../types/token.type";
 import { BadrequestError, InternalServerError, NeedActivation, NotfoundError } from "../utils/errors";
 import { ManyRequestError } from "../utils/errors/many-request";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
@@ -18,7 +19,7 @@ import { validation } from "../utils/validations/validation";
 const RESEND_COOLDOWN_SECONDS = 60
 
 export class AuthService {
-	static async signup(req: UserSignupRequest): Promise<UserResponse> {
+	static async signup(req: SignupRequest): Promise<UserResponse> {
 		const validateFields = validation.validate(AuthValidation.SIGNUP, req);
 
 		const checkEmailUser = await UserRepository.isEmailTaken(validateFields.email);
@@ -42,7 +43,7 @@ export class AuthService {
 		return responses.toUserResponse(result);
 	}
 
-	static async signin(req: UserSigninRequest): Promise<UserSigninResponse> {
+	static async signin(req: SigninRequest): Promise<SigninResponse> {
 		const validateFields = validation.validate(AuthValidation.SIGNIN, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
@@ -61,28 +62,6 @@ export class AuthService {
 			...toUserResponse(checkUser),
 			token,
 		};
-	}
-
-	static async changePassword(req: ChangePasswordRequest, user: Token): Promise<UserResponse> {
-		const validateFields = validation.validate(AuthValidation.CHANGEPASSWORD, req);
-
-		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm password tidak sama");
-
-		const checkUser = await UserRepository.findById(user.id);
-
-		if (!checkUser) throw new NotfoundError("Pengguna tidak di temukan");
-
-		if (!checkUser.is_active) throw new UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
-
-		const newHasPassword = await helpers.hashPassword(validateFields.password);
-
-		const result = await UserRepository.updatePassword(checkUser.id, newHasPassword);
-
-		if (checkUser.is_first_login) await UserRepository.updateIsFirstLogin(checkUser.id);
-
-		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
-
-		return responses.toUserResponse(result);
 	}
 
 	static async activation(req: ActivationRequest): Promise<UserResponse> {

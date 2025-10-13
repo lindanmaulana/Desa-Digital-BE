@@ -11,6 +11,8 @@ const client_1 = require("@prisma/client");
 const route = (0, express_1.Router)();
 route.get("/", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUsers);
 route.get("/:id", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUserById);
+route.get("/me", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getProfile);
+route.get("/me/password", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.changePassword);
 route.delete("/:id", auth_1.authenticatedUser, (0, auth_1.authorizedRoles)(client_1.UserRole.ADMIN), controllers_1.default.UserController.deleteUser);
 exports.default = route;
 //# sourceMappingURL=user.routes.js.map

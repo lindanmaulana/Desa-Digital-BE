@@ -1,12 +1,14 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
-import { UserSignupRequest } from "../models/user.model";
+import { SignupRequest } from "../models/auth.model";
 
 export class UserRepository {
-	static async findAll(whereCondition: Prisma.UserWhereInput) {
-		return prismaClient.user.findMany({
-			where: whereCondition
-		});
+	static async findCount() {
+		return prismaClient.user.count()
+	}
+
+	static async findAll(args: Prisma.UserFindManyArgs) {
+		return prismaClient.user.findMany(args);
 	}
 
 	static async findById(id: string) {
@@ -34,7 +36,7 @@ export class UserRepository {
 		});
 	}
 
-	static async create(data: UserSignupRequest) {
+	static async create(data: SignupRequest) {
 		return prismaClient.user.create({
 			data,
 		});

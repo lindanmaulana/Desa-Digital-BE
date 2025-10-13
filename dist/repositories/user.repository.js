@@ -12,11 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const db_1 = require("../db");
 class UserRepository {
-    static findAll(whereCondition) {
+    static findCount() {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.user.findMany({
-                where: whereCondition
-            });
+            return db_1.prismaClient.user.count();
+        });
+    }
+    static findAll(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.findMany(args);
         });
     }
     static findById(id) {

@@ -9,10 +9,6 @@ export declare class AuthValidation {
         email: z.ZodEmail;
         password: z.ZodString;
     }, z.core.$strip>;
-    static readonly CHANGEPASSWORD: z.ZodObject<{
-        password: z.ZodString;
-        confirm_password: z.ZodString;
-    }, z.core.$strip>;
     static readonly ACTIVATION: z.ZodObject<{
         email: z.ZodEmail;
         otp_code: z.ZodString;

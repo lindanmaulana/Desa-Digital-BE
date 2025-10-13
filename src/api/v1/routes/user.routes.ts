@@ -10,6 +10,9 @@ const route = Router()
 route.get("/", authenticatedUser, publicRateLimit, controllers.UserController.getUsers)
 route.get("/:id", authenticatedUser, publicRateLimit, controllers.UserController.getUserById)
 
+route.get("/me", authenticatedUser, publicRateLimit, controllers.UserController.getProfile)
+route.get("/me/password", authenticatedUser, publicRateLimit, controllers.UserController.changePassword)
+
 route.delete("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), controllers.UserController.deleteUser)
 
 export default route

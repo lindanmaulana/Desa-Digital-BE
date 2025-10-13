@@ -1,0 +1,10 @@
+const MAXIMUM_LIMTI = 20
+const DEFAULT_LIMIT = 5
+const DEFAULT_PAGE = 1
+
+
+export default {
+	MAXIMUM_LIMTI,
+	DEFAULT_LIMIT,
+	DEFAULT_PAGE
+}

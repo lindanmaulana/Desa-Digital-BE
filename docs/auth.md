@@ -73,7 +73,29 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 3. CHANGEPASSWORD user
+## 3. GETPROFILE user
+  Endpoint : GET /api/v1/auth/me
+
+  Request Header :
+  - Authorization : Bearer token
+
+  Response Body (Success)
+  ```json
+  {
+    "data": {
+      /* UserResponse Object */
+    }
+  }
+  ```
+
+  Response Body (Failed)
+  ```json
+  {
+    "errors": "Message error"
+  }
+  ```
+
+## 4. CHANGEPASSWORD user
   Endpoint : PATCH /api/v1/auth/me/password
 
   Request Header :
@@ -103,7 +125,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 4. ACTIVATION user
+## 5. ACTIVATION user
   Endpoint : POST /api/v1/auth/verify-account
 
   Request Body
@@ -129,7 +151,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 5. RESENDOTP user
+## 6. RESENDOTP user
   Endpoint : POST /api/v1/auth/resend-otp
 
   Request Body
@@ -157,7 +179,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 6. FORGOTPASSWORD user
+## 7. FORGOTPASSWORD user
   Endpoint : POST /api/v1/auth/forgot-password
 
   Send Otp -> Email
@@ -187,7 +209,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 7. VERIFYOTP user
+## 8. VERIFYOTP user
   Endpoint : POST /api/v1/auth/verify-otp
 
   Request Body
@@ -216,7 +238,7 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   }
   ```
 
-## 6. RESETPASSWORD user
+## 9. RESETPASSWORD user
   Endpoint : POST /api/v1/auth/reset-password
 
   Request Header :

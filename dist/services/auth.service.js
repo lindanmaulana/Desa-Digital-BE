@@ -59,25 +59,6 @@ class AuthService {
             return Object.assign(Object.assign({}, (0, user__response_1.toUserResponse)(checkUser)), { token });
         });
     }
-    static changePassword(req, user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.CHANGEPASSWORD, req);
-            if (validateFields.password !== validateFields.confirm_password)
-                throw new errors_1.BadrequestError("Password dan Konfirm password tidak sama");
-            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
-            if (!checkUser)
-                throw new errors_1.NotfoundError("Pengguna tidak di temukan");
-            if (!checkUser.is_active)
-                throw new unauthorized_1.UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
-            const newHasPassword = yield helpers_1.default.hashPassword(validateFields.password);
-            const result = yield user_repository_1.UserRepository.updatePassword(checkUser.id, newHasPassword);
-            if (checkUser.is_first_login)
-                yield user_repository_1.UserRepository.updateIsFirstLogin(checkUser.id);
-            if (!result)
-                throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            return responses_1.default.toUserResponse(result);
-        });
-    }
     static activation(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.ACTIVATION, req);

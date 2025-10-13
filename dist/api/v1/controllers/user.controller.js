@@ -22,12 +22,14 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const token = req.user;
-                const result = yield services_1.default.UserService.getAll(token);
+                const reqParams = req.query;
+                const result = yield services_1.default.UserService.getAll(reqParams, token);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.read,
-                    data: result,
+                    data: result.data,
+                    pagination: result.pagination
                 });
             }
             catch (err) {
@@ -63,6 +65,41 @@ class UserController {
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.delete,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static getProfile(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.user;
+                const result = yield services_1.default.UserService.getProfile(token);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static changePassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.user;
+                const reqBody = req.body;
+                const result = yield services_1.default.UserService.changePassword(reqBody, token);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: "Kata sandi berhasil di ubah",
                     data: result,
                 });
             }

@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { UserSignupRequest } from "../models/user.model";
+import { SignupRequest } from "../models/auth.model";
 export declare class UserRepository {
-    static findAll(whereCondition: Prisma.UserWhereInput): Promise<{
+    static findCount(): Promise<number>;
+    static findAll(args: Prisma.UserFindManyArgs): Promise<{
         id: string;
         name: string;
         email: string;
@@ -45,7 +46,7 @@ export declare class UserRepository {
         otp_code: string | null;
         is_active: boolean;
     } | null>;
-    static create(data: UserSignupRequest): Promise<{
+    static create(data: SignupRequest): Promise<{
         id: string;
         name: string;
         email: string;

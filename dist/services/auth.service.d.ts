@@ -1,9 +1,9 @@
-import { ActivationRequest, ChangePasswordRequest, ForgotPasswordRequest, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResetPasswordRequest, UserResponse, UserSigninRequest, UserSigninResponse, UserSignupRequest } from "../models/user.model";
-import { Token, TokenVerification } from "../types/token.type";
+import { ActivationRequest, ForgotPasswordRequest, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResetPasswordRequest, SigninRequest, SigninResponse, SignupRequest } from "../models/auth.model";
+import { UserResponse } from "../models/user.model";
+import { TokenVerification } from "../types/token.type";
 export declare class AuthService {
-    static signup(req: UserSignupRequest): Promise<UserResponse>;
-    static signin(req: UserSigninRequest): Promise<UserSigninResponse>;
-    static changePassword(req: ChangePasswordRequest, user: Token): Promise<UserResponse>;
+    static signup(req: SignupRequest): Promise<UserResponse>;
+    static signin(req: SigninRequest): Promise<SigninResponse>;
     static activation(req: ActivationRequest): Promise<UserResponse>;
     static resendOtp(req: ResendOtpRequest): Promise<UserResponse>;
     static forgotPassword(req: ForgotPasswordRequest): Promise<UserResponse>;
