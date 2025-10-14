@@ -36,10 +36,8 @@ export class UserRepository {
 		});
 	}
 
-	static async create(data: SignupRequest) {
-		return prismaClient.user.create({
-			data,
-		});
+	static async create(args: Prisma.UserCreateArgs) {
+		return prismaClient.user.create(args);
 	}
 
 	static async updatePassword(id: string, password: string) {

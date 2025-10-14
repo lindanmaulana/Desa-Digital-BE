@@ -49,11 +49,9 @@ class UserRepository {
             });
         });
     }
-    static create(data) {
+    static create(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.user.create({
-                data,
-            });
+            return db_1.prismaClient.user.create(args);
         });
     }
     static updatePassword(id, password) {

@@ -18,6 +18,23 @@ const logging_1 = require("../../../logging");
 const services_1 = __importDefault(require("../../../services"));
 const response_message_type_1 = require("../../../utils/response-message.type");
 class UserController {
+    static registerStaff(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const reqBody = req.body;
+                const result = yield services_1.default.UserService.registerStaff(reqBody);
+                res.status(http_status_codes_1.StatusCodes.CREATED).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
     static getUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

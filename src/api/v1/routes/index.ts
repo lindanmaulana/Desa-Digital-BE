@@ -1,10 +1,14 @@
 import { Router } from "express"
-import userRoute from "../routes/user.routes"
 import authRoute from "../routes/auth.routes"
+import adminRoute from "./admin"
+import commonRoute from "./common"
+import headOfFamilyRoute from "./head-of-family"
 
-const mainRoute = Router()
+const apiRoute = Router()
 
-mainRoute.use("/users", userRoute)
-mainRoute.use("/auth", authRoute)
+	apiRoute.use("/auth", authRoute)
+	apiRoute.use("/admin", adminRoute)
+	apiRoute.use("/head-of-family", headOfFamilyRoute)
+	apiRoute.use("/", commonRoute)
 
-export default mainRoute
+export default apiRoute

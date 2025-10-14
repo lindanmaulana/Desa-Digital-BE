@@ -1,8 +1,8 @@
-import express from "express"
 import cors from "cors"
+import express from "express"
+import apiRoute from "./api/v1/routes"
 import { errorMiddleware } from "./middlewares/handler-error"
 import notfound from "./middlewares/notfound"
-import mainRoute from "./api/v1/routes"
 
 export const app = express()
 
@@ -14,7 +14,7 @@ app.use(cors({
 
 const V1 = "/api/v1"
 
-app.use(V1, mainRoute)
+app.use(V1, apiRoute)
 
 app.use(errorMiddleware)
 app.use(notfound)

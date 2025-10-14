@@ -1,25 +1,82 @@
-import { Prisma, UserRole } from "@prisma/client";
-import { ChangePasswordRequest, GetAllRequest, GetAllUserResponse, UserResponse } from "../models/user.model";
+import { Gender, Marital, Prisma, UserRole } from "@prisma/client";
+import services from ".";
+import { prismaClient } from "../db";
+import {
+	ChangePasswordRequest,
+	GetAllRequest,
+	GetAllUserResponse,
+	RegisterHeadOfFamilyRequest,
+	RegisterStaffRequest,
+	UserResponse,
+} from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
 import { Token } from "../types/token.type";
-import paginationConst from "../utils/const/pagination.const";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
 import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
 import responses from "../utils/responses";
 import { UserValidation } from "../utils/validations/user.validation";
 import { validation } from "../utils/validations/validation";
-import { getPagination } from "../utils/helpers/get-pagination";
-import { ROLES } from "../utils/const/roles";
-import { Roles } from "../types/roles";
 
 export class UserService {
+	static async registerStaff(req: RegisterStaffRequest): Promise<UserResponse> {
+		const validateFields = validation.validate(UserValidation.REGISTERSTAFF, req);
+
+		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
+
+		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
+
+		const hashPassword = await helpers.hashPassword(validateFields.password);
+		const otp = helpers.generateOtp();
+
+		const result = await prismaClient.$transaction(async (tx) => {
+			const newUser = await tx.user.create({
+				data: {
+					email: validateFields.email,
+					name: validateFields.name,
+					password: hashPassword,
+					role: "STAFF",
+					otp_code: otp,
+					otp_last_sen_at: new Date(),
+				},
+			});
+
+			const newStaff = await tx.staff.create({
+				data: {
+					user_id: newUser.id,
+					profile_picture: validateFields.profile_picture ?? "",
+					identity_number: validateFields.identity_number ?? "",
+					gender: (validateFields.gender as Gender) ?? undefined,
+					date_of_birth: validateFields.date_of_birth ?? null,
+					phone_number: validateFields.phone_number ?? "",
+					occupation: validateFields.occupation ?? "",
+					marital_status: (validateFields.marital_status as Marital) ?? undefined,
+				},
+			});
+
+			console.log({ newUser, newStaff });
+
+			return { newUser, newStaff };
+		});
+
+		console.log({ result });
+		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
+
+		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+
+		return responses.userResponse.toUserResponse(result.newUser);
+	}
+
+	static async createHeadOfFamily(req: RegisterHeadOfFamilyRequest) {}
+
+	static async createFamilyMember() {}
+
 	static async getProfile(user: Token): Promise<UserResponse> {
 		const checkUser = await UserRepository.findById(user.id);
 
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
 
-		return responses.toUserResponse(checkUser);
+		return responses.userResponse.toUserResponse(checkUser);
 	}
 
 	static async getAll(req: GetAllRequest, user: Token): Promise<GetAllUserResponse> {
@@ -42,10 +99,14 @@ export class UserService {
 		if (validateFields.keyword) {
 			whereCondition = {
 				...whereCondition,
-				name: {
-					contains: validateFields.keyword,
-					mode: "insensitive",
-				},
+				OR: [
+					{
+						name: {
+							contains: validateFields.keyword,
+							mode: "insensitive",
+						},
+					},
+				],
 			};
 		}
 
@@ -67,7 +128,7 @@ export class UserService {
 			};
 		}
 
-		let conditionsCount: Prisma.UserCountArgs = {where: whereCondition}
+		let conditionsCount: Prisma.UserCountArgs = { where: whereCondition };
 
 		const count = await UserRepository.findCount(conditionsCount);
 
@@ -81,6 +142,44 @@ export class UserService {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
+			select: {
+				head_of_family: {
+					select: {
+						id: true,
+						profile_picture: true,
+						identity_number: true,
+						date_of_birth: true,
+						phone_number: true,
+						gender: true,
+						occupation: true,
+						marital_status: true,
+
+						family_member: {
+							select: {
+								id: true,
+								profile_picture: true,
+								identity_number: true,
+								date_of_birth: true,
+								phone_number: true,
+								gender: true,
+								occupation: true,
+								marital_status: true,
+							},
+						},
+					},
+				},
+				staff: {
+					select: {
+						id: true,
+						identity_number: true,
+						date_of_birth: true,
+						gender: true,
+						occupation: true,
+						marital_status: true,
+					},
+				},
+				family_member: true,
+			},
 		};
 
 		const result = await UserRepository.findAll(conditionsFindMany);
@@ -88,7 +187,7 @@ export class UserService {
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later!");
 
 		return {
-			data: responses.toUserResponses(result),
+			data: responses.userResponse.toUserResponses(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -108,8 +207,10 @@ export class UserService {
 		if (user.role !== "ADMIN" && user.role !== "STAFF")
 			if (result.role === "ADMIN" || result.role === "STAFF") throw new BadrequestError("Pengguna tidak ditemukan");
 
-		return responses.toUserResponse(result);
+		return responses.userResponse.toUserResponse(result);
 	}
+
+	static async update() {}
 
 	static async delete(id: string): Promise<UserResponse> {
 		const checkUser = await UserRepository.findById(id);
@@ -120,7 +221,7 @@ export class UserService {
 
 		const result = await UserRepository.deleteById(checkUser.id);
 
-		return responses.toUserResponse(result);
+		return responses.userResponse.toUserResponse(result);
 	}
 
 	static async changePassword(req: ChangePasswordRequest, user: Token): Promise<UserResponse> {
@@ -142,6 +243,6 @@ export class UserService {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		return responses.toUserResponse(result);
+		return responses.userResponse.toUserResponse(result);
 	}
 }

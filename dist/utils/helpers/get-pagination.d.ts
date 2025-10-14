@@ -1,4 +1,4 @@
-interface getPaginationParams {
+export interface getPaginationParams {
     count: number;
     pageRequest: string | undefined;
     limitRequest: string | undefined;
@@ -12,5 +12,4 @@ export declare const getPagination: ({ count, pageRequest, limitRequest }: getPa
     limit: number;
     currentPage: number;
 };
-export {};
 //# sourceMappingURL=get-pagination.d.ts.map

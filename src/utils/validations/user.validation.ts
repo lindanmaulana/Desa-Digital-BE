@@ -1,10 +1,22 @@
-import { UserRole } from "@prisma/client";
 import z from "zod";
+import { AuthValidation } from "./auth.validation";
+import { StaffValidation } from "./staff.validation";
+import { VALID_GENDER, VALID_MARITAL, VALID_ROLE } from "./validation";
 
 export class UserValidation {
+	static readonly REGISTERSTAFF = AuthValidation.SIGNUP.extend(z.object({
+			profile_picture: z.string().optional(),
+			identity_number: z.string().optional(),
+			gender: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_GENDER)).optional(),
+			date_of_birth: z.string().optional(),
+			phone_number: z.string().optional(),
+			occupation: z.string().optional(),
+			marital_status: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_MARITAL)).optional()
+	}).shape)
+
 	static readonly GETALL = z.object({
 		keyword: z.string().optional(),
-		role: z.string().toUpperCase().optional(),
+		role: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_ROLE)).optional(),
 		is_active: z.string().optional(),
 		page: z.string().optional(),
 		limit: z.string().optional()

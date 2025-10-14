@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import { UserResponse } from "../../models/user.model";
 import { toUserRole } from "../helpers/to-user-role";
 
-export const toUserResponse = (user: User): UserResponse => {
+const toUserResponse = (user: User): UserResponse => {
 	return {
 		id: user.id,
 		name: user.name,
@@ -15,7 +15,7 @@ export const toUserResponse = (user: User): UserResponse => {
 	};
 };
 
-export const toUserResponses = (users: User[]): UserResponse[] => {
+const toUserResponses = (users: User[]): UserResponse[] => {
 	return users.map((user) => ({
 		id: user.id,
 		name: user.name,
@@ -27,3 +27,6 @@ export const toUserResponses = (users: User[]): UserResponse[] => {
 		updated_at: user.updated_at,
 	}));
 };
+
+
+export default {toUserResponse, toUserResponses}

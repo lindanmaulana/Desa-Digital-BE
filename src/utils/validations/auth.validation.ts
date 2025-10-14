@@ -1,4 +1,4 @@
-import z, { object } from "zod";
+import z from "zod";
 
 export class AuthValidation {
 	static readonly SIGNUP = z.object({

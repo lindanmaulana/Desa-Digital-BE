@@ -24,7 +24,6 @@ const create_token_1 = require("../utils/helpers/create-token");
 const create_token_verification_1 = require("../utils/helpers/create-token-verification");
 const generate_otp_1 = require("../utils/helpers/generate-otp");
 const responses_1 = __importDefault(require("../utils/responses"));
-const user__response_1 = require("../utils/responses/user.,response");
 const auth_validation_1 = require("../utils/validations/auth.validation");
 const validation_1 = require("../utils/validations/validation");
 const RESEND_COOLDOWN_SECONDS = 60;
@@ -37,11 +36,13 @@ class AuthService {
                 throw new errors_1.BadrequestError("Email telah di gunakan");
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
-            const result = yield user_repository_1.UserRepository.create(Object.assign(Object.assign({}, validateFields), { password: hashPassword, otp_code: otp, otp_last_sen_at: new Date() }));
+            const result = yield user_repository_1.UserRepository.create({
+                data: Object.assign(Object.assign({}, validateFields), { password: hashPassword, otp_code: otp, otp_last_sen_at: new Date() }),
+            });
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later!");
             yield _1.default.EmailService.SendOtpMail(result.email, result);
-            return responses_1.default.toUserResponse(result);
+            return responses_1.default.userResponse.toUserResponse(result);
         });
     }
     static signin(req) {
@@ -56,7 +57,7 @@ class AuthService {
             if (!isPasswordValid)
                 throw new unauthorized_1.UnauthorizedError("Invalid credentials");
             const token = (0, create_token_1.createToken)(checkUser);
-            return Object.assign(Object.assign({}, (0, user__response_1.toUserResponse)(checkUser)), { token });
+            return Object.assign(Object.assign({}, responses_1.default.userResponse.toUserResponse(checkUser)), { token });
         });
     }
     static activation(req) {
@@ -75,7 +76,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateIsActive(checkUserActivation.id);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            return (0, user__response_1.toUserResponse)(result);
+            return responses_1.default.userResponse.toUserResponse(result);
         });
     }
     static resendOtp(req) {
@@ -101,7 +102,7 @@ class AuthService {
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
-            return (0, user__response_1.toUserResponse)(result);
+            return responses_1.default.userResponse.toUserResponse(result);
         });
     }
     static forgotPassword(req) {
@@ -116,7 +117,7 @@ class AuthService {
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
-            return (0, user__response_1.toUserResponse)(result);
+            return responses_1.default.userResponse.toUserResponse(result);
         });
     }
     static matchOtp(req) {
@@ -130,7 +131,7 @@ class AuthService {
             const token = (0, create_token_verification_1.createTokenVerification)({ id: checkUser.id, email: checkUser.email, role: checkUser.role });
             yield user_repository_1.UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
             return {
-                verify_token: token
+                verify_token: token,
             };
         });
     }
@@ -145,7 +146,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updatePassword(checkUser.id, validateFields.password);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            return (0, user__response_1.toUserResponse)(result);
+            return responses_1.default.userResponse.toUserResponse(result);
         });
     }
 }

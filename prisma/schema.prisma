@@ -88,9 +88,29 @@ model User {
 
   head_of_family HeadOfFamily?
   family_member FamilyMember?
+  staff Staff?
   development_applicant DevelopmentApplicant[]
 
   @@map("users")
+}
+
+model Staff {
+  id String @id @default(uuid())
+  user_id String @unique
+  profile_picture String? @db.VarChar(250)
+  identity_number String? @db.VarChar(20)
+  gender Gender @default(MALE)
+  date_of_birth DateTime? @db.Date
+  phone_number String? @db.VarChar()
+  occupation String? @db.VarChar()
+  marital_status Marital @default(SINGLE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("staffs")
 }
 
 model HeadOfFamily {

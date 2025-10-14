@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const user__response_1 = require("./user.,response");
+const staff_response_1 = __importDefault(require("./staff-response"));
+const user__response_1 = __importDefault(require("./user.,response"));
 exports.default = {
-    toUserResponse: user__response_1.toUserResponse,
-    toUserResponses: user__response_1.toUserResponses
+    userResponse: user__response_1.default,
+    staffResponse: staff_response_1.default
 };
 //# sourceMappingURL=index.js.map

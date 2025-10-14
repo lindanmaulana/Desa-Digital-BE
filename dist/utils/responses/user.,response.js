@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toUserResponses = exports.toUserResponse = void 0;
 const to_user_role_1 = require("../helpers/to-user-role");
 const toUserResponse = (user) => {
     return {
@@ -14,7 +13,6 @@ const toUserResponse = (user) => {
         updated_at: user.updated_at,
     };
 };
-exports.toUserResponse = toUserResponse;
 const toUserResponses = (users) => {
     return users.map((user) => ({
         id: user.id,
@@ -27,5 +25,5 @@ const toUserResponses = (users) => {
         updated_at: user.updated_at,
     }));
 };
-exports.toUserResponses = toUserResponses;
+exports.default = { toUserResponse, toUserResponses };
 //# sourceMappingURL=user.,response.js.map

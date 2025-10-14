@@ -8,6 +8,15 @@ declare const _default: {
     toUserRole: (role: string) => import("@prisma/client").UserRole;
     hashPassword: (password: string, salt?: number) => Promise<string>;
     comparePassword: (requestPassword: string, hashPassword: string) => Promise<boolean>;
+    getPagination: ({ count, pageRequest, limitRequest }: import("./get-pagination").getPaginationParams) => {
+        totalPage: number;
+        links: number[];
+        nextPage: number | null;
+        prevPage: number | null;
+        page: number;
+        limit: number;
+        currentPage: number;
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

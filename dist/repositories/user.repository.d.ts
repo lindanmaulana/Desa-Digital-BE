@@ -1,11 +1,10 @@
 import { Prisma } from "@prisma/client";
-import { SignupRequest } from "../models/auth.model";
 export declare class UserRepository {
     static findCount(args: Prisma.UserCountArgs): Promise<number>;
     static findAll(args: Prisma.UserFindManyArgs): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -16,9 +15,9 @@ export declare class UserRepository {
         updated_at: Date;
     }[]>;
     static findById(id: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -29,9 +28,9 @@ export declare class UserRepository {
         updated_at: Date;
     } | null>;
     static findByEmail(email: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -46,10 +45,10 @@ export declare class UserRepository {
         otp_code: string | null;
         is_active: boolean;
     } | null>;
-    static create(data: SignupRequest): Promise<{
+    static create(args: Prisma.UserCreateArgs): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -60,9 +59,9 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static updatePassword(id: string, password: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -73,9 +72,9 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static updateIsFirstLogin(id: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -86,9 +85,9 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static updateIsActive(id: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -99,9 +98,9 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static updateOtp(id: string, otp_code: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -113,9 +112,9 @@ export declare class UserRepository {
     }>;
     static deleteAll(): Promise<Prisma.BatchPayload>;
     static deleteById(id: string): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
@@ -126,9 +125,9 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static deleteOtp(id: string, is_active: boolean): Promise<{
+        name: string;
         id: string;
         email: string;
-        name: string;
         password: string;
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;

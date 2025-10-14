@@ -1,5 +1,8 @@
-import { UserRole } from "@prisma/client";
+import { Gender, Marital, UserRole } from "@prisma/client";
 import { PaginationResponse } from "./pagination.model";
+import { SignupRequest } from "./auth.model";
+import { CreateHeadOfFamilyRequest } from "./head-of-family";
+import { CreateStaffRequest } from "./staff.model";
 
 export interface UserResponse {
 	id: string;
@@ -15,8 +18,8 @@ export interface UserResponse {
 }
 
 export interface GetAllUserResponse {
-	data: UserResponse[]
-	pagination: PaginationResponse
+	data: UserResponse[];
+	pagination: PaginationResponse;
 }
 
 export interface ChangePasswordRequest {
@@ -32,4 +35,24 @@ export interface GetAllRequest {
 	is_active?: string;
 	page?: string;
 	limit?: string;
+}
+
+export interface RegisterHeadOfFamilyRequest extends SignupRequest {
+	profile_picture?: string;
+	identity_number?: string;
+	gender?: string;
+	date_of_birth?: string;
+	phone_number?: string;
+	occupation?: string;
+	marital_status?: string;
+}
+
+export interface RegisterStaffRequest extends SignupRequest {
+	profile_picture?: string;
+	identity_number?: string;
+	gender?: string;
+	date_of_birth?: string;
+	phone_number?: string;
+	occupation?: string;
+	marital_status?: string;
 }

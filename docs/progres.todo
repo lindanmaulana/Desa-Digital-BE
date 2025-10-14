@@ -5,9 +5,9 @@
 [X] 2. USERS -> service
 
 ### 📝 Akan Dikerjakan (TODO)
-[ ] 1. USERS -> update
-[ ] 2. USERS -> getAll
+[ ] 1. USERS -> registerStaff
+[ ] 2. USERS -> registerHeadOfFamily
 
 ### 🚧 Blocking / Notes
-- cek services -> forgot-password -> verify-otp -> reset-password
-- perbaiki getAllUsers dengan pagination nya yang masih ga work
+- register staff, dari user -> createStaff
+- updateUser service

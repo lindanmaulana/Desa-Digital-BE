@@ -5,9 +5,27 @@ import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
 import { Token } from "../../../types/token.type";
-import { ChangePasswordRequest, GetAllRequest } from "../../../models/user.model";
+import { ChangePasswordRequest, GetAllRequest, RegisterStaffRequest } from "../../../models/user.model";
 
 export class UserController {
+
+	static async registerStaff(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const reqBody = req.body as RegisterStaffRequest
+			
+			const result = await services.UserService.registerStaff(reqBody)
+
+			res.status(StatusCodes.CREATED).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: RESPONSE_MESSAGE.success.read,
+				data: result,
+			})
+		} catch (err) {
+			next(err)
+		}
+	}
+
 	static async getUsers(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const token = req.user as Token;

@@ -1,6 +1,7 @@
-import { toUserResponse, toUserResponses } from "./user.,response";
+import staffResponse from "./staff-response";
+import userResponse from "./user.,response";
 
 export default {
-	toUserResponse,
-	toUserResponses
+	userResponse,
+	staffResponse
 }

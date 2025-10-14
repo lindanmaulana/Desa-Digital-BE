@@ -18,7 +18,14 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
 **Catatan:** Dalam respons API sebenarnya, properti sensitif seperti `otp_code` dan `password` **TIDAK** boleh disertakan.
 
 ## 1. GET all user
-  Endpoint : GET /api/v1/v1/users
+  Endpoint : GET /api/v1/v1/users?
+
+  - Request Query :
+  keyword=value
+  is_active=true or false
+  role=userRole
+
+
 
   Request Header :
   - Authorization : Bearer token
@@ -29,8 +36,16 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
     "data": [
       {
       /* UserResponse Object */
-      }
-    ]
+      },
+    ],
+    "pagination": {
+        "total_page": totalPage,
+				"limit": limit,
+				"current_page": currentPage,
+				"links": number[number],
+				"next_page": nextPage,
+				"prev_page": prevPage,
+    }
   }
   ```
 
