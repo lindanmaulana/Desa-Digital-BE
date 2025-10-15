@@ -45,7 +45,7 @@ export class AuthService {
 				otp_code: otp,
 				otp_last_sen_at: new Date(),
 			},
-		});
+		})
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later!");
 
@@ -59,7 +59,7 @@ export class AuthService {
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
 
-		if (!checkUser) throw new UnauthorizedError("Invalid credentialssssss");
+		if (!checkUser) throw new UnauthorizedError("Invalid credentials");
 
 		if (!checkUser.is_active)
 			throw new NeedActivation("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun", checkUser.email);

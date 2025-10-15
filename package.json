@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --config ./jest.config.ts",
     "dev": "nodemon ./dist/index.js",
     "seed": "node -r ts-node/register prisma/seed.ts"
   },

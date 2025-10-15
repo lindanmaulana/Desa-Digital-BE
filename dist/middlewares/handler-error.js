@@ -19,11 +19,14 @@ const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0,
     let errors = "Something went wrong, please try again later.";
     let responseData = { errors };
     if (error instanceof zod_1.ZodError) {
-        statusCodes = http_status_codes_1.StatusCodes.NOT_FOUND;
-        errors = error.issues.map(e => e.message);
+        console.log("Zod Error");
+        statusCodes = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        errors = error.issues.map((e) => e.message);
         responseData = { errors };
     }
     else if (error instanceof errors_1.CustomAPIError) {
+        console.log("CustomApi Error");
+        console.log({ error });
         statusCodes = error.StatusCodes;
         errors = error.message;
         responseData = { errors };
@@ -33,6 +36,7 @@ const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0,
         }
     }
     else if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+        console.log("Prisma client Error");
         statusCodes = http_status_codes_1.StatusCodes.NOT_FOUND;
         errors = `Database error ${error.message}`;
     }

@@ -1,14 +1,21 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
-import { SignupRequest } from "../models/auth.model";
+import { UserWithRelations } from "../models/user.model";
 
 export class UserRepository {
 	static async findCount(args: Prisma.UserCountArgs) {
 		return prismaClient.user.count(args)
 	}
 
-	static async findAll(args: Prisma.UserFindManyArgs) {
-		return prismaClient.user.findMany(args);
+	static async findAll(args: Prisma.UserFindManyArgs): Promise<UserWithRelations[]> {
+		return prismaClient.user.findMany({
+			where: args.where ?? {},
+			skip: args.skip ?? 0,
+			take: args.take ?? 5,
+			include: {
+				...args.include
+			}
+		});
 	}
 
 	static async findById(id: string) {
@@ -16,6 +23,9 @@ export class UserRepository {
 			where: {
 				id,
 			},
+			include: {
+				staff: true,
+			}
 		});
 	}
 

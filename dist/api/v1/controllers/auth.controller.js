@@ -22,7 +22,7 @@ class AuthController {
                 const result = yield services_1.default.AuthService.signup(req.body);
                 res.status(http_status_codes_1.StatusCodes.CREATED).json({
                     status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
+                    code: http_status_codes_1.StatusCodes.CREATED,
                     message: "Pendaftaran berhasil",
                     data: result,
                 });

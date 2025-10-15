@@ -1,8 +1,13 @@
-import { Gender, Marital, UserRole } from "@prisma/client";
-import { PaginationResponse } from "./pagination.model";
+import { Prisma, UserRole } from "@prisma/client";
 import { SignupRequest } from "./auth.model";
-import { CreateHeadOfFamilyRequest } from "./head-of-family";
-import { CreateStaffRequest } from "./staff.model";
+import { PaginationResponse } from "./pagination.model";
+import { StaffResponse } from "./staff.model";
+
+export type UserWithRelations = Prisma.UserGetPayload<{
+	include: {
+		staff: true;
+	};
+}>;
 
 export interface UserResponse {
 	id: string;
@@ -13,8 +18,13 @@ export interface UserResponse {
 	otp_last_sen_at?: Date;
 	is_active: boolean;
 	is_first_login: boolean;
+
 	created_at: Date;
 	updated_at: Date;
+}
+
+export interface UserResponseWithRelation extends UserResponse {
+	staff?: StaffResponse | null
 }
 
 export interface GetAllUserResponse {

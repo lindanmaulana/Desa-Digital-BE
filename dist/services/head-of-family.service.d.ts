@@ -1,4 +1,4 @@
-import { CreateHeadOfFamilyRequest } from "../models/head-of-family";
+import { CreateHeadOfFamilyRequest } from "../models/head-of-family.model";
 export declare class HeadOfFamilyService {
     static create(req: CreateHeadOfFamilyRequest): Promise<void>;
 }

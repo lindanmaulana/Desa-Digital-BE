@@ -12,7 +12,7 @@ export class UserController {
 	static async registerStaff(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqBody = req.body as RegisterStaffRequest
-			
+
 			const result = await services.UserService.registerStaff(reqBody)
 
 			res.status(StatusCodes.CREATED).json({
@@ -30,6 +30,7 @@ export class UserController {
 		try {
 			const token = req.user as Token;
 			const reqParams = req.query as GetAllRequest
+
 			const result = await services.UserService.getAll(reqParams, token);
 
 			res.status(StatusCodes.OK).json({

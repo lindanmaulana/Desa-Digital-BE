@@ -9,7 +9,7 @@ import {
 } from "../../../models/auth.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
-import { Token, TokenVerification } from "../../../types/token.type";
+import { TokenVerification } from "../../../types/token.type";
 
 export class AuthController {
 	static async signup(req: CustomeRequest, res: Response, next: NextFunction) {
@@ -18,7 +18,7 @@ export class AuthController {
 
 			res.status(StatusCodes.CREATED).json({
 				status: "success",
-				code: StatusCodes.OK,
+				code: StatusCodes.CREATED,
 				message: "Pendaftaran berhasil",
 				data: result,
 			});
@@ -124,7 +124,7 @@ export class AuthController {
 				data: result,
 			});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	}
 }

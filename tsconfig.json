@@ -39,7 +39,5 @@
     "moduleDetection": "auto",
     "noUncheckedSideEffectImports": false
   },
-  "include": [
-    "./src" // Cukup sertakan folder source code utama
-  ]
+  "include": ["src/**/*"]
 }

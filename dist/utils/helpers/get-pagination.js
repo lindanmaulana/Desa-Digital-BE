@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPagination = void 0;
-const pagination_const_1 = __importDefault(require("../const/pagination.const"));
+const const_1 = __importDefault(require("../const"));
 const getPagination = ({ count, pageRequest, limitRequest }) => {
     let totalPage = 1;
     let links = [1];
     let nextPage = null;
     let prevPage = null;
-    let page = pagination_const_1.default.DEFAULT_PAGE;
-    let limit = pagination_const_1.default.DEFAULT_LIMIT;
+    let page = const_1.default.paginationConst.DEFAULT_PAGE;
+    let limit = const_1.default.paginationConst.DEFAULT_LIMIT;
     if (pageRequest)
         page = Number(pageRequest);
     if (limitRequest && limitRequest <= "20")

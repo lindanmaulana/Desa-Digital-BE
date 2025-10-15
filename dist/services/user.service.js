@@ -42,7 +42,7 @@ class UserService {
                         role: "STAFF",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
-                    },
+                    }
                 });
                 const newStaff = yield tx.staff.create({
                     data: {
@@ -56,10 +56,8 @@ class UserService {
                         marital_status: (_g = validateFields.marital_status) !== null && _g !== void 0 ? _g : undefined,
                     },
                 });
-                console.log({ newUser, newStaff });
                 return { newUser, newStaff };
             }));
-            console.log({ result });
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
             yield _1.default.EmailService.SendOtpMail(result.newUser.email, result.newUser);
@@ -120,49 +118,15 @@ class UserService {
                 where: whereCondition,
                 skip: limit * (page - 1),
                 take: limit,
-                select: {
-                    head_of_family: {
-                        select: {
-                            id: true,
-                            profile_picture: true,
-                            identity_number: true,
-                            date_of_birth: true,
-                            phone_number: true,
-                            gender: true,
-                            occupation: true,
-                            marital_status: true,
-                            family_member: {
-                                select: {
-                                    id: true,
-                                    profile_picture: true,
-                                    identity_number: true,
-                                    date_of_birth: true,
-                                    phone_number: true,
-                                    gender: true,
-                                    occupation: true,
-                                    marital_status: true,
-                                },
-                            },
-                        },
-                    },
-                    staff: {
-                        select: {
-                            id: true,
-                            identity_number: true,
-                            date_of_birth: true,
-                            gender: true,
-                            occupation: true,
-                            marital_status: true,
-                        },
-                    },
-                    family_member: true,
+                include: {
+                    staff: true,
                 },
             };
             const result = yield user_repository_1.UserRepository.findAll(conditionsFindMany);
             if (!result)
                 throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
             return {
-                data: responses_1.default.userResponse.toUserResponses(result),
+                data: responses_1.default.userResponse.toUserResponsesWithRelation(result),
                 pagination: {
                     total_page: totalPage,
                     limit,

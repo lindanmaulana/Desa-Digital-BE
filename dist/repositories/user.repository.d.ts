@@ -1,7 +1,23 @@
 import { Prisma } from "@prisma/client";
+import { UserWithRelations } from "../models/user.model";
 export declare class UserRepository {
     static findCount(args: Prisma.UserCountArgs): Promise<number>;
-    static findAll(args: Prisma.UserFindManyArgs): Promise<{
+    static findAll(args: Prisma.UserFindManyArgs): Promise<UserWithRelations[]>;
+    static findById(id: string): Promise<({
+        staff: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            user_id: string;
+            profile_picture: string | null;
+            identity_number: string | null;
+            gender: import("@prisma/client").$Enums.Gender;
+            date_of_birth: Date | null;
+            phone_number: string | null;
+            occupation: string | null;
+            marital_status: import("@prisma/client").$Enums.Marital;
+        } | null;
+    } & {
         name: string;
         id: string;
         email: string;
@@ -13,20 +29,7 @@ export declare class UserRepository {
         is_first_login: boolean;
         created_at: Date;
         updated_at: Date;
-    }[]>;
-    static findById(id: string): Promise<{
-        name: string;
-        id: string;
-        email: string;
-        password: string;
-        role: import("@prisma/client").$Enums.UserRole;
-        otp_code: string | null;
-        otp_last_sen_at: Date | null;
-        is_active: boolean;
-        is_first_login: boolean;
-        created_at: Date;
-        updated_at: Date;
-    } | null>;
+    }) | null>;
     static findByEmail(email: string): Promise<{
         name: string;
         id: string;

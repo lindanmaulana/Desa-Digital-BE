@@ -8,6 +8,7 @@ import {
 	RegisterHeadOfFamilyRequest,
 	RegisterStaffRequest,
 	UserResponse,
+	UserWithRelations,
 } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
 import { Token } from "../types/token.type";
@@ -38,7 +39,7 @@ export class UserService {
 					role: "STAFF",
 					otp_code: otp,
 					otp_last_sen_at: new Date(),
-				},
+				}
 			});
 
 			const newStaff = await tx.staff.create({
@@ -54,12 +55,9 @@ export class UserService {
 				},
 			});
 
-			console.log({ newUser, newStaff });
-
 			return { newUser, newStaff };
 		});
 
-		console.log({ result });
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
 		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser);
@@ -88,12 +86,14 @@ export class UserService {
 		let whereCondition: Prisma.UserWhereInput = {};
 
 		if (!fullAccess) {
+
 			whereCondition = {
 				...whereCondition,
 				role: {
 					notIn: hiddenRoles,
 				},
 			};
+
 		}
 
 		if (validateFields.keyword) {
@@ -142,52 +142,17 @@ export class UserService {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
-			select: {
-				head_of_family: {
-					select: {
-						id: true,
-						profile_picture: true,
-						identity_number: true,
-						date_of_birth: true,
-						phone_number: true,
-						gender: true,
-						occupation: true,
-						marital_status: true,
-
-						family_member: {
-							select: {
-								id: true,
-								profile_picture: true,
-								identity_number: true,
-								date_of_birth: true,
-								phone_number: true,
-								gender: true,
-								occupation: true,
-								marital_status: true,
-							},
-						},
-					},
-				},
-				staff: {
-					select: {
-						id: true,
-						identity_number: true,
-						date_of_birth: true,
-						gender: true,
-						occupation: true,
-						marital_status: true,
-					},
-				},
-				family_member: true,
+			include: {
+				staff: true,
 			},
-		};
+		}
 
 		const result = await UserRepository.findAll(conditionsFindMany);
 
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later!");
 
 		return {
-			data: responses.userResponse.toUserResponses(result),
+			data: responses.userResponse.toUserResponsesWithRelation(result),
 			pagination: {
 				total_page: totalPage,
 				limit,

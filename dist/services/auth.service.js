@@ -50,7 +50,7 @@ class AuthService {
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.SIGNIN, req);
             const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
             if (!checkUser)
-                throw new unauthorized_1.UnauthorizedError("Invalid credentialssssss");
+                throw new unauthorized_1.UnauthorizedError("Invalid credentials");
             if (!checkUser.is_active)
                 throw new errors_1.NeedActivation("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun", checkUser.email);
             const isPasswordValid = yield helpers_1.default.comparePassword(validateFields.password, checkUser.password);
@@ -62,18 +62,17 @@ class AuthService {
     }
     static activation(req) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.ACTIVATION, req);
             const checkUser = yield user_repository_1.UserRepository.findByEmail(req.email);
             if (!checkUser)
                 throw new unauthenticated_1.UnauthenticatedError("Email tidak valid atau pengguna telah terhapus");
             const checkUserActivation = yield user_repository_1.UserRepository.findUserForActivation(checkUser.id);
-            if (!checkUserActivation)
-                throw new unauthenticated_1.UnauthenticatedError("Pengguna tidak di temukan");
-            if (checkUserActivation.is_active)
+            if (checkUserActivation && checkUserActivation.is_active)
                 throw new errors_1.BadrequestError("Akun anda sudah aktif");
-            if (checkUserActivation.otp_code !== validateFields.otp_code)
+            if (checkUserActivation && checkUserActivation.otp_code !== validateFields.otp_code)
                 throw new errors_1.BadrequestError("Kode OTP yang Anda masukan salah");
-            const result = yield user_repository_1.UserRepository.updateIsActive(checkUserActivation.id);
+            const result = yield user_repository_1.UserRepository.updateIsActive((_a = checkUserActivation === null || checkUserActivation === void 0 ? void 0 : checkUserActivation.id) !== null && _a !== void 0 ? _a : "");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             return responses_1.default.userResponse.toUserResponse(result);

@@ -1,6 +1,12 @@
-import { UserRole } from "@prisma/client";
-import { PaginationResponse } from "./pagination.model";
+import { Prisma, UserRole } from "@prisma/client";
 import { SignupRequest } from "./auth.model";
+import { PaginationResponse } from "./pagination.model";
+import { StaffResponse } from "./staff.model";
+export type UserWithRelations = Prisma.UserGetPayload<{
+    include: {
+        staff: true;
+    };
+}>;
 export interface UserResponse {
     id: string;
     name: string;
@@ -12,6 +18,9 @@ export interface UserResponse {
     is_first_login: boolean;
     created_at: Date;
     updated_at: Date;
+}
+export interface UserResponseWithRelation extends UserResponse {
+    staff?: StaffResponse | null;
 }
 export interface GetAllUserResponse {
     data: UserResponse[];

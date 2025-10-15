@@ -1,4 +1,4 @@
-import paginationConst from "../const/pagination.const";
+import _const from "../const";
 
 export interface getPaginationParams {
 	count: number;
@@ -12,8 +12,8 @@ export const getPagination = ({ count, pageRequest, limitRequest }: getPaginatio
 	let nextPage: number | null = null;
 	let prevPage: number | null = null;
 
-	let page: number = paginationConst.DEFAULT_PAGE;
-	let limit: number = paginationConst.DEFAULT_LIMIT;
+	let page: number = _const.paginationConst.DEFAULT_PAGE;
+	let limit: number = _const.paginationConst.DEFAULT_LIMIT;
 
 	if (pageRequest) page = Number(pageRequest);
 	if (limitRequest && limitRequest <= "20") limit = Number(limitRequest);

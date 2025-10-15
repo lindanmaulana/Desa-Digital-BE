@@ -1,4 +1,4 @@
-import { Gender, Marital } from "@prisma/client";
+import { Gender, HeadOfFamily, Marital, Prisma } from "@prisma/client";
 
 export interface HeadOfFamilyResponse {
 	user_id: string;
@@ -12,6 +12,14 @@ export interface HeadOfFamilyResponse {
 	created_at: Date
 	updated_at: Date
 }
+
+export type HeadOfFamilyWithRelations = Prisma.HeadOfFamilyGetPayload<{
+	include: {
+		family_member: true,
+		event_participant: true,
+		sosial_assistance_recipient: true
+	}
+}>
 
 export interface CreateHeadOfFamilyRequest {
 	user_id: string;
