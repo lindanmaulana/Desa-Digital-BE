@@ -1,0 +1,1 @@
+{"version":3,"file":"social-assistance.controller.d.ts","sourceRoot":"","sources":["../../../../src/api/v1/controllers/social-assistance.controller.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AACjD,OAAO,EAAE,cAAc,EAAE,MAAM,6BAA6B,CAAC;AAM7D,qBAAa,0BAA0B;WACzB,MAAM,CAAC,GAAG,EAAE,cAAc,EAAE,GAAG,EAAE,QAAQ,EAAE,IAAI,EAAE,YAAY;CAgB1E"}

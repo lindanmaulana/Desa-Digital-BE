@@ -73,7 +73,7 @@ class AuthController {
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
-                    message: "kode OTP berhasil di kirim",
+                    message: "Kode OTP berhasil di kirim",
                     data: result,
                 });
             }

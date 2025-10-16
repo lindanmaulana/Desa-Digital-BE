@@ -1,12 +1,14 @@
+import { UserRole } from "@prisma/client";
 import { Router } from "express";
 import { authenticatedUser, authorizedRoles } from "../../../../middlewares/auth";
-import { adminRateLimit, publicRateLimit } from "../../../../middlewares/rateLimit";
+import { adminRateLimit } from "../../../../middlewares/rateLimit";
 import controllers from "../../controllers";
-import { UserRole } from "@prisma/client";
 
 const userRouteAdmin = Router()
 
-	userRouteAdmin.post("/staff", authenticatedUser, authorizedRoles(UserRole.ADMIN), publicRateLimit, controllers.UserController.registerStaff)
+	userRouteAdmin.post("/staff/register", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, controllers.UserController.registerStaff)
+	userRouteAdmin.post("/head-of-family/register", authenticatedUser, authorizedRoles(UserRole.ADMIN, UserRole.STAFF), adminRateLimit, controllers.UserController.registerHeadOfFamily)
+
 	userRouteAdmin.delete("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, controllers.UserController.deleteUser);
 
 export default userRouteAdmin

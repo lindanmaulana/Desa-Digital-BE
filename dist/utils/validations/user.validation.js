@@ -19,6 +19,15 @@ UserValidation.REGISTERSTAFF = auth_validation_1.AuthValidation.SIGNUP.extend(zo
     occupation: zod_1.default.string().optional(),
     marital_status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_MARITAL)).optional()
 }).shape);
+UserValidation.REGISTERHEADOFFAMILY = auth_validation_1.AuthValidation.SIGNUP.extend(zod_1.default.object({
+    profile_picture: zod_1.default.string().optional(),
+    identity_number: zod_1.default.string().optional(),
+    gender: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_GENDER)).optional(),
+    date_of_birth: zod_1.default.string().optional(),
+    phone_number: zod_1.default.string().optional(),
+    occupation: zod_1.default.string().optional(),
+    marital_status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_MARITAL)).optional()
+}).shape);
 UserValidation.GETALL = zod_1.default.object({
     keyword: zod_1.default.string().optional(),
     role: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_ROLE)).optional(),

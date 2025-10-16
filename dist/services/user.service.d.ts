@@ -1,9 +1,8 @@
 import { ChangePasswordRequest, GetAllRequest, GetAllUserResponse, RegisterHeadOfFamilyRequest, RegisterStaffRequest, UserResponse } from "../models/user.model";
 import { Token } from "../types/token.type";
 export declare class UserService {
-    static registerStaff(req: RegisterStaffRequest): Promise<UserResponse>;
-    static createHeadOfFamily(req: RegisterHeadOfFamilyRequest): Promise<void>;
-    static createFamilyMember(): Promise<void>;
+    static registerStaffAccount(req: RegisterStaffRequest): Promise<UserResponse>;
+    static registerHeadOfFamilyAccount(req: RegisterHeadOfFamilyRequest): Promise<UserResponse>;
     static getProfile(user: Token): Promise<UserResponse>;
     static getAll(req: GetAllRequest, user: Token): Promise<GetAllUserResponse>;
     static getById(id: string, user: Token): Promise<UserResponse>;

@@ -22,12 +22,29 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.UserService.registerStaff(reqBody);
+                const result = yield services_1.default.UserService.registerStaffAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.CREATED).json({
                     status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
-                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    code: http_status_codes_1.StatusCodes.CREATED,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.create,
                     data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static registerHeadOfFamily(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const reqBody = req.body;
+                const result = yield services_1.default.UserService.registerHeadOfFamilyAccount(reqBody);
+                res.status(http_status_codes_1.StatusCodes.CREATED).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.CREATED,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.create,
+                    data: result
                 });
             }
             catch (err) {

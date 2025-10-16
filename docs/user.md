@@ -118,7 +118,7 @@ Response Body (failed)
 
 ## 4. POST register-staff
 
-Endpoint : /api/v1/admin/users/staff
+Endpoint : /api/v1/admin/users/staff/register
 
 Request Header :
 
@@ -153,6 +153,56 @@ Role :
     /* UserResponse Object */
     "staff": {
       /* StaffResponse Object */
+    }
+  }
+}
+```
+
+Response Body (failed)
+
+```json
+{
+  "errors": "Messagge Error"
+}
+```
+
+## 5. POST register-head-of-family
+
+Endpoint : /api/v1/admin/users/head-of-family/register
+
+Request Header :
+
+- Authrorization : Bearer token
+
+Role :
+
+- ADMIN
+
+  Request Body :
+
+```json
+{
+  "name": "Jhon Doe",
+  "email": "jhondoe@gmail.com",
+  "password": "jhondoe123",
+  "profile_picture": string | optional,
+  "identity_number": string | optional,
+  "gender": string | optional,
+  "date_of_birth": string | optional,
+  "phone_number": string | optional,
+  "occupation": string | optional,
+  "marital_status": string | optional,
+}
+```
+
+    Response Body (success)
+
+```json
+{
+  "data": {
+    /* UserResponse Object */
+    "staff": {
+      /* HeadOfFamily Object */
     }
   }
 }

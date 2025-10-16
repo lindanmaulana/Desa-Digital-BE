@@ -1,5 +1,6 @@
 import { AuthService } from "./auth.service";
 import { EmailService } from "./email.service";
+import { SocialAssistanceService } from "./social-assistance.service";
 import { StaffService } from "./staff.service";
 import { UserService } from "./user.service";
 declare const _default: {
@@ -7,6 +8,7 @@ declare const _default: {
     UserService: typeof UserService;
     EmailService: typeof EmailService;
     StaffService: typeof StaffService;
+    SocialAssistanceService: typeof SocialAssistanceService;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

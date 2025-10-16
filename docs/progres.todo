@@ -3,11 +3,18 @@
 ### ✅ Selesai (DONE)
 [X] 1. AUTH -> service
 [X] 2. USERS -> service
+[X] 3. Unit Testing
+      a. Auth
+        - signin
+        - signup
+        - activation
+        - resend-otp
+
+[X] 4. USERS -> registerStaff
+[X] 5. USERS -> registerHeadOfFamily
 
 ### 📝 Akan Dikerjakan (TODO)
-[ ] 1. USERS -> registerStaff
-[ ] 2. USERS -> registerHeadOfFamily
+[] 1. SOCIAL-ASSISTANCE -> create
 
 ### 🚧 Blocking / Notes
-- register staff, dari user -> createStaff
-- updateUser service
+- cek kembali service resend-otp dll response nya jangan userResponse bahaya

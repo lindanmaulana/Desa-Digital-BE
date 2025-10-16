@@ -24,7 +24,7 @@ const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
 const validation_1 = require("../utils/validations/validation");
 class UserService {
-    static registerStaff(req) {
+    static registerStaffAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
             const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
@@ -42,7 +42,7 @@ class UserService {
                         role: "STAFF",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
-                    }
+                    },
                 });
                 const newStaff = yield tx.staff.create({
                     data: {
@@ -64,11 +64,45 @@ class UserService {
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }
-    static createHeadOfFamily(req) {
-        return __awaiter(this, void 0, void 0, function* () { });
-    }
-    static createFamilyMember() {
-        return __awaiter(this, void 0, void 0, function* () { });
+    static registerHeadOfFamilyAccount(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERHEADOFFAMILY, req);
+            const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
+            if (checkEmailTaken)
+                throw new errors_1.BadrequestError("Email telah digunakan");
+            const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
+            const otp = helpers_1.default.generateOtp();
+            const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b, _c, _d, _e, _f, _g;
+                const newUser = yield tx.user.create({
+                    data: {
+                        email: validateFields.email,
+                        name: validateFields.name,
+                        password: hashPassword,
+                        role: "HEAD_OF_FAMILY",
+                        otp_code: otp,
+                        otp_last_sen_at: new Date(),
+                    },
+                });
+                const newHeadOfFamily = yield tx.headOfFamily.create({
+                    data: {
+                        user_id: newUser.id,
+                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "",
+                        identity_number: (_b = validateFields.identity_number) !== null && _b !== void 0 ? _b : "",
+                        gender: (_c = validateFields.gender) !== null && _c !== void 0 ? _c : undefined,
+                        date_of_birth: (_d = validateFields.date_of_birth) !== null && _d !== void 0 ? _d : null,
+                        phone_number: (_e = validateFields.phone_number) !== null && _e !== void 0 ? _e : "",
+                        occupation: (_f = validateFields.occupation) !== null && _f !== void 0 ? _f : "",
+                        marital_status: (_g = validateFields.marital_status) !== null && _g !== void 0 ? _g : undefined,
+                    },
+                });
+                return { newUser, newHeadOfFamily };
+            }));
+            if (!result)
+                throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
+            yield _1.default.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+            return responses_1.default.userResponse.toUserResponse(result.newUser);
+        });
     }
     static getProfile(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -96,6 +130,18 @@ class UserService {
                                 contains: validateFields.keyword,
                                 mode: "insensitive",
                             },
+                            staff: {
+                                identity_number: {
+                                    contains: validateFields.keyword,
+                                    mode: "insensitive"
+                                }
+                            },
+                            head_of_family: {
+                                identity_number: {
+                                    contains: validateFields.keyword,
+                                    mode: "insensitive"
+                                }
+                            }
                         },
                     ] });
             }

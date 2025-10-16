@@ -265,13 +265,13 @@ model ProfileImage {
 
 model SocialAssistance {
   id String @id @default(uuid())
-  thumbnail String @db.VarChar()
+  thumbnail String? @db.VarChar()
   name String @db.VarChar()
   category CategorySocialAssistance
   amount Decimal @db.Decimal(10, 2)
   provider String @db.VarChar()
-  description String @db.Text
-  is_active Boolean @db.Boolean
+  description String? @db.Text
+  is_active Boolean @db.Boolean @default(false)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

@@ -83,15 +83,11 @@ export class AuthService {
 
 		if (!checkUser) throw new UnauthenticatedError("Email tidak valid atau pengguna telah terhapus");
 
-		const checkUserActivation = await UserRepository.findUserForActivation(checkUser.id);
+		if (checkUser.is_active) throw new BadrequestError("Akun anda sudah aktif");
 
-		if (!checkUserActivation) throw new UnauthenticatedError("Pengguna tidak di temukan");
+		if (checkUser.otp_code !== validateFields.otp_code) throw new BadrequestError("Kode OTP yang Anda masukan salah");
 
-		if (checkUserActivation.is_active) throw new BadrequestError("Akun anda sudah aktif");
-
-		if (checkUserActivation.otp_code !== validateFields.otp_code) throw new BadrequestError("Kode OTP yang Anda masukan salah");
-
-		const result = await UserRepository.updateIsActive(checkUserActivation.id);
+		const result = await UserRepository.updateIsActive(checkUser.id);
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
@@ -103,7 +99,7 @@ export class AuthService {
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
 
-		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
+		if (!checkUser) throw new BadrequestError("Pengguna tidak ditemukan");
 
 		if (checkUser.is_active) throw new BadrequestError("Akun Anda sudah aktif, Tidak dapat mengirim kode OTP");
 

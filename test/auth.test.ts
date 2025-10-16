@@ -1,10 +1,13 @@
-import bcrypt from "bcryptjs";
 import supertest from "supertest";
 import { logger } from "../src/logging";
 import { app } from "../src/web";
 import { UserTest } from "./user.utils";
 
 describe("POST /api/v1/auth/signup", () => {
+	beforeAll(async () => {
+		await UserTest.setupHashedPassword();
+	});
+
 	afterEach(async () => {
 		await UserTest.deleteAdmin();
 	});
@@ -22,13 +25,11 @@ describe("POST /api/v1/auth/signup", () => {
 	});
 
 	it("should signup new user CREDENTIALS", async () => {
-		const response = await supertest(app)
-			.post("/api/v1/auth/signup")
-			.send({
-				name: "admin",
-				email: "admin@gmail.com",
-				password: await bcrypt.hash("admin123", 4),
-			});
+		const response = await supertest(app).post("/api/v1/auth/signup").send({
+			name: "admin",
+			email: "admin@gmail.com",
+			password: UserTest.HASHED_PASSWORD_USERTEST,
+		});
 
 		logger.debug(response.body);
 		expect(response.status).toBe(201);
@@ -42,10 +43,14 @@ describe("POST /api/v1/auth/signup", () => {
 		expect(typeof response.body.data.id).toBe("string");
 
 		expect(response.body.data).not.toHaveProperty("password");
-	});
+	}, 20000);
 });
 
 describe("POST /api/v1/auth/signin", () => {
+	beforeAll(async () => {
+		await UserTest.setupHashedPassword();
+	});
+
 	beforeEach(async () => {
 		await UserTest.createUserTest();
 		await UserTest.createUserTestActive();
@@ -97,7 +102,7 @@ describe("POST /api/v1/auth/signin", () => {
 	it("Should be able signin", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signin").send({
 			email: "useractive@gmail.com",
-			password: "useractive123",
+			password: "usertest123",
 		});
 
 		logger.debug(response.body);
@@ -114,6 +119,21 @@ describe("POST /api/v1/auth/signin", () => {
 		expect(typeof response.body.data.token).toBe("string");
 
 		expect(response.body.data).not.toHaveProperty("password");
+	});
+});
+
+describe("POST /api/v1/auth/verify-account", () => {
+	beforeAll(async () => {
+		await UserTest.setupHashedPassword();
+	});
+
+	beforeEach(async () => {
+		await UserTest.createUserTestActive();
+		await UserTest.createUserTestOtp();
+	});
+
+	afterEach(async () => {
+		await UserTest.deleteUserTest();
 	});
 
 	it("Should reject activation if request body invalid", async () => {
@@ -154,5 +174,76 @@ describe("POST /api/v1/auth/signin", () => {
 		expect(response.body.errors).toBe("Akun anda sudah aktif");
 	});
 
-	// it("Should reject activation if otp_code invalid", async () => {});
+	it("Should reject activation if otp_code invalid", async () => {
+		const response = await supertest(app).post("/api/v1/auth/verify-account").send({
+			email: "userotp@gmail.com",
+			otp_code: "239887",
+		});
+
+		logger.debug(response.body);
+		expect(response.status).toBe(400);
+
+		expect(response.body.errors).toBeDefined();
+		expect(response.body).toHaveProperty("errors", "Kode OTP yang Anda masukan salah");
+	});
+
+	it("Should be able user active after verify code otp", async () => {
+		const response = await supertest(app).post("/api/v1/auth/verify-account").send({
+			email: "userotp@gmail.com",
+			otp_code: "223344",
+		});
+
+		logger.debug(response.body);
+		expect(response.status).toBe(200);
+
+		expect(response.body).toHaveProperty("status", "success");
+		expect(response.body).toHaveProperty("code", 200);
+		expect(response.body).toHaveProperty("message", "Aktivasi akun berhasil");
+		expect(response.body.data).toBeDefined();
+		expect(response.body.data).toHaveProperty("is_active", true);
+
+		expect(response.body.data).not.toHaveProperty("password");
+	});
+});
+
+describe("POST /api/v1/auth/resend-otp", () => {
+	beforeAll(async () => {
+		await UserTest.setupHashedPassword();
+	});
+
+	beforeEach(async () => {
+		await UserTest.createUserTestOtp();
+	});
+
+	afterEach(async () => {
+		await UserTest.deleteUserTest();
+	});
+
+	it("Should reject if email account notfound", async () => {
+		const response = await supertest(app).post("/api/v1/auth/resend-otp").send({
+			email: "example@gmail.com"
+		})
+
+		logger.debug(response.body)
+		expect(response.status).toBe(400)
+
+		expect(response.body.errors).toBeDefined()
+		expect(response.body).toHaveProperty("errors", "Pengguna tidak ditemukan")
+	})
+
+	it("Should be able receive otp_code", async () => {
+		const response = await supertest(app).post("/api/v1/auth/resend-otp").send({
+			email: "userotp@gmail.com"
+		})
+
+		logger.debug(response.body)
+		expect(response.status).toBe(200)
+
+		expect(response.body).toHaveProperty("status", "success")
+		expect(response.body).toHaveProperty("code", 200)
+		expect(response.body).toHaveProperty("message", "Kode OTP berhasil di kirim")
+		expect(response.body.data).toBeDefined()
+
+		expect(response.body.data).not.toHaveProperty("password")
+	}, 20000)
 });

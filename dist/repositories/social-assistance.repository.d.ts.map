@@ -1,0 +1,1 @@
+{"version":3,"file":"social-assistance.repository.d.ts","sourceRoot":"","sources":["../../src/repositories/social-assistance.repository.ts"],"names":[],"mappings":"AAAA,OAAO,EAA4B,MAAM,EAAE,MAAM,gBAAgB,CAAC;AAIlE,qBAAa,0BAA0B;WACzB,MAAM,CAAC,IAAI,EAAE,MAAM,CAAC,0BAA0B;;;;;;;;;;;;WAI9C,WAAW,CAAC,IAAI,EAAE,MAAM;CAYrC"}

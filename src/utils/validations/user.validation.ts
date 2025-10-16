@@ -1,6 +1,5 @@
 import z from "zod";
 import { AuthValidation } from "./auth.validation";
-import { StaffValidation } from "./staff.validation";
 import { VALID_GENDER, VALID_MARITAL, VALID_ROLE } from "./validation";
 
 export class UserValidation {
@@ -12,6 +11,16 @@ export class UserValidation {
 			phone_number: z.string().optional(),
 			occupation: z.string().optional(),
 			marital_status: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_MARITAL)).optional()
+	}).shape)
+
+	static readonly REGISTERHEADOFFAMILY = AuthValidation.SIGNUP.extend(z.object({
+		profile_picture: z.string().optional(),
+		identity_number: z.string().optional(),
+		gender: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_GENDER)).optional(),
+		date_of_birth: z.string().optional(),
+		phone_number: z.string().optional(),
+		occupation: z.string().optional(),
+		marital_status: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_MARITAL)).optional()
 	}).shape)
 
 	static readonly GETALL = z.object({

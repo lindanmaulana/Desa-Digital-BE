@@ -5,7 +5,7 @@ import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
 import { Token } from "../../../types/token.type";
-import { ChangePasswordRequest, GetAllRequest, RegisterStaffRequest } from "../../../models/user.model";
+import { ChangePasswordRequest, GetAllRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
 
 export class UserController {
 
@@ -13,13 +13,30 @@ export class UserController {
 		try {
 			const reqBody = req.body as RegisterStaffRequest
 
-			const result = await services.UserService.registerStaff(reqBody)
+			const result = await services.UserService.registerStaffAccount(reqBody)
 
 			res.status(StatusCodes.CREATED).json({
 				status: "success",
-				code: StatusCodes.OK,
-				message: RESPONSE_MESSAGE.success.read,
+				code: StatusCodes.CREATED,
+				message: RESPONSE_MESSAGE.success.create,
 				data: result,
+			})
+		} catch (err) {
+			next(err)
+		}
+	}
+
+	static async registerHeadOfFamily(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const reqBody = req.body as RegisterHeadOfFamilyRequest
+
+			const result = await services.UserService.registerHeadOfFamilyAccount(reqBody)
+
+			res.status(StatusCodes.CREATED).json({
+				status: "success",
+				code: StatusCodes.CREATED,
+				message: RESPONSE_MESSAGE.success.create,
+				data: result
 			})
 		} catch (err) {
 			next(err)

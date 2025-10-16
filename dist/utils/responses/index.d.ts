@@ -9,6 +9,10 @@ declare const _default: {
         toStaffResponse: (staff: import("@prisma/client").Staff) => import("../../models/staff.model").StaffResponse;
         toStaffResponses: (staff: import("@prisma/client").Staff[]) => import("../../models/staff.model").StaffResponse[];
     };
+    socialAssistanceResponse: {
+        toSocialAssistanceResponse: (socialAssistance: import("@prisma/client").SocialAssistance) => import("../../models/social-assistance.model").SocialAssistanceResponse;
+        toSocialAssistanceResponses: (socialAssistances: import("@prisma/client").SocialAssistance[]) => import("../../models/social-assistance.model").SocialAssistanceResponse[];
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

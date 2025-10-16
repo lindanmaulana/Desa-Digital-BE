@@ -20,7 +20,7 @@ import { UserValidation } from "../utils/validations/user.validation";
 import { validation } from "../utils/validations/validation";
 
 export class UserService {
-	static async registerStaff(req: RegisterStaffRequest): Promise<UserResponse> {
+	static async registerStaffAccount(req: RegisterStaffRequest): Promise<UserResponse> {
 		const validateFields = validation.validate(UserValidation.REGISTERSTAFF, req);
 
 		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
@@ -39,7 +39,7 @@ export class UserService {
 					role: "STAFF",
 					otp_code: otp,
 					otp_last_sen_at: new Date(),
-				}
+				},
 			});
 
 			const newStaff = await tx.staff.create({
@@ -65,9 +65,50 @@ export class UserService {
 		return responses.userResponse.toUserResponse(result.newUser);
 	}
 
-	static async createHeadOfFamily(req: RegisterHeadOfFamilyRequest) {}
+	static async registerHeadOfFamilyAccount(req: RegisterHeadOfFamilyRequest) {
+		const validateFields = validation.validate(UserValidation.REGISTERHEADOFFAMILY, req);
 
-	static async createFamilyMember() {}
+		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
+
+		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
+
+		const hashPassword = await helpers.hashPassword(validateFields.password);
+		const otp = helpers.generateOtp();
+
+		const result = await prismaClient.$transaction(async (tx) => {
+			const newUser = await tx.user.create({
+				data: {
+					email: validateFields.email,
+					name: validateFields.name,
+					password: hashPassword,
+					role: "HEAD_OF_FAMILY",
+					otp_code: otp,
+					otp_last_sen_at: new Date(),
+				},
+			});
+
+			const newHeadOfFamily = await tx.headOfFamily.create({
+				data: {
+					user_id: newUser.id,
+					profile_picture: validateFields.profile_picture ?? "",
+					identity_number: validateFields.identity_number ?? "",
+					gender: (validateFields.gender as Gender) ?? undefined,
+					date_of_birth: validateFields.date_of_birth ?? null,
+					phone_number: validateFields.phone_number ?? "",
+					occupation: validateFields.occupation ?? "",
+					marital_status: (validateFields.marital_status as Marital) ?? undefined,
+				},
+			});
+
+			return {newUser, newHeadOfFamily}
+		});
+
+		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later")
+
+		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser)
+
+		return responses.userResponse.toUserResponse(result.newUser)
+	}
 
 	static async getProfile(user: Token): Promise<UserResponse> {
 		const checkUser = await UserRepository.findById(user.id);
@@ -86,14 +127,12 @@ export class UserService {
 		let whereCondition: Prisma.UserWhereInput = {};
 
 		if (!fullAccess) {
-
 			whereCondition = {
 				...whereCondition,
 				role: {
 					notIn: hiddenRoles,
 				},
 			};
-
 		}
 
 		if (validateFields.keyword) {
@@ -105,6 +144,20 @@ export class UserService {
 							contains: validateFields.keyword,
 							mode: "insensitive",
 						},
+
+						staff: {
+							identity_number: {
+								contains: validateFields.keyword,
+								mode: "insensitive"
+							}
+						},
+
+						head_of_family: {
+							identity_number: {
+								contains: validateFields.keyword,
+								mode: "insensitive"
+							}
+						}
 					},
 				],
 			};
@@ -145,7 +198,7 @@ export class UserService {
 			include: {
 				staff: true,
 			},
-		}
+		};
 
 		const result = await UserRepository.findAll(conditionsFindMany);
 

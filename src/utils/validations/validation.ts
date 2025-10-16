@@ -1,9 +1,10 @@
-import { Gender, Marital, UserRole } from "@prisma/client";
+import { CategorySocialAssistance, Gender, Marital, UserRole } from "@prisma/client";
 import { ZodType } from "zod";
 
 export const VALID_GENDER = Object.values(Gender) as [string, ...string[]]
 export const VALID_MARITAL = Object.values(Marital) as [string, ...string[]]
 export const VALID_ROLE = Object.values(UserRole) as [string, ...string[]]
+export const VALID_CATEGORY_SOCIAL_ASSISTANCE = Object.values(CategorySocialAssistance) as [string, ...string[]]
 
 
 export class validation {
