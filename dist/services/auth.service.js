@@ -99,7 +99,10 @@ class AuthService {
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
-            return responses_1.default.userResponse.toUserResponse(result);
+            return {
+                email: result.email,
+                otp_last_sent_at: new Date()
+            };
         });
     }
     static forgotPassword(req) {
@@ -114,7 +117,10 @@ class AuthService {
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
-            return responses_1.default.userResponse.toUserResponse(result);
+            return {
+                email: result.email,
+                otp_last_sent_at: new Date()
+            };
         });
     }
     static matchOtp(req) {

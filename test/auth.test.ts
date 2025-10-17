@@ -241,8 +241,11 @@ describe("POST /api/v1/auth/resend-otp", () => {
 
 		expect(response.body).toHaveProperty("status", "success")
 		expect(response.body).toHaveProperty("code", 200)
-		expect(response.body).toHaveProperty("message", "Kode OTP berhasil di kirim")
+		expect(response.body).toHaveProperty("message", "Kode verifikasi telah dikirimkan. Cek email Anda.")
 		expect(response.body.data).toBeDefined()
+
+		expect(response.body.data).toHaveProperty("email")
+		expect(response.body.data).toHaveProperty("otp_last_sent_at")
 
 		expect(response.body.data).not.toHaveProperty("password")
 	}, 20000)

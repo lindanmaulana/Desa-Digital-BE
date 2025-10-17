@@ -75,8 +75,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const params = req.params;
-                const token = req.user;
-                const result = yield services_1.default.UserService.getById(params.id, token);
+                const result = yield services_1.default.UserService.getById(params.id);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,

@@ -5,7 +5,7 @@ import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
 import { Token } from "../../../types/token.type";
-import { ChangePasswordRequest, GetAllRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
+import { ChangePasswordRequest, GetAllUserRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
 
 export class UserController {
 
@@ -46,7 +46,7 @@ export class UserController {
 	static async getUsers(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const token = req.user as Token;
-			const reqParams = req.query as GetAllRequest
+			const reqParams = req.query as GetAllUserRequest
 
 			const result = await services.UserService.getAll(reqParams, token);
 
@@ -65,9 +65,8 @@ export class UserController {
 	static async getUserById(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const params = req.params as { id: string };
-			const token = req.user as Token;
 
-			const result = await services.UserService.getById(params.id, token!);
+			const result = await services.UserService.getById(params.id);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

@@ -1,5 +1,6 @@
 import { CategorySocialAssistance } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
+import { PaginationResponse } from "./pagination.model";
 export interface SocialAssistanceResponse {
     id: string;
     thumbnail?: string | null;
@@ -20,5 +21,16 @@ export interface CreateSocialAssistanceRequest {
     provider: string;
     description?: string;
     is_active: string;
+}
+export interface GetAllSocialAssistanceRequest {
+    keyword?: string;
+    category?: CategorySocialAssistance;
+    is_active?: string;
+    page?: string;
+    limit?: string;
+}
+export interface GetAllSocialAssistanceUserResponse {
+    data: SocialAssistanceResponse[];
+    pagination: PaginationResponse;
 }
 //# sourceMappingURL=social-assistance.model.d.ts.map

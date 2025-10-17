@@ -12,9 +12,11 @@
 
 [X] 4. USERS -> registerStaff
 [X] 5. USERS -> registerHeadOfFamily
+[X] 6. SOCIAL-ASSISTANCE -> create
 
 ### 📝 Akan Dikerjakan (TODO)
-[] 1. SOCIAL-ASSISTANCE -> create
+[] 2. SOCIAL-ASSISTANCE -> getAll
+[] 3. SOCIAL-ASSISTANCE -> update
 
 ### 🚧 Blocking / Notes
 - cek kembali service resend-otp dll response nya jangan userResponse bahaya

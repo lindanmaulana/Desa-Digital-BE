@@ -26,8 +26,18 @@ export interface ResendOtpRequest {
 	email: string
 }
 
+export interface ResendOtpResponse {
+	email: string
+	otp_last_sent_at: Date
+}
+
 export interface ForgotPasswordRequest {
 	email: string
+}
+
+export interface ForgotPasswordResponse {
+	email: string
+	otp_last_sent_at: Date
 }
 
 export interface MatchOtpRequest {

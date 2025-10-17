@@ -13,17 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceService = void 0;
+const client_1 = require("@prisma/client");
 const social_assistance_repository_1 = require("../repositories/social-assistance.repository");
 const errors_1 = require("../utils/errors");
 const responses_1 = __importDefault(require("../utils/responses"));
 const social_assistance_validation_1 = require("../utils/validations/social-assistance.validation");
 const validation_1 = require("../utils/validations/validation");
+const helpers_1 = __importDefault(require("../utils/helpers"));
+const response_message_type_1 = require("../utils/response-message.type");
 class SocialAssistanceService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
             const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.CREATE, req);
-            if (Number(validateFields.amount) < 0)
+            if (validateFields.amount && Number(validateFields.amount) < 0)
                 throw new errors_1.BadrequestError("Nominal bantuan tidak valid");
             const result = yield social_assistance_repository_1.SocialAssistanceRepository.create({
                 data: {
@@ -39,6 +42,55 @@ class SocialAssistanceService {
             if (!result)
                 throw new errors_1.InternalServerError("Pembuatan bantuan sosial gagal, please try again later");
             return responses_1.default.socialAssistanceResponse.toSocialAssistanceResponse(result);
+        });
+    }
+    static getAll(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.GETALL, req);
+            let whereCondition = {};
+            if (validateFields.keyword) {
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { OR: [
+                        {
+                            name: {
+                                contains: validateFields.keyword,
+                                mode: "insensitive"
+                            },
+                            provider: {
+                                contains: validateFields.keyword,
+                                mode: "insensitive"
+                            }
+                        }
+                    ] });
+            }
+            if (validateFields.category && Object.values(client_1.CategorySocialAssistance).includes(validateFields.category)) {
+                const searchCategory = validateFields.category;
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { category: searchCategory });
+            }
+            if (validateFields.is_active) {
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: validateFields.is_active === "true" });
+            }
+            let conditionCount = { where: whereCondition };
+            const count = yield social_assistance_repository_1.SocialAssistanceRepository.findCount(conditionCount);
+            const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = helpers_1.default.getPagination({ count, pageRequest: validateFields.page, limitRequest: validateFields.limit });
+            let conditionFindAll = {
+                where: whereCondition,
+                skip: limit * (page - 1),
+                take: limit,
+            };
+            const result = yield social_assistance_repository_1.SocialAssistanceRepository.findAll(conditionFindAll);
+            if (!result)
+                throw new errors_1.InternalServerError(`${response_message_type_1.RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`);
+            return {
+                data: responses_1.default.socialAssistanceResponse.toSocialAssistanceResponses(result),
+                pagination: {
+                    total_page: totalPage,
+                    limit,
+                    current_page: currentPage,
+                    next_page: nextPage,
+                    prev_page: prevPage,
+                    links: links
+                }
+            };
         });
     }
 }

@@ -3,12 +3,11 @@ import services from ".";
 import { prismaClient } from "../db";
 import {
 	ChangePasswordRequest,
-	GetAllRequest,
+	GetAllUserRequest,
 	GetAllUserResponse,
 	RegisterHeadOfFamilyRequest,
 	RegisterStaffRequest,
-	UserResponse,
-	UserWithRelations,
+	UserResponse
 } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
 import { Token } from "../types/token.type";
@@ -118,7 +117,7 @@ export class UserService {
 		return responses.userResponse.toUserResponse(checkUser);
 	}
 
-	static async getAll(req: GetAllRequest, user: Token): Promise<GetAllUserResponse> {
+	static async getAll(req: GetAllUserRequest, user: Token): Promise<GetAllUserResponse> {
 		const validateFields = validation.validate(UserValidation.GETALL, req);
 
 		const hiddenRoles = [UserRole.ADMIN];
@@ -191,16 +190,17 @@ export class UserService {
 			limitRequest: validateFields.limit,
 		});
 
-		let conditionsFindMany: Prisma.UserFindManyArgs = {
+		let conditionsFindAll: Prisma.UserFindManyArgs = {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
 			include: {
 				staff: true,
+				head_of_family: true
 			},
 		};
 
-		const result = await UserRepository.findAll(conditionsFindMany);
+		const result = await UserRepository.findAll(conditionsFindAll);
 
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later!");
 
@@ -217,15 +217,14 @@ export class UserService {
 		};
 	}
 
-	static async getById(id: string, user: Token): Promise<UserResponse> {
+	static async getById(id: string): Promise<UserResponse> {
 		const result = await UserRepository.findById(id);
 
 		if (!result) throw new NotfoundError(`Pengguna tidak ditemukan`);
 
-		if (user.role !== "ADMIN" && user.role !== "STAFF")
-			if (result.role === "ADMIN" || result.role === "STAFF") throw new BadrequestError("Pengguna tidak ditemukan");
+		if (result.role === "ADMIN") throw new BadrequestError("Pengguna tidak ditemukan");
 
-		return responses.userResponse.toUserResponse(result);
+		return responses.userResponse.toUserResponseWithRelation(result);
 	}
 
 	static async update() {}

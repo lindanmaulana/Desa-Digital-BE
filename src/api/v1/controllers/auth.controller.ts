@@ -68,7 +68,7 @@ export class AuthController {
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
-				message: "Kode OTP berhasil di kirim",
+				message: "Kode verifikasi telah dikirimkan. Cek email Anda.",
 				data: result,
 			});
 		} catch (err) {

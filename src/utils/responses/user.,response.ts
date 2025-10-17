@@ -45,7 +45,6 @@ const toUserResponseWithRelation = (user: UserWithRelations): UserResponseWithRe
 	};
 };
 
-type UserResponses = Prisma.PromiseReturnType<typeof prismaClient.user.findMany> extends (infer T)[] ? T : never;
 
 const toUserResponses = (users: User[]): UserResponse[] => {
 	return users.map((user) => ({
@@ -82,6 +81,20 @@ const toUserResponsesWithRelation = (users: UserWithRelations[]): UserResponseWi
 			marital_status: user.staff.marital_status,
 			created_at: user.staff.created_at,
 			updated_at: user.staff.updated_at,
+		},
+
+		head_of_family: user.head_of_family && {
+			id: user.head_of_family.id,
+			user_id: user.head_of_family.user_id,
+			profile_picture: user.head_of_family.profile_picture ?? "",
+			identity_number: user.head_of_family.identity_number ?? "",
+			gender: user.head_of_family.gender,
+			date_of_birth: user.head_of_family.date_of_birth?.toString() ?? "",
+			phone_number: user.head_of_family.phone_number ?? "",
+			occupation: user.head_of_family.occupation ?? "",
+			marital_status: user.head_of_family.marital_status,
+			created_at: user.head_of_family.created_at,
+			updated_at: user.head_of_family.updated_at,
 		},
 
 		created_at: user.created_at,

@@ -2,9 +2,11 @@ import services from ".";
 import {
 	ActivationRequest,
 	ForgotPasswordRequest,
+	ForgotPasswordResponse,
 	MatchOtpRequest,
 	MathOtpResponse,
 	ResendOtpRequest,
+	ResendOtpResponse,
 	ResetPasswordRequest,
 	SigninRequest,
 	SigninResponse,
@@ -94,7 +96,7 @@ export class AuthService {
 		return responses.userResponse.toUserResponse(result);
 	}
 
-	static async resendOtp(req: ResendOtpRequest): Promise<UserResponse> {
+	static async resendOtp(req: ResendOtpRequest): Promise<ResendOtpResponse> {
 		const validateFields = validation.validate(AuthValidation.RESENDOTP, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
@@ -128,10 +130,13 @@ export class AuthService {
 
 		await services.EmailService.SendOtpMail(validateFields.email, valueOTP);
 
-		return responses.userResponse.toUserResponse(result);
+		return {
+			email: result.email,
+			otp_last_sent_at: new Date()
+		};
 	}
 
-	static async forgotPassword(req: ForgotPasswordRequest): Promise<UserResponse> {
+	static async forgotPassword(req: ForgotPasswordRequest): Promise<ForgotPasswordResponse> {
 		const validateFields = validation.validate(AuthValidation.FORGOTPASSWORD, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
@@ -151,7 +156,10 @@ export class AuthService {
 
 		await services.EmailService.SendOtpMail(validateFields.email, valueOTP);
 
-		return responses.userResponse.toUserResponse(result);
+		return {
+			email: result.email,
+			otp_last_sent_at: new Date()
+		};
 	}
 
 	static async matchOtp(req: MatchOtpRequest): Promise<MathOtpResponse> {

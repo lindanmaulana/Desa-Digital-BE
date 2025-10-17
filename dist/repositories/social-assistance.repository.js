@@ -17,6 +17,21 @@ class SocialAssistanceRepository {
             return db_1.prismaClient.socialAssistance.create(args);
         });
     }
+    static findAll(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c;
+            return db_1.prismaClient.socialAssistance.findMany({
+                where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
+                skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
+                take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
+            });
+        });
+    }
+    static findCount(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.socialAssistance.count(args);
+        });
+    }
     static isNameTaken(name) {
         return __awaiter(this, void 0, void 0, function* () {
             const count = yield db_1.prismaClient.socialAssistance.count({

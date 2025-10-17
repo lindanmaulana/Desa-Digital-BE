@@ -1,9 +1,10 @@
 import { NextFunction, Response } from "express";
 import { CustomeRequest } from "../../../types/express.type";
-import { CreateSocialAssistanceRequest } from "../../../models/social-assistance.model";
+import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest } from "../../../models/social-assistance.model";
 import services from "../../../services";
 import { StatusCodes } from "http-status-codes";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
+import { logger } from "../../../logging";
 
 export class SocialAssistanceController {
 	static async create(req: CustomeRequest, res: Response, next: NextFunction) {
@@ -20,6 +21,24 @@ export class SocialAssistanceController {
 			});
 		} catch (err) {
 			next(err);
+		}
+	}
+
+	static async getSocialAssistances(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const reqBody = req.query as GetAllSocialAssistanceRequest;
+
+			const result = await services.SocialAssistanceService.getAll(reqBody);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.CREATED,
+				message: RESPONSE_MESSAGE.success.create,
+				data: result.data,
+				pagination: result.pagination
+			});
+		} catch (err) {
+			next(err)
 		}
 	}
 }

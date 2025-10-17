@@ -53,7 +53,7 @@ const toUserResponses = (users) => {
 };
 const toUserResponsesWithRelation = (users) => {
     return users.map((user) => {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         return ({
             id: user.id,
             name: user.name,
@@ -73,6 +73,19 @@ const toUserResponsesWithRelation = (users) => {
                 marital_status: user.staff.marital_status,
                 created_at: user.staff.created_at,
                 updated_at: user.staff.updated_at,
+            },
+            head_of_family: user.head_of_family && {
+                id: user.head_of_family.id,
+                user_id: user.head_of_family.user_id,
+                profile_picture: (_g = user.head_of_family.profile_picture) !== null && _g !== void 0 ? _g : "",
+                identity_number: (_h = user.head_of_family.identity_number) !== null && _h !== void 0 ? _h : "",
+                gender: user.head_of_family.gender,
+                date_of_birth: (_k = (_j = user.head_of_family.date_of_birth) === null || _j === void 0 ? void 0 : _j.toString()) !== null && _k !== void 0 ? _k : "",
+                phone_number: (_l = user.head_of_family.phone_number) !== null && _l !== void 0 ? _l : "",
+                occupation: (_m = user.head_of_family.occupation) !== null && _m !== void 0 ? _m : "",
+                marital_status: user.head_of_family.marital_status,
+                created_at: user.head_of_family.created_at,
+                updated_at: user.head_of_family.updated_at,
             },
             created_at: user.created_at,
             updated_at: user.updated_at,

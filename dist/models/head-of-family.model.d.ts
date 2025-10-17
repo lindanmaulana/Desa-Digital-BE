@@ -4,7 +4,7 @@ export interface HeadOfFamilyResponse {
     profile_picture?: string;
     identity_number?: string;
     gender: Gender;
-    date_of_birth?: Date;
+    date_of_birth?: string;
     phone_number?: string;
     occupation?: string;
     marital_status: Marital;

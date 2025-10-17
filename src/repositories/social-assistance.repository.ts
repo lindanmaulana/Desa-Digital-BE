@@ -1,10 +1,21 @@
-import { CategorySocialAssistance, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
-import { CreateSocialAssistanceRequest } from "../models/social-assistance.model";
 
 export class SocialAssistanceRepository {
 	static async create(args: Prisma.SocialAssistanceCreateArgs) {
 		return prismaClient.socialAssistance.create(args);
+	}
+
+	static async findAll(args: Prisma.SocialAssistanceFindManyArgs) {
+		return prismaClient.socialAssistance.findMany({
+			where: args.where ?? {},
+			skip: args.skip ?? 0,
+			take: args.take ?? 5,
+		})
+	}
+
+	static async findCount(args: Prisma.SocialAssistanceCountArgs) {
+		return prismaClient.socialAssistance.count(args)
 	}
 
 	static async isNameTaken(name: string) {

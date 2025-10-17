@@ -36,6 +36,7 @@ class UserRepository {
                 },
                 include: {
                     staff: true,
+                    head_of_family: true
                 }
             });
         });

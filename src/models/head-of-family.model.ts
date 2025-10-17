@@ -1,11 +1,11 @@
-import { Gender, HeadOfFamily, Marital, Prisma } from "@prisma/client";
+import { Gender, Marital, Prisma } from "@prisma/client";
 
 export interface HeadOfFamilyResponse {
 	user_id: string;
 	profile_picture?: string;
 	identity_number?: string;
 	gender: Gender;
-	date_of_birth?: Date;
+	date_of_birth?: string;
 	phone_number?: string;
 	occupation?: string;
 	marital_status: Marital;

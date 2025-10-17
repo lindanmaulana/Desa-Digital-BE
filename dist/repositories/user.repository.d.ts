@@ -17,6 +17,19 @@ export declare class UserRepository {
             occupation: string | null;
             marital_status: import("@prisma/client").$Enums.Marital;
         } | null;
+        head_of_family: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            user_id: string;
+            profile_picture: string | null;
+            identity_number: string | null;
+            gender: import("@prisma/client").$Enums.Gender;
+            date_of_birth: Date | null;
+            phone_number: string | null;
+            occupation: string | null;
+            marital_status: import("@prisma/client").$Enums.Marital;
+        } | null;
     } & {
         name: string;
         id: string;

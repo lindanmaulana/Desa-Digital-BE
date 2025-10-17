@@ -167,7 +167,8 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   ```json
   {
     "data": {
-      /* userResponse Object */
+      "email": "jhondoe@gmail.com",
+      "otp_last_sent_at": "Date"
     }
   }
   ```
@@ -197,7 +198,8 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
   ```json
   {
     "data": {
-      /* UserResponse Object */
+      "email": "jhondoe@gmail.com",
+      "otp_last_sent_at": "Date"
     }
   }
   ```

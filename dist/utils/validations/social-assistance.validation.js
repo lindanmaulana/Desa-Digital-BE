@@ -20,4 +20,13 @@ SocialAssistanceValidation.CREATE = zod_1.default.object({
         error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
     })
 });
+SocialAssistanceValidation.GETALL = zod_1.default.object({
+    keyword: zod_1.default.string().optional(),
+    category: zod_1.default.string().transform((v) => v.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
+    is_active: zod_1.default.string().refine((val) => val.toLowerCase() === "true" || val.toLowerCase() === "false", {
+        error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
+    }).optional(),
+    page: zod_1.default.string().optional(),
+    limit: zod_1.default.string().optional()
+});
 //# sourceMappingURL=social-assistance.validation.js.map

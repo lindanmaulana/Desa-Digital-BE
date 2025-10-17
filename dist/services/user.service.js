@@ -160,15 +160,16 @@ class UserService {
                 pageRequest: validateFields.page,
                 limitRequest: validateFields.limit,
             });
-            let conditionsFindMany = {
+            let conditionsFindAll = {
                 where: whereCondition,
                 skip: limit * (page - 1),
                 take: limit,
                 include: {
                     staff: true,
+                    head_of_family: true
                 },
             };
-            const result = yield user_repository_1.UserRepository.findAll(conditionsFindMany);
+            const result = yield user_repository_1.UserRepository.findAll(conditionsFindAll);
             if (!result)
                 throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
             return {
@@ -184,15 +185,14 @@ class UserService {
             };
         });
     }
-    static getById(id, user) {
+    static getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield user_repository_1.UserRepository.findById(id);
             if (!result)
                 throw new errors_1.NotfoundError(`Pengguna tidak ditemukan`);
-            if (user.role !== "ADMIN" && user.role !== "STAFF")
-                if (result.role === "ADMIN" || result.role === "STAFF")
-                    throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
-            return responses_1.default.userResponse.toUserResponse(result);
+            if (result.role === "ADMIN")
+                throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
+            return responses_1.default.userResponse.toUserResponseWithRelation(result);
         });
     }
     static update() {
