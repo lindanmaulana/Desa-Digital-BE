@@ -1,5 +1,6 @@
 import z from "zod";
 import { VALID_CATEGORY_SOCIAL_ASSISTANCE } from "./validation";
+import { CategorySocialAssistance } from "@prisma/client";
 
 export class SocialAssistanceValidation {
 		static readonly GETALL = z.object({
@@ -27,13 +28,26 @@ export class SocialAssistanceValidation {
 	static readonly UPDATE = z.object({
 		thumbnail: z.string().optional(),
 		name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
-		category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)),
-		amount: z.string().nonempty({error: "Nomimal bantuan tidak boleh kosong"}),
+		category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
+		amount: z.coerce.number({error: "Nomimal harus berupa angka"}).int().positive().min(1, "Nominal bantuan tidak boleh kosong").optional(),
 		provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
 		description: z.string().optional(),
-		is_active: z.string().refine((val) => val.toLocaleLowerCase() === "true" || val.toLocaleLowerCase() === "false", {
-			error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
-		})
+
+		is_active: z.preprocess((val) => {
+			if (typeof val === "string") {
+				const lowerCaseVal = val.toLocaleLowerCase()
+
+				return lowerCaseVal === "true"
+			}
+
+			return val
+		}, z.boolean())
 	})
 
 }
+
+export type ValidatedFieldsUpdate = z.infer<typeof SocialAssistanceValidation.UPDATE>
+
+		// is_active: z.string().refine((val) => val.toLocaleLowerCase() === "true" || val.toLocaleLowerCase() === "false", {
+		// 	error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
+		// })

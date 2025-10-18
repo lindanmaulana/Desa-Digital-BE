@@ -1,12 +1,12 @@
 import { CategorySocialAssistance, Prisma } from "@prisma/client";
-import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../models/social-assistance.model";
+import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest, UpdateSocialAssistanceSchema } from "../models/social-assistance.model";
 import { SocialAssistanceRepository } from "../repositories/social-assistance.repository";
 import { BadrequestError, InternalServerError } from "../utils/errors";
-import responses from "../utils/responses";
-import { SocialAssistanceValidation } from "../utils/validations/social-assistance.validation";
-import { validation } from "../utils/validations/validation";
 import helpers from "../utils/helpers";
 import { RESPONSE_MESSAGE } from "../utils/response-message.type";
+import responses from "../utils/responses";
+import { SocialAssistanceValidation, ValidatedFieldsUpdate } from "../utils/validations/social-assistance.validation";
+import { validation } from "../utils/validations/validation";
 
 export class SocialAssistanceService {
 	static async create(req: CreateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
@@ -97,30 +97,34 @@ export class SocialAssistanceService {
 		}
 	}
 
-	static async update(req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
-		const validateFields = validation.validate(SocialAssistanceValidation.UPDATE, req)
+	static async update(id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
+		const validateFields: ValidatedFieldsUpdate = validation.validate(SocialAssistanceValidation.UPDATE, req)
 
-		let updateData: Partial<UpdateSocialAssistanceRequest> = {}
+		let updateData: Partial<UpdateSocialAssistanceSchema> = {}
 
-		if (validateFields.name) {
-			updateData = {
-				...updateData,
-				name: validateFields.name,
-			}
+		if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail
+
+		if (validateFields.name) updateData.name = validateFields.name
+
+		if (validateFields.category !== undefined && validateFields.category !== null) updateData.category = validateFields.category
+
+		if (validateFields.provider) updateData.provider = validateFields.provider
+
+		if (validateFields.amount && validateFields.amount > 0) updateData.amount = validateFields.amount
+
+		if (validateFields.description) updateData.description = validateFields.description
+
+		if (!validateFields.is_active === undefined && !validateFields.is_active === null) updateData.is_active = validateFields.is_active
+
+		const conditions: Prisma.SocialAssistanceUpdateArgs = {
+			where: {id},
+			data: updateData
 		}
 
-		if (validateFields.category && Object.values(CategorySocialAssistance).includes(validateFields.category as CategorySocialAssistance)) {
-			updateData = {
-				...updateData,
-				category: validateFields.category
-			}
-		}
+		const result = await SocialAssistanceRepository.update(conditions)
 
-		if (validateFields.provider) {
-			updateData = {
-				...updateData,
-				provider: validateFields.provider
-			}
-		}
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat update data, please try again later")
+
+		return responses.socialAssistanceResponse.toSocialAssistanceResponse(result)
 	}
 }

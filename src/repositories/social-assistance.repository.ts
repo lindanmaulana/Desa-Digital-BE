@@ -6,6 +6,10 @@ export class SocialAssistanceRepository {
 		return prismaClient.socialAssistance.create(args);
 	}
 
+	static async update(args: Prisma.SocialAssistanceUpdateArgs) {
+		return prismaClient.socialAssistance.update(args)
+	}
+
 	static async findAll(args: Prisma.SocialAssistanceFindManyArgs) {
 		return prismaClient.socialAssistance.findMany({
 			where: args.where ?? {},

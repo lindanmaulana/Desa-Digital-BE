@@ -48,3 +48,13 @@ export interface UpdateSocialAssistanceRequest {
 	description?: string;
 	is_active: string;
 }
+
+export interface UpdateSocialAssistanceSchema {
+	thumbnail?: string;
+	name: string;
+	category: CategorySocialAssistance;
+	amount: number;
+	provider: string;
+	description?: string;
+	is_active: boolean;
+}
