@@ -14,6 +14,8 @@ route.post("/verify-account", rateLimit_1.publicRateLimit, controllers_1.default
 route.post("/resend-otp", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.resendOtp);
 route.post("/forgot-password", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.forgotPassword);
 route.post("/verify-otp", rateLimit_1.publicRateLimit, controllers_1.default.AuthController.matchOtp);
-route.post("/reset-password", rateLimit_1.publicRateLimit, auth_1.authenticatedVerificationUser, controllers_1.default.AuthController.resetPassword);
+route.post("/reset-password", auth_1.authenticatedVerificationUser, rateLimit_1.publicRateLimit, controllers_1.default.AuthController.resetPassword);
+route.get("/profile", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.ProfileController.getProfile);
+route.get("/profile/password", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.ProfileController.changePassword);
 exports.default = route;
 //# sourceMappingURL=auth.routes.js.map

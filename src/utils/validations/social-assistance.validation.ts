@@ -1,6 +1,5 @@
 import z from "zod";
 import { VALID_CATEGORY_SOCIAL_ASSISTANCE } from "./validation";
-import { CategorySocialAssistance } from "@prisma/client";
 
 export class SocialAssistanceValidation {
 		static readonly GETALL = z.object({

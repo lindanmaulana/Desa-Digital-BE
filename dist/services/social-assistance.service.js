@@ -16,11 +16,11 @@ exports.SocialAssistanceService = void 0;
 const client_1 = require("@prisma/client");
 const social_assistance_repository_1 = require("../repositories/social-assistance.repository");
 const errors_1 = require("../utils/errors");
+const helpers_1 = __importDefault(require("../utils/helpers"));
+const response_message_type_1 = require("../utils/response-message.type");
 const responses_1 = __importDefault(require("../utils/responses"));
 const social_assistance_validation_1 = require("../utils/validations/social-assistance.validation");
 const validation_1 = require("../utils/validations/validation");
-const helpers_1 = __importDefault(require("../utils/helpers"));
-const response_message_type_1 = require("../utils/response-message.type");
 class SocialAssistanceService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -86,11 +86,39 @@ class SocialAssistanceService {
                     total_page: totalPage,
                     limit,
                     current_page: currentPage,
+                    links: links,
                     next_page: nextPage,
                     prev_page: prevPage,
-                    links: links
                 }
             };
+        });
+    }
+    static update(id, req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.UPDATE, req);
+            let updateData = {};
+            if (validateFields.thumbnail)
+                updateData.thumbnail = validateFields.thumbnail;
+            if (validateFields.name)
+                updateData.name = validateFields.name;
+            if (validateFields.category !== undefined && validateFields.category !== null)
+                updateData.category = validateFields.category;
+            if (validateFields.provider)
+                updateData.provider = validateFields.provider;
+            if (validateFields.amount && validateFields.amount > 0)
+                updateData.amount = validateFields.amount;
+            if (validateFields.description)
+                updateData.description = validateFields.description;
+            if (!validateFields.is_active === undefined && !validateFields.is_active === null)
+                updateData.is_active = validateFields.is_active;
+            const conditions = {
+                where: { id },
+                data: updateData
+            };
+            const result = yield social_assistance_repository_1.SocialAssistanceRepository.update(conditions);
+            if (!result)
+                throw new errors_1.InternalServerError("Terjadi kesalahan saat update data, please try again later");
+            return responses_1.default.socialAssistanceResponse.toSocialAssistanceResponse(result);
         });
     }
 }

@@ -18,7 +18,6 @@ const _1 = __importDefault(require("."));
 const db_1 = require("../db");
 const user_repository_1 = require("../repositories/user.repository");
 const errors_1 = require("../utils/errors");
-const unauthorized_1 = require("../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../utils/helpers"));
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
@@ -33,7 +32,6 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
-                var _a, _b, _c, _d, _e, _f, _g;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -47,13 +45,13 @@ class UserService {
                 const newStaff = yield tx.staff.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "",
-                        identity_number: (_b = validateFields.identity_number) !== null && _b !== void 0 ? _b : "",
-                        gender: (_c = validateFields.gender) !== null && _c !== void 0 ? _c : undefined,
-                        date_of_birth: (_d = validateFields.date_of_birth) !== null && _d !== void 0 ? _d : null,
-                        phone_number: (_e = validateFields.phone_number) !== null && _e !== void 0 ? _e : "",
-                        occupation: (_f = validateFields.occupation) !== null && _f !== void 0 ? _f : "",
-                        marital_status: (_g = validateFields.marital_status) !== null && _g !== void 0 ? _g : undefined,
+                        profile_picture: validateFields.profile_picture,
+                        identity_number: validateFields.identity_number,
+                        gender: validateFields.gender,
+                        date_of_birth: validateFields.date_of_birth,
+                        phone_number: validateFields.phone_number,
+                        occupation: validateFields.occupation,
+                        marital_status: validateFields.marital_status,
                     },
                 });
                 return { newUser, newStaff };
@@ -73,7 +71,6 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
-                var _a, _b, _c, _d, _e, _f, _g;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -87,13 +84,13 @@ class UserService {
                 const newHeadOfFamily = yield tx.headOfFamily.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "",
-                        identity_number: (_b = validateFields.identity_number) !== null && _b !== void 0 ? _b : "",
-                        gender: (_c = validateFields.gender) !== null && _c !== void 0 ? _c : undefined,
-                        date_of_birth: (_d = validateFields.date_of_birth) !== null && _d !== void 0 ? _d : null,
-                        phone_number: (_e = validateFields.phone_number) !== null && _e !== void 0 ? _e : "",
-                        occupation: (_f = validateFields.occupation) !== null && _f !== void 0 ? _f : "",
-                        marital_status: (_g = validateFields.marital_status) !== null && _g !== void 0 ? _g : undefined,
+                        profile_picture: validateFields.profile_picture,
+                        identity_number: validateFields.identity_number,
+                        gender: validateFields.gender,
+                        date_of_birth: validateFields.date_of_birth,
+                        phone_number: validateFields.phone_number,
+                        occupation: validateFields.occupation,
+                        marital_status: validateFields.marital_status,
                     },
                 });
                 return { newUser, newHeadOfFamily };
@@ -102,14 +99,6 @@ class UserService {
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
             yield _1.default.EmailService.SendOtpMail(result.newUser.email, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
-        });
-    }
-    static getProfile(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
-            if (!checkUser)
-                throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
-            return responses_1.default.userResponse.toUserResponse(checkUser);
         });
     }
     static getAll(req, user) {
@@ -130,28 +119,30 @@ class UserService {
                                 contains: validateFields.keyword,
                                 mode: "insensitive",
                             },
+                        },
+                        {
                             staff: {
                                 identity_number: {
                                     contains: validateFields.keyword,
-                                    mode: "insensitive"
-                                }
+                                    mode: "insensitive",
+                                },
                             },
+                        },
+                        {
                             head_of_family: {
                                 identity_number: {
                                     contains: validateFields.keyword,
-                                    mode: "insensitive"
-                                }
-                            }
+                                    mode: "insensitive",
+                                },
+                            },
                         },
                     ] });
             }
             if (validateFields.is_active) {
-                const isActive = validateFields.is_active === "true";
-                whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: isActive });
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: validateFields.is_active });
             }
-            if (validateFields.role && Object.values(client_1.UserRole).includes(validateFields.role)) {
-                const searchRole = validateFields.role;
-                whereCondition = Object.assign(Object.assign({}, whereCondition), { role: searchRole });
+            if (validateFields.role) {
+                whereCondition = Object.assign(Object.assign({}, whereCondition), { role: validateFields.role });
             }
             let conditionsCount = { where: whereCondition };
             const count = yield user_repository_1.UserRepository.findCount(conditionsCount);
@@ -166,8 +157,11 @@ class UserService {
                 take: limit,
                 include: {
                     staff: true,
-                    head_of_family: true
+                    head_of_family: true,
                 },
+                orderBy: {
+                    created_at: "desc"
+                }
             };
             const result = yield user_repository_1.UserRepository.findAll(conditionsFindAll);
             if (!result)
@@ -195,9 +189,6 @@ class UserService {
             return responses_1.default.userResponse.toUserResponseWithRelation(result);
         });
     }
-    static update() {
-        return __awaiter(this, void 0, void 0, function* () { });
-    }
     static delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const checkUser = yield user_repository_1.UserRepository.findById(id);
@@ -206,25 +197,6 @@ class UserService {
             if (checkUser.role === "ADMIN")
                 throw new errors_1.NotfoundError("Pengguna tidak dapat di hapus");
             const result = yield user_repository_1.UserRepository.deleteById(checkUser.id);
-            return responses_1.default.userResponse.toUserResponse(result);
-        });
-    }
-    static changePassword(req, user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.CHANGEPASSWORD, req);
-            if (validateFields.password !== validateFields.confirm_password)
-                throw new errors_1.BadrequestError("Password dan Konfirm password tidak sama");
-            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
-            if (!checkUser)
-                throw new errors_1.NotfoundError("Pengguna tidak di temukan");
-            if (!checkUser.is_active)
-                throw new unauthorized_1.UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
-            const newHasPassword = yield helpers_1.default.hashPassword(validateFields.password);
-            const result = yield user_repository_1.UserRepository.updatePassword(checkUser.id, newHasPassword);
-            if (checkUser.is_first_login)
-                yield user_repository_1.UserRepository.updateIsFirstLogin(checkUser.id);
-            if (!result)
-                throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             return responses_1.default.userResponse.toUserResponse(result);
         });
     }

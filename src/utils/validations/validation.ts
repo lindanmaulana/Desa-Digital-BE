@@ -1,9 +1,9 @@
 import { CategorySocialAssistance, Gender, Marital, UserRole } from "@prisma/client";
-import z, { ZodType } from "zod";
+import z from "zod";
 
-export const VALID_GENDER = Object.values(Gender) as [string, ...string[]]
-export const VALID_MARITAL = Object.values(Marital) as [string, ...string[]]
-export const VALID_ROLE = Object.values(UserRole) as [string, ...string[]]
+export const VALID_GENDER = [Gender.MALE, Gender.FEMALE] as const
+export const VALID_MARITAL = [Marital.MARRIED, Marital.SINGLE] as const
+export const VALID_ROLE = [UserRole.ADMIN, UserRole.HEAD_OF_FAMILY, UserRole.RESIDENT, UserRole.STAFF] as const
 export const VALID_CATEGORY_SOCIAL_ASSISTANCE = [CategorySocialAssistance.CASH, CategorySocialAssistance.HEALTH, CategorySocialAssistance.STAPLE, CategorySocialAssistance.SUBSIDIZED_FUEL] as const
 
 

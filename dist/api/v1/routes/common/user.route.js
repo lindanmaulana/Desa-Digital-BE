@@ -10,7 +10,5 @@ const controllers_1 = __importDefault(require("../../controllers"));
 const userRouteCommon = (0, express_1.Router)();
 userRouteCommon.get("/", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUsers);
 userRouteCommon.get("/:id", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getUserById);
-userRouteCommon.get("/me", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.getProfile);
-userRouteCommon.get("/me/password", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.default.UserController.changePassword);
 exports.default = userRouteCommon;
 //# sourceMappingURL=user.route.js.map

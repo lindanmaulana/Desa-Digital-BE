@@ -1,8 +1,7 @@
-import { Gender, Marital, Prisma, UserRole } from "@prisma/client";
+import { Prisma, UserRole } from "@prisma/client";
 import services from ".";
 import { prismaClient } from "../db";
 import {
-	ChangePasswordRequest,
 	GetAllUserRequest,
 	GetAllUserResponse,
 	RegisterHeadOfFamilyRequest,
@@ -12,7 +11,6 @@ import {
 import { UserRepository } from "../repositories/user.repository";
 import { Token } from "../types/token.type";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
-import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
 import responses from "../utils/responses";
 import { UserValidation } from "../utils/validations/user.validation";
@@ -44,13 +42,13 @@ export class UserService {
 			const newStaff = await tx.staff.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture ?? "",
-					identity_number: validateFields.identity_number ?? "",
-					gender: (validateFields.gender as Gender) ?? undefined,
-					date_of_birth: validateFields.date_of_birth ?? null,
-					phone_number: validateFields.phone_number ?? "",
-					occupation: validateFields.occupation ?? "",
-					marital_status: (validateFields.marital_status as Marital) ?? undefined,
+					profile_picture: validateFields.profile_picture,
+					identity_number: validateFields.identity_number,
+					gender: validateFields.gender,
+					date_of_birth: validateFields.date_of_birth,
+					phone_number: validateFields.phone_number,
+					occupation: validateFields.occupation,
+					marital_status: validateFields.marital_status,
 				},
 			});
 
@@ -89,32 +87,24 @@ export class UserService {
 			const newHeadOfFamily = await tx.headOfFamily.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture ?? "",
-					identity_number: validateFields.identity_number ?? "",
-					gender: (validateFields.gender as Gender) ?? undefined,
-					date_of_birth: validateFields.date_of_birth ?? null,
-					phone_number: validateFields.phone_number ?? "",
-					occupation: validateFields.occupation ?? "",
-					marital_status: (validateFields.marital_status as Marital) ?? undefined,
+					profile_picture: validateFields.profile_picture,
+					identity_number: validateFields.identity_number,
+					gender: validateFields.gender,
+					date_of_birth: validateFields.date_of_birth,
+					phone_number: validateFields.phone_number,
+					occupation: validateFields.occupation,
+					marital_status: validateFields.marital_status,
 				},
 			});
 
-			return {newUser, newHeadOfFamily}
+			return { newUser, newHeadOfFamily };
 		});
 
-		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later")
+		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
-		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser)
+		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser);
 
-		return responses.userResponse.toUserResponse(result.newUser)
-	}
-
-	static async getProfile(user: Token): Promise<UserResponse> {
-		const checkUser = await UserRepository.findById(user.id);
-
-		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
-
-		return responses.userResponse.toUserResponse(checkUser);
+		return responses.userResponse.toUserResponse(result.newUser);
 	}
 
 	static async getAll(req: GetAllUserRequest, user: Token): Promise<GetAllUserResponse> {
@@ -143,40 +133,38 @@ export class UserService {
 							contains: validateFields.keyword,
 							mode: "insensitive",
 						},
-
+					},
+					{
 						staff: {
 							identity_number: {
 								contains: validateFields.keyword,
-								mode: "insensitive"
-							}
+								mode: "insensitive",
+							},
 						},
-
+					},
+					{
 						head_of_family: {
 							identity_number: {
 								contains: validateFields.keyword,
-								mode: "insensitive"
-							}
-						}
+								mode: "insensitive",
+							},
+						},
 					},
 				],
 			};
 		}
 
 		if (validateFields.is_active) {
-			const isActive: boolean = validateFields.is_active === "true";
-
 			whereCondition = {
 				...whereCondition,
-				is_active: isActive,
+				is_active: validateFields.is_active,
 			};
 		}
 
-		if (validateFields.role && Object.values(UserRole).includes(validateFields.role as UserRole)) {
-			const searchRole = validateFields.role as UserRole;
-
+		if (validateFields.role) {
 			whereCondition = {
 				...whereCondition,
-				role: searchRole,
+				role: validateFields.role,
 			};
 		}
 
@@ -196,8 +184,11 @@ export class UserService {
 			take: limit,
 			include: {
 				staff: true,
-				head_of_family: true
+				head_of_family: true,
 			},
+			orderBy: {
+				created_at: "desc"
+			}
 		};
 
 		const result = await UserRepository.findAll(conditionsFindAll);
@@ -227,8 +218,6 @@ export class UserService {
 		return responses.userResponse.toUserResponseWithRelation(result);
 	}
 
-	static async update() {}
-
 	static async delete(id: string): Promise<UserResponse> {
 		const checkUser = await UserRepository.findById(id);
 
@@ -237,28 +226,6 @@ export class UserService {
 		if (checkUser.role === "ADMIN") throw new NotfoundError("Pengguna tidak dapat di hapus");
 
 		const result = await UserRepository.deleteById(checkUser.id);
-
-		return responses.userResponse.toUserResponse(result);
-	}
-
-	static async changePassword(req: ChangePasswordRequest, user: Token): Promise<UserResponse> {
-		const validateFields = validation.validate(UserValidation.CHANGEPASSWORD, req);
-
-		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm password tidak sama");
-
-		const checkUser = await UserRepository.findById(user.id);
-
-		if (!checkUser) throw new NotfoundError("Pengguna tidak di temukan");
-
-		if (!checkUser.is_active) throw new UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
-
-		const newHasPassword = await helpers.hashPassword(validateFields.password);
-
-		const result = await UserRepository.updatePassword(checkUser.id, newHasPassword);
-
-		if (checkUser.is_first_login) await UserRepository.updateIsFirstLogin(checkUser.id);
-
-		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
 		return responses.userResponse.toUserResponse(result);
 	}

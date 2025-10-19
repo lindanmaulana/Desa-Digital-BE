@@ -12,6 +12,18 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }>;
+    static update(args: Prisma.SocialAssistanceUpdateArgs): Promise<{
+        name: string;
+        id: string;
+        is_active: boolean;
+        created_at: Date;
+        updated_at: Date;
+        thumbnail: string | null;
+        category: import("@prisma/client").$Enums.CategorySocialAssistance;
+        amount: Prisma.Decimal;
+        provider: string;
+        description: string | null;
+    }>;
     static findAll(args: Prisma.SocialAssistanceFindManyArgs): Promise<{
         name: string;
         id: string;

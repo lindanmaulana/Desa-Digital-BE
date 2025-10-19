@@ -1,10 +1,9 @@
 import { NextFunction, Response } from "express";
-import { CustomeRequest } from "../../../types/express.type";
+import { StatusCodes } from "http-status-codes";
 import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest } from "../../../models/social-assistance.model";
 import services from "../../../services";
-import { StatusCodes } from "http-status-codes";
+import { CustomeRequest } from "../../../types/express.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
-import { logger } from "../../../logging";
 
 export class SocialAssistanceController {
 	static async create(req: CustomeRequest, res: Response, next: NextFunction) {

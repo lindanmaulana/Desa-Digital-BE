@@ -25,10 +25,6 @@ export interface UserResponseWithRelation extends UserResponse {
     staff?: StaffResponse | null;
     head_of_family?: HeadOfFamilyResponse | null;
 }
-export interface ChangePasswordRequest {
-    password: string;
-    confirm_password: string;
-}
 export interface PaginationRequest {
 }
 export interface GetAllUserRequest {

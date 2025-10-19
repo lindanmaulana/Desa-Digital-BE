@@ -33,4 +33,22 @@ export interface GetAllSocialAssistanceUserResponse {
     data: SocialAssistanceResponse[];
     pagination: PaginationResponse;
 }
+export interface UpdateSocialAssistanceRequest {
+    thumbnail?: string;
+    name: string;
+    category: string;
+    amount: string;
+    provider: string;
+    description?: string;
+    is_active: string;
+}
+export interface UpdateSocialAssistanceSchema {
+    thumbnail?: string;
+    name: string;
+    category: CategorySocialAssistance;
+    amount: number;
+    provider: string;
+    description?: string;
+    is_active: boolean;
+}
 //# sourceMappingURL=social-assistance.model.d.ts.map

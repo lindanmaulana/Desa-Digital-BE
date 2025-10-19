@@ -17,6 +17,11 @@ class SocialAssistanceRepository {
             return db_1.prismaClient.socialAssistance.create(args);
         });
     }
+    static update(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.socialAssistance.update(args);
+        });
+    }
     static findAll(args) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;

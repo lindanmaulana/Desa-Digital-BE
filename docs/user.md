@@ -19,9 +19,97 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
 
 **Catatan:** Dalam respons API sebenarnya, properti sensitif seperti `otp_code` dan `password` **TIDAK** boleh disertakan.
 
-## 1. GET all user
+## 1. POST register-staff
 
-Endpoint : GET /api/v1/v1/users?
+Endpoint : /api/v1/admin/users/staff/register
+
+Request Header :
+- Authrorization : Bearer token
+
+Role :
+- ADMIN
+
+Request Body :
+```json
+{
+  "name": "Jhon Doe",
+  "email": "jhondoe@gmail.com",
+  "password": "jhondoe123",
+  "profile_picture": string | optional,
+  "identity_number": string | optional,
+  "gender": string | optional,
+  "date_of_birth": string | optional,
+  "phone_number": string | optional,
+  "occupation": string | optional,
+  "marital_status": string | optional,
+}
+```
+
+    Response Body (success)
+
+```json
+{
+  "data": {
+    /* UserResponse Object */
+  }
+}
+```
+
+Response Body (failed)
+```json
+{
+  "errors": Messagge Error
+}
+```
+
+## 2. POST register-head-of-family
+
+Endpoint : /api/v1/admin/users/head-of-family/register
+
+Request Header :
+- Authrorization : Bearer token
+
+Role :
+
+- ADMIN
+
+Request Body :
+```json
+{
+  "name": "Jhon Doe",
+  "email": "jhondoe@gmail.com",
+  "password": "jhondoe123",
+  "profile_picture": string | optional,
+  "identity_number": string | optional,
+  "gender": string | optional,
+  "date_of_birth": string | optional,
+  "phone_number": string | optional,
+  "occupation": string | optional,
+  "marital_status": string | optional,
+}
+```
+
+Response Body (success) :
+
+```json
+{
+  "data": {
+    /* UserResponse Object */
+  }
+}
+```
+
+Response Body (failed)
+
+```json
+{
+  "errors": Messagge Error
+}
+```
+
+## 3. GET all user
+
+Endpoint : GET /api/v1/users?
 
 - Request Query :
   keyword=value
@@ -45,7 +133,7 @@ Response Body (success) :
       "total_page": totalPage,
 				"limit": limit,
 				"current_page": currentPage,
-				"links": number[number],
+				"links": number[],
 				"next_page": nextPage,
 				"prev_page": prevPage,
   }
@@ -60,7 +148,7 @@ Response Body (failed)
 }
 ```
 
-## 2. GET one user
+## 4. GET byId
 
 Endpoint : /api/v1/users/:id
 
@@ -86,7 +174,7 @@ Response Body (failed)
 }
 ```
 
-## 3. DELETE user
+## 5. DELETE user
 
 Endpoint : /api/v1/users/:id
 
@@ -104,106 +192,6 @@ Response Body (success)
 {
   "data": {
     /* UserResponse Object */
-  }
-}
-```
-
-Response Body (failed)
-
-```json
-{
-  "errors": "Messagge Error"
-}
-```
-
-## 4. POST register-staff
-
-Endpoint : /api/v1/admin/users/staff/register
-
-Request Header :
-
-- Authrorization : Bearer token
-
-Role :
-
-- ADMIN
-
-  Request Body :
-
-```json
-{
-  "name": "Jhon Doe",
-  "email": "jhondoe@gmail.com",
-  "password": "jhondoe123",
-  "profile_picture": string | optional,
-  "identity_number": string | optional,
-  "gender": string | optional,
-  "date_of_birth": string | optional,
-  "phone_number": string | optional,
-  "occupation": string | optional,
-  "marital_status": string | optional,
-}
-```
-
-    Response Body (success)
-
-```json
-{
-  "data": {
-    /* UserResponse Object */
-    "staff": {
-      /* StaffResponse Object */
-    }
-  }
-}
-```
-
-Response Body (failed)
-
-```json
-{
-  "errors": "Messagge Error"
-}
-```
-
-## 5. POST register-head-of-family
-
-Endpoint : /api/v1/admin/users/head-of-family/register
-
-Request Header :
-
-- Authrorization : Bearer token
-
-Role :
-
-- ADMIN
-
-  Request Body :
-
-```json
-{
-  "name": "Jhon Doe",
-  "email": "jhondoe@gmail.com",
-  "password": "jhondoe123",
-  "profile_picture": string | optional,
-  "identity_number": string | optional,
-  "gender": string | optional,
-  "date_of_birth": string | optional,
-  "phone_number": string | optional,
-  "occupation": string | optional,
-  "marital_status": string | optional,
-}
-```
-
-    Response Body (success)
-
-```json
-{
-  "data": {
-    /* UserResponse Object */
-    "staff": {
-      /* HeadOfFamily Object */
-    }
   }
 }
 ```
