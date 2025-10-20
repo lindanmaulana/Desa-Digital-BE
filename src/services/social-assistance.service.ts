@@ -1,4 +1,4 @@
-import { CategorySocialAssistance, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest, UpdateSocialAssistanceSchema } from "../models/social-assistance.model";
 import { SocialAssistanceRepository } from "../repositories/social-assistance.repository";
 import { BadrequestError, InternalServerError } from "../utils/errors";
@@ -12,17 +12,17 @@ export class SocialAssistanceService {
 	static async create(req: CreateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
 		const validateFields = validation.validate(SocialAssistanceValidation.CREATE, req)
 
-		if (validateFields.amount && Number(validateFields.amount) < 0) throw new BadrequestError("Nominal bantuan tidak valid")
+		if (validateFields.amount && validateFields.amount < 0) throw new BadrequestError("Nominal bantuan tidak valid")
 
 		const result = await SocialAssistanceRepository.create({
 			data: {
-				thumbnail: validateFields.thumbnail ?? null,
+				thumbnail: validateFields.thumbnail,
 				name: validateFields.name,
-				category: (validateFields.category as CategorySocialAssistance) ?? undefined,
+				category: validateFields.category,
 				amount: validateFields.amount,
 				provider: validateFields.provider,
-				description: validateFields.description ?? null,
-				is_active: validateFields.is_active === "true",
+				description: validateFields.description,
+				is_active: validateFields.is_active
 			},
 		})
 
@@ -54,19 +54,12 @@ export class SocialAssistanceService {
 			}
 		}
 
-		if (validateFields.category && Object.values(CategorySocialAssistance).includes(validateFields.category as CategorySocialAssistance)) {
-			const searchCategory = validateFields.category as CategorySocialAssistance
-			whereCondition = {
-				...whereCondition,
-				category: searchCategory
-			}
+		if (validateFields.category) {
+			whereCondition.category = validateFields.category
 		}
 
-		if (validateFields.is_active) {
-			whereCondition = {
-				...whereCondition,
-				is_active: validateFields.is_active === "true"
-			}
+		if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) {
+			whereCondition.is_active = validateFields.is_active
 		}
 
 		let conditionCount: Prisma.SocialAssistanceCountArgs = {where: whereCondition}
@@ -114,7 +107,7 @@ export class SocialAssistanceService {
 
 		if (validateFields.description) updateData.description = validateFields.description
 
-		if (!validateFields.is_active === undefined && !validateFields.is_active === null) updateData.is_active = validateFields.is_active
+		if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null)) updateData.is_active = validateFields.is_active
 
 		const conditions: Prisma.SocialAssistanceUpdateArgs = {
 			where: {id},

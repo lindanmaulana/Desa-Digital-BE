@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceService = void 0;
-const client_1 = require("@prisma/client");
 const social_assistance_repository_1 = require("../repositories/social-assistance.repository");
 const errors_1 = require("../utils/errors");
 const helpers_1 = __importDefault(require("../utils/helpers"));
@@ -24,19 +23,18 @@ const validation_1 = require("../utils/validations/validation");
 class SocialAssistanceService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
             const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.CREATE, req);
             if (validateFields.amount && Number(validateFields.amount) < 0)
                 throw new errors_1.BadrequestError("Nominal bantuan tidak valid");
             const result = yield social_assistance_repository_1.SocialAssistanceRepository.create({
                 data: {
-                    thumbnail: (_a = validateFields.thumbnail) !== null && _a !== void 0 ? _a : null,
+                    thumbnail: validateFields.thumbnail,
                     name: validateFields.name,
-                    category: (_b = validateFields.category) !== null && _b !== void 0 ? _b : undefined,
+                    category: validateFields.category,
                     amount: validateFields.amount,
                     provider: validateFields.provider,
-                    description: (_c = validateFields.description) !== null && _c !== void 0 ? _c : null,
-                    is_active: validateFields.is_active === "true",
+                    description: validateFields.description,
+                    is_active: validateFields.is_active
                 },
             });
             if (!result)
@@ -62,12 +60,11 @@ class SocialAssistanceService {
                         }
                     ] });
             }
-            if (validateFields.category && Object.values(client_1.CategorySocialAssistance).includes(validateFields.category)) {
-                const searchCategory = validateFields.category;
-                whereCondition = Object.assign(Object.assign({}, whereCondition), { category: searchCategory });
+            if (validateFields.category) {
+                whereCondition.category = validateFields.category;
             }
-            if (validateFields.is_active) {
-                whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: validateFields.is_active === "true" });
+            if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) {
+                whereCondition.is_active = validateFields.is_active;
             }
             let conditionCount = { where: whereCondition };
             const count = yield social_assistance_repository_1.SocialAssistanceRepository.findCount(conditionCount);
@@ -109,7 +106,7 @@ class SocialAssistanceService {
                 updateData.amount = validateFields.amount;
             if (validateFields.description)
                 updateData.description = validateFields.description;
-            if (!validateFields.is_active === undefined && !validateFields.is_active === null)
+            if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null))
                 updateData.is_active = validateFields.is_active;
             const conditions = {
                 where: { id },
