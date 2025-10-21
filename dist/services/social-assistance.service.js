@@ -24,7 +24,7 @@ class SocialAssistanceService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.CREATE, req);
-            if (validateFields.amount && Number(validateFields.amount) < 0)
+            if (validateFields.amount && validateFields.amount < 0)
                 throw new errors_1.BadrequestError("Nominal bantuan tidak valid");
             const result = yield social_assistance_repository_1.SocialAssistanceRepository.create({
                 data: {
@@ -93,6 +93,8 @@ class SocialAssistanceService {
     static update(id, req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.UPDATE, req);
+            if (Object.keys(req).length <= 0)
+                throw new errors_1.BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.");
             let updateData = {};
             if (validateFields.thumbnail)
                 updateData.thumbnail = validateFields.thumbnail;

@@ -93,6 +93,8 @@ export class SocialAssistanceService {
 	static async update(id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
 		const validateFields: ValidatedFieldsUpdate = validation.validate(SocialAssistanceValidation.UPDATE, req)
 
+		if (Object.keys(req).length <= 0) throw new BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.")
+
 		let updateData: Partial<UpdateSocialAssistanceSchema> = {}
 
 		if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail

@@ -221,32 +221,105 @@ describe("POST /api/v1/auth/resend-otp", () => {
 
 	it("Should reject if email account notfound", async () => {
 		const response = await supertest(app).post("/api/v1/auth/resend-otp").send({
-			email: "example@gmail.com"
+			email: "example@gmail.com",
+		});
+
+		logger.debug(response.body);
+		expect(response.status).toBe(400);
+
+		expect(response.body.errors).toBeDefined();
+		expect(response.body).toHaveProperty("errors", "Pengguna tidak ditemukan");
+	});
+
+	it("Should be able receive otp_code", async () => {
+		const response = await supertest(app).post("/api/v1/auth/resend-otp").send({
+			email: "userotp@gmail.com",
+		});
+
+		logger.debug(response.body);
+		expect(response.status).toBe(200);
+
+		expect(response.body).toHaveProperty("status", "success");
+		expect(response.body).toHaveProperty("code", 200);
+		expect(response.body).toHaveProperty("message", "Kode verifikasi telah dikirimkan. Cek email Anda.");
+		expect(response.body.data).toBeDefined();
+
+		expect(response.body.data).toHaveProperty("email");
+		expect(response.body.data).toHaveProperty("otp_last_sent_at");
+
+		expect(response.body.data).not.toHaveProperty("password");
+	}, 20000);
+});
+
+describe("POST /api/v1/auth/forgot-password", () => {
+	beforeAll(async () => {
+		await UserTest.setupHashedPassword();
+	});
+
+	beforeEach(async () => {
+		await UserTest.createUserTest();
+	});
+
+	afterEach(async () => {
+		await UserTest.deleteUserTest();
+	});
+
+	it("Should reject if req body empty", async () => {
+		const response = await supertest(app).post("/api/v1/auth/forgot-password").send({})
+
+		logger.debug(response.body)
+		expect(response.status).toBe(400)
+
+		expect(response.body.errors).toBeDefined()
+		expect(response.body.errors).toEqual(expect.arrayContaining(["Format email tidak valid"]))
+
+		expect(response.body).not.toHaveProperty("data")
+	});
+
+	it("Should reject if email empty", async () => {
+		const response = await supertest(app).post("/api/v1/auth/forgot-password").send({
+			email: ""
 		})
 
 		logger.debug(response.body)
 		expect(response.status).toBe(400)
 
 		expect(response.body.errors).toBeDefined()
-		expect(response.body).toHaveProperty("errors", "Pengguna tidak ditemukan")
+		expect(response.body.errors).toEqual(expect.arrayContaining(["Format email tidak valid", "Email tidak boleh kosong"]))
+
+		expect(response.body).not.toHaveProperty("data")
 	})
 
-	it("Should be able receive otp_code", async () => {
-		const response = await supertest(app).post("/api/v1/auth/resend-otp").send({
-			email: "userotp@gmail.com"
+	it("Should reject if email not matching", async () => {
+		const response = await supertest(app).post("/api/v1/auth/forgot-password").send({
+			email: "examplmark123@gmail.com"
+		})
+
+		logger.debug(response.body)
+		expect(response.status).toBe(404)
+
+		expect(response.body.errors).toBeDefined()
+		expect(response.body.errors).toBe("Pengguna tidak ditemukan")
+
+		expect(response.body).not.toHaveProperty("data")
+	})
+
+	it("Should be able receive email & otp_last_sent_at", async () => {
+		const response = await supertest(app).post("/api/v1/auth/forgot-password").send({
+			email: "usertest@gmail.com"
 		})
 
 		logger.debug(response.body)
 		expect(response.status).toBe(200)
 
-		expect(response.body).toHaveProperty("status", "success")
-		expect(response.body).toHaveProperty("code", 200)
-		expect(response.body).toHaveProperty("message", "Kode verifikasi telah dikirimkan. Cek email Anda.")
-		expect(response.body.data).toBeDefined()
-
 		expect(response.body.data).toHaveProperty("email")
 		expect(response.body.data).toHaveProperty("otp_last_sent_at")
 
-		expect(response.body.data).not.toHaveProperty("password")
+		expect(response.body).not.toHaveProperty("errors")
 	}, 20000)
+
+	// email: z.email({error: "Format email tidak valid"}).nonempty({error: "Email tidak boleh kosong"})
+
+			// email: result.email,
+			// otp_last_sent_at: new Date()
 });

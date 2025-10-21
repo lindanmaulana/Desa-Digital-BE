@@ -44,15 +44,7 @@ SocialAssistanceValidation.CREATE = _a.SOCIALASSISTANCE;
 // 	description: z.string().nullable().default(null),
 // 	is_active: this.IS_ACTIVE
 // })
-SocialAssistanceValidation.UPDATE = zod_1.default.object({
-    thumbnail: zod_1.default.string().optional(),
-    name: zod_1.default.string().nonempty({ error: "Nama tidak boleh kosong" }),
-    category: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
-    amount: zod_1.default.coerce.number({ error: "Nomimal harus berupa angka" }).int().positive().min(1, "Nominal bantuan tidak boleh kosong").optional(),
-    provider: zod_1.default.string().nonempty({ error: "Nama pemberi bantuan tidak boleh kosong" }),
-    description: zod_1.default.string().optional(),
-    is_active: _a.IS_ACTIVE.optional()
-});
+SocialAssistanceValidation.UPDATE = _a.SOCIALASSISTANCE.partial();
 // is_active: z.string().refine((val) => val.toLocaleLowerCase() === "true" || val.toLocaleLowerCase() === "false", {
 // 	error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
 // })

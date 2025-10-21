@@ -34,6 +34,24 @@ class SocialAssistanceController {
             }
         });
     }
+    static update(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const reqParams = req.params;
+                const reqBody = req.body;
+                const result = yield services_1.default.SocialAssistanceService.update(reqParams.id, reqBody);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.update,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
     static getSocialAssistances(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -44,7 +62,7 @@ class SocialAssistanceController {
                     code: http_status_codes_1.StatusCodes.CREATED,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.create,
                     data: result.data,
-                    pagination: result.pagination
+                    pagination: result.pagination,
                 });
             }
             catch (err) {

@@ -41,17 +41,18 @@ export class SocialAssistanceValidation {
 	// 	is_active: this.IS_ACTIVE
 	// })
 
-	static readonly UPDATE = z.object({
-		thumbnail: z.string().optional(),
-		name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
-		category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
-		amount: z.coerce.number({error: "Nomimal harus berupa angka"}).int().positive().min(1, "Nominal bantuan tidak boleh kosong").optional(),
-		provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
-		description: z.string().optional(),
+	static readonly UPDATE = this.SOCIALASSISTANCE.partial()
 
-		is_active: this.IS_ACTIVE.optional()
-	})
+	// static readonly UPDATE = z.object({
+	// 	thumbnail: z.string().optional(),
+	// 	name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
+	// 	category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
+	// 	amount: z.coerce.number({error: "Nomimal harus berupa angka"}).int().positive().min(1, "Nominal bantuan tidak boleh kosong").optional(),
+	// 	provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
+	// 	description: z.string().optional(),
 
+	// 	is_active: this.IS_ACTIVE.optional()
+	// })
 }
 
 export type ValidatedFieldsUpdate = z.infer<typeof SocialAssistanceValidation.UPDATE>
