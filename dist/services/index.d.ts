@@ -4,6 +4,7 @@ import { ProfileService } from "./profile.service";
 import { SocialAssistanceService } from "./social-assistance.service";
 import { StaffService } from "./staff.service";
 import { UserService } from "./user.service";
+import { VillageProfileService } from "./village-profile.service";
 declare const _default: {
     AuthService: typeof AuthService;
     UserService: typeof UserService;
@@ -11,6 +12,7 @@ declare const _default: {
     SocialAssistanceService: typeof SocialAssistanceService;
     ProfileService: typeof ProfileService;
     EmailService: typeof EmailService;
+    VillageProfileService: typeof VillageProfileService;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

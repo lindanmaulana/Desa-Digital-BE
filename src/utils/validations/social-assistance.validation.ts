@@ -12,13 +12,13 @@ export class SocialAssistanceValidation {
 		return val
 	}, z.boolean({error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"}))
 
-	static readonly SOCIALASSISTANCE = z.object({
-		thumbnail: z.string().nullable().default(null),
+	static readonly INDEX = z.object({
+		thumbnail: z.string().nullable(),
 		name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
 		category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)),
 		amount: z.coerce.number({error: "Nominal harus berupa angka"}).int().positive().min(1, "Nominal bantuan tidak boleh kosong"),
 		provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
-		description: z.string().nullable().default(null),
+		description: z.string().nullable(),
 		is_active: this.IS_ACTIVE
 	})
 
@@ -30,33 +30,10 @@ export class SocialAssistanceValidation {
 		limit: z.string().optional()
 	})
 
-	static readonly CREATE = this.SOCIALASSISTANCE
-	// static readonly CREATE = z.object({
-	// 	thumbnail: z.string().nullable().default(null),
-	// 	name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
-	// 	category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)),
-	// 	amount: z.string().nonempty({error: "Nomimal bantuan tidak boleh kosong"}),
-	// 	provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
-	// 	description: z.string().nullable().default(null),
-	// 	is_active: this.IS_ACTIVE
-	// })
+	static readonly CREATE = this.INDEX.extend({
+		thumbnail: z.string().nullable().default(null),
+		description: z.string().nullable().default(null)
+	})
 
-	static readonly UPDATE = this.SOCIALASSISTANCE.partial()
-
-	// static readonly UPDATE = z.object({
-	// 	thumbnail: z.string().optional(),
-	// 	name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
-	// 	category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
-	// 	amount: z.coerce.number({error: "Nomimal harus berupa angka"}).int().positive().min(1, "Nominal bantuan tidak boleh kosong").optional(),
-	// 	provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
-	// 	description: z.string().optional(),
-
-	// 	is_active: this.IS_ACTIVE.optional()
-	// })
+	static readonly UPDATE = this.INDEX.partial()
 }
-
-export type ValidatedFieldsUpdate = z.infer<typeof SocialAssistanceValidation.UPDATE>
-
-		// is_active: z.string().refine((val) => val.toLocaleLowerCase() === "true" || val.toLocaleLowerCase() === "false", {
-		// 	error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
-		// })

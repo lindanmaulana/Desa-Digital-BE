@@ -93,28 +93,30 @@ class SocialAssistanceService {
     static update(id, req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.UPDATE, req);
+            console.log({ cekActive: validateFields.is_active });
             if (Object.keys(req).length <= 0)
                 throw new errors_1.BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.");
-            let updateData = {};
-            if (validateFields.thumbnail)
-                updateData.thumbnail = validateFields.thumbnail;
-            if (validateFields.name)
-                updateData.name = validateFields.name;
-            if (validateFields.category !== undefined && validateFields.category !== null)
-                updateData.category = validateFields.category;
-            if (validateFields.provider)
-                updateData.provider = validateFields.provider;
-            if (validateFields.amount && validateFields.amount > 0)
-                updateData.amount = validateFields.amount;
-            if (validateFields.description)
-                updateData.description = validateFields.description;
-            if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null))
-                updateData.is_active = validateFields.is_active;
-            const conditions = {
+            // let updateData: Partial<UpdateSocialAssistanceSchema> = {}
+            // if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail
+            // if (validateFields.name) updateData.name = validateFields.name
+            // if (validateFields.category !== undefined && validateFields.category !== null) updateData.category = validateFields.category
+            // if (validateFields.provider) updateData.provider = validateFields.provider
+            // if (validateFields.amount && validateFields.amount > 0) updateData.amount = validateFields.amount
+            // if (validateFields.description) updateData.description = validateFields.description
+            // if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null)) updateData.is_active = validateFields.is_active
+            const conditions = Object.keys(validateFields).reduce((acc, key) => {
+                const value = validateFields[key];
+                if (value !== undefined || value !== null)
+                    acc[key] = value;
+                return acc;
+            }, {});
+            console.log({ conditions });
+            const cleanDataForPrisma = conditions;
+            const prismaUpdateArgs = {
                 where: { id },
-                data: updateData
+                data: cleanDataForPrisma
             };
-            const result = yield social_assistance_repository_1.SocialAssistanceRepository.update(conditions);
+            const result = yield social_assistance_repository_1.SocialAssistanceRepository.update(prismaUpdateArgs);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat update data, please try again later");
             return responses_1.default.socialAssistanceResponse.toSocialAssistanceResponse(result);

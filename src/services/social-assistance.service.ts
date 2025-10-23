@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
-import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest, UpdateSocialAssistanceSchema } from "../models/social-assistance.model";
+import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../models/social-assistance.model";
 import { SocialAssistanceRepository } from "../repositories/social-assistance.repository";
 import { BadrequestError, InternalServerError } from "../utils/errors";
 import helpers from "../utils/helpers";
 import { RESPONSE_MESSAGE } from "../utils/response-message.type";
 import responses from "../utils/responses";
-import { SocialAssistanceValidation, ValidatedFieldsUpdate } from "../utils/validations/social-assistance.validation";
+import { SocialAssistanceValidation } from "../utils/validations/social-assistance.validation";
 import { validation } from "../utils/validations/validation";
 
 export class SocialAssistanceService {
@@ -91,32 +91,46 @@ export class SocialAssistanceService {
 	}
 
 	static async update(id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> {
-		const validateFields: ValidatedFieldsUpdate = validation.validate(SocialAssistanceValidation.UPDATE, req)
+		const validateFields = validation.validate(SocialAssistanceValidation.UPDATE, req)
+
+		console.log({cekActive: validateFields.is_active})
 
 		if (Object.keys(req).length <= 0) throw new BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.")
 
-		let updateData: Partial<UpdateSocialAssistanceSchema> = {}
+		// let updateData: Partial<UpdateSocialAssistanceSchema> = {}
 
-		if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail
+		// if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail
 
-		if (validateFields.name) updateData.name = validateFields.name
+		// if (validateFields.name) updateData.name = validateFields.name
 
-		if (validateFields.category !== undefined && validateFields.category !== null) updateData.category = validateFields.category
+		// if (validateFields.category !== undefined && validateFields.category !== null) updateData.category = validateFields.category
 
-		if (validateFields.provider) updateData.provider = validateFields.provider
+		// if (validateFields.provider) updateData.provider = validateFields.provider
 
-		if (validateFields.amount && validateFields.amount > 0) updateData.amount = validateFields.amount
+		// if (validateFields.amount && validateFields.amount > 0) updateData.amount = validateFields.amount
 
-		if (validateFields.description) updateData.description = validateFields.description
+		// if (validateFields.description) updateData.description = validateFields.description
 
-		if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null)) updateData.is_active = validateFields.is_active
+		// if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null)) updateData.is_active = validateFields.is_active
 
-		const conditions: Prisma.SocialAssistanceUpdateArgs = {
+		const conditions = Object.keys(validateFields).reduce((acc, key) => {
+			const value = validateFields[key as keyof typeof validateFields]
+
+			if (value !== undefined || value !== null) (acc as any)[key as keyof typeof validateFields] = value
+
+			return acc
+		}, {} as Partial<UpdateSocialAssistanceRequest>)
+
+		console.log({conditions})
+
+		const cleanDataForPrisma = conditions as Prisma.SocialAssistanceUpdateInput
+
+		const prismaUpdateArgs: Prisma.SocialAssistanceUpdateArgs = {
 			where: {id},
-			data: updateData
+			data: cleanDataForPrisma
 		}
 
-		const result = await SocialAssistanceRepository.update(conditions)
+		const result = await SocialAssistanceRepository.update(prismaUpdateArgs)
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat update data, please try again later")
 

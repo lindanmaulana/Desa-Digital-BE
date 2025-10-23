@@ -18,13 +18,13 @@ SocialAssistanceValidation.IS_ACTIVE = zod_1.default.preprocess((val) => {
     }
     return val;
 }, zod_1.default.boolean({ error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia" }));
-SocialAssistanceValidation.SOCIALASSISTANCE = zod_1.default.object({
-    thumbnail: zod_1.default.string().nullable().default(null),
+SocialAssistanceValidation.INDEX = zod_1.default.object({
+    thumbnail: zod_1.default.string().nullable(),
     name: zod_1.default.string().nonempty({ error: "Nama tidak boleh kosong" }),
     category: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_CATEGORY_SOCIAL_ASSISTANCE)),
     amount: zod_1.default.coerce.number({ error: "Nominal harus berupa angka" }).int().positive().min(1, "Nominal bantuan tidak boleh kosong"),
     provider: zod_1.default.string().nonempty({ error: "Nama pemberi bantuan tidak boleh kosong" }),
-    description: zod_1.default.string().nullable().default(null),
+    description: zod_1.default.string().nullable(),
     is_active: _a.IS_ACTIVE
 });
 SocialAssistanceValidation.GETALL = zod_1.default.object({
@@ -34,18 +34,9 @@ SocialAssistanceValidation.GETALL = zod_1.default.object({
     page: zod_1.default.string().optional(),
     limit: zod_1.default.string().optional()
 });
-SocialAssistanceValidation.CREATE = _a.SOCIALASSISTANCE;
-// static readonly CREATE = z.object({
-// 	thumbnail: z.string().nullable().default(null),
-// 	name: z.string().nonempty({error: "Nama tidak boleh kosong"}),
-// 	category: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)),
-// 	amount: z.string().nonempty({error: "Nomimal bantuan tidak boleh kosong"}),
-// 	provider: z.string().nonempty({error: "Nama pemberi bantuan tidak boleh kosong"}),
-// 	description: z.string().nullable().default(null),
-// 	is_active: this.IS_ACTIVE
-// })
-SocialAssistanceValidation.UPDATE = _a.SOCIALASSISTANCE.partial();
-// is_active: z.string().refine((val) => val.toLocaleLowerCase() === "true" || val.toLocaleLowerCase() === "false", {
-// 	error: "Opsi ketersediaan harus Tersedia atau Tidak Tersedia"
-// })
+SocialAssistanceValidation.CREATE = _a.INDEX.extend({
+    thumbnail: zod_1.default.string().nullable().default(null),
+    description: zod_1.default.string().nullable().default(null)
+});
+SocialAssistanceValidation.UPDATE = _a.INDEX.partial();
 //# sourceMappingURL=social-assistance.validation.js.map

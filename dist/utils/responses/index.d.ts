@@ -13,6 +13,9 @@ declare const _default: {
         toSocialAssistanceResponse: (socialAssistance: import("@prisma/client").SocialAssistance) => import("../../models/social-assistance.model").SocialAssistanceResponse;
         toSocialAssistanceResponses: (socialAssistances: import("@prisma/client").SocialAssistance[]) => import("../../models/social-assistance.model").SocialAssistanceResponse[];
     };
+    villageProfileResponse: {
+        toVillageProfileResponse: (villageProfile: import("@prisma/client").Profile) => import("../../models/village-profile").VillageProfileResponse;
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map
