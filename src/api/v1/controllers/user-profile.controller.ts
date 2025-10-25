@@ -1,17 +1,17 @@
 import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { ChangePasswordProfileRequest } from "../../../models/profile.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
 import { Token } from "../../../types/token.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
+import { ChangePasswordUserProfileRequest } from "../../../models/user-profile.model";
 
-export class ProfileController {
+export class UserProfileController {
 	static async getProfile(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const token = req.user as Token;
 
-			const result = await services.ProfileService.get(token);
+			const result = await services.UserProfileService.get(token);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -20,16 +20,16 @@ export class ProfileController {
 				data: result,
 			});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	}
 
 	static async changePassword(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const token = req.user as Token;
-			const reqBody = req.body as ChangePasswordProfileRequest;
+			const reqBody = req.body as ChangePasswordUserProfileRequest;
 
-			const result = await services.ProfileService.changePassword(reqBody, token!);
+			const result = await services.UserProfileService.changePassword(reqBody, token!);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

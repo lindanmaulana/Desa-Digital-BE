@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfileService = void 0;
+exports.UserProfileService = void 0;
 const repositories_1 = __importDefault(require("../repositories"));
 const user_repository_1 = require("../repositories/user.repository");
 const errors_1 = require("../utils/errors");
@@ -21,7 +21,7 @@ const helpers_1 = __importDefault(require("../utils/helpers"));
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
 const validation_1 = require("../utils/validations/validation");
-class ProfileService {
+class UserProfileService {
     static get(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield repositories_1.default.UserRepository.findById(user.id);
@@ -50,5 +50,5 @@ class ProfileService {
         });
     }
 }
-exports.ProfileService = ProfileService;
+exports.UserProfileService = UserProfileService;
 //# sourceMappingURL=profile.service.js.map

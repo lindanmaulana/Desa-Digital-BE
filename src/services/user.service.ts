@@ -42,7 +42,7 @@ export class UserService {
 			const newStaff = await tx.staff.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture,
+					profile_picture: validateFields.profile_picture ?? "/images/users/profile-user-default.png",
 					identity_number: validateFields.identity_number,
 					gender: validateFields.gender,
 					date_of_birth: validateFields.date_of_birth,
@@ -57,7 +57,7 @@ export class UserService {
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
-		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+		await services.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}
@@ -87,7 +87,7 @@ export class UserService {
 			const newHeadOfFamily = await tx.headOfFamily.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture,
+					profile_picture: validateFields.profile_picture ?? "/images/users/profile-user-default.png",
 					identity_number: validateFields.identity_number,
 					gender: validateFields.gender,
 					date_of_birth: validateFields.date_of_birth,
@@ -102,7 +102,7 @@ export class UserService {
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
-		await services.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+		await services.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}

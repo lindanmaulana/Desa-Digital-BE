@@ -32,6 +32,7 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -45,7 +46,7 @@ class UserService {
                 const newStaff = yield tx.staff.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: validateFields.profile_picture,
+                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "/images/users/profile-user-default.png",
                         identity_number: validateFields.identity_number,
                         gender: validateFields.gender,
                         date_of_birth: validateFields.date_of_birth,
@@ -58,7 +59,7 @@ class UserService {
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
-            yield _1.default.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }
@@ -71,6 +72,7 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -84,7 +86,7 @@ class UserService {
                 const newHeadOfFamily = yield tx.headOfFamily.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: validateFields.profile_picture,
+                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "/images/users/profile-user-default.png",
                         identity_number: validateFields.identity_number,
                         gender: validateFields.gender,
                         date_of_birth: validateFields.date_of_birth,
@@ -97,7 +99,7 @@ class UserService {
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
-            yield _1.default.EmailService.SendOtpMail(result.newUser.email, result.newUser);
+            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }

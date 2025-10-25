@@ -1,6 +1,6 @@
 import { AuthService } from "./auth.service";
 import { EmailService } from "./email.service";
-import { ProfileService } from "./profile.service";
+import { UserProfileService } from "./user-profile.service";
 import { SocialAssistanceService } from "./social-assistance.service";
 import { StaffService } from "./staff.service";
 import { UserService } from "./user.service";
@@ -10,7 +10,7 @@ declare const _default: {
     UserService: typeof UserService;
     StaffService: typeof StaffService;
     SocialAssistanceService: typeof SocialAssistanceService;
-    ProfileService: typeof ProfileService;
+    UserProfileService: typeof UserProfileService;
     EmailService: typeof EmailService;
     VillageProfileService: typeof VillageProfileService;
 };

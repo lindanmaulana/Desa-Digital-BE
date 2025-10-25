@@ -96,23 +96,7 @@ export class SocialAssistanceService {
 		console.log({cekActive: validateFields.is_active})
 
 		if (Object.keys(req).length <= 0) throw new BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.")
-
-		// let updateData: Partial<UpdateSocialAssistanceSchema> = {}
-
-		// if (validateFields.thumbnail) updateData.thumbnail = validateFields.thumbnail
-
-		// if (validateFields.name) updateData.name = validateFields.name
-
-		// if (validateFields.category !== undefined && validateFields.category !== null) updateData.category = validateFields.category
-
-		// if (validateFields.provider) updateData.provider = validateFields.provider
-
-		// if (validateFields.amount && validateFields.amount > 0) updateData.amount = validateFields.amount
-
-		// if (validateFields.description) updateData.description = validateFields.description
-
-		// if (validateFields.is_active && (!validateFields.is_active === undefined || !validateFields.is_active === null)) updateData.is_active = validateFields.is_active
-
+			
 		const conditions = Object.keys(validateFields).reduce((acc, key) => {
 			const value = validateFields[key as keyof typeof validateFields]
 

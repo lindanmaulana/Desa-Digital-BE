@@ -1,6 +1,6 @@
 import { AuthService } from "./auth.service";
 import { EmailService } from "./email.service";
-import { ProfileService } from "./profile.service";
+import { UserProfileService } from "./user-profile.service";
 import { SocialAssistanceService } from "./social-assistance.service";
 import { StaffService } from "./staff.service";
 import { UserService } from "./user.service";
@@ -11,7 +11,7 @@ export default {
 	UserService,
 	StaffService,
 	SocialAssistanceService,
-	ProfileService,
+	UserProfileService,
 	EmailService,
 	VillageProfileService
 };

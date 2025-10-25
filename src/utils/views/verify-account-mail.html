@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Verifikasi Akun Anda</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      /* Reset Styles */
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+      }
+
+      /* General Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      }
+      .header {
+        padding: 40px 30px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        padding: 30px;
+        text-align: center;
+      }
+      .otp-box {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #e9ecef;
+        border-radius: 6px;
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 10px;
+        color: #333333;
+        display: inline-block;
+      }
+      .footer {
+        padding: 30px;
+        font-size: 12px;
+        color: #999999;
+        text-align: center;
+        border-top: 1px solid #eeeeee;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td align="center" style="padding: 30px 10px 0px 10px">
+          <table border="0" cellpadding="0" cellspacing="0" class="container" width="100%">
+            <!-- HEADER -->
+            <tr>
+              <td align="center" class="header">
+                <h1 style="margin: 0; font-size: 28px">Verifikasi Akun</h1>
+              </td>
+            </tr>
+
+            <!-- CONTENT -->
+            <tr>
+              <td align="left" class="content">
+                <h2 style="font-size: 20px; color: #333333; margin-top: 0">Halo, {{ user_name }}!</h2>
+                <p style="font-size: 16px; color: #666666; line-height: 24px">
+                  Akun Anda telah dibuat oleh admin di <strong>{{ app_name }}</strong>. Klik tombol di bawah ini untuk memverifikasi dan
+                  mengaktifkan akun Anda.
+                </p>
+
+                <p style="margin: 30px 0">
+                  <a href="{{ verification_link }}" class="button">Verifikasi Akun Sekarang</a>
+                </p>
+
+                <div class="otp-box">{{ otp_code }}</div>
+
+                <p style="font-size: 14px; color: #999999; line-height: 20px">
+                  Link ini akan kedaluwarsa dalam waktu {{ expiry_minutes }} menit.
+                </p>
+
+                <p style="font-size: 12px; color: #999999; line-height: 18px">
+                  Jika Anda tidak meminta akun ini, abaikan email ini. Jangan pernah membagikan tautan ini kepada siapapun.
+                </p>
+
+                <!-- FALLBACK LINK -->
+                <p style="font-size: 12px; color: #999999; line-height: 18px; margin-top: 20px">
+                  Jika tombol di atas tidak berfungsi, salin dan tempel tautan berikut di browser Anda:<br />
+                  <a href="{{ verification_link }}" style="color: #007bff">{{ verification_link }}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td align="center" class="footer">
+                <p>Dikelola oleh {{ app_name }}</p>
+                <p><a href="{{ app_website }}" style="color: #999999; text-decoration: none">{{ app_website }}</a></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

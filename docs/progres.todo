@@ -13,10 +13,11 @@
 [X] 4. USERS -> registerStaff
 [X] 5. USERS -> registerHeadOfFamily
 [X] 6. SOCIAL-ASSISTANCE -> create
+[X] 7. SOCIAL-ASSISTANCE -> getAll
+[X] 8. SOCIAL-ASSISTANCE -> update
 
 ### 📝 Akan Dikerjakan (TODO)
-[] 2. SOCIAL-ASSISTANCE -> getAll
-[] 3. SOCIAL-ASSISTANCE -> update
+[] 1. Setup multer for upload image
+[] 2. Upload image for users -> head-of-family, staff, family-member
 
 ### 🚧 Blocking / Notes
-- cek kembali service resend-otp dll response nya jangan userResponse bahaya

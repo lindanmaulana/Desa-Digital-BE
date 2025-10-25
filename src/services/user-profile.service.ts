@@ -1,4 +1,4 @@
-import { ChangePasswordProfileRequest } from "../models/profile.model";
+import { ChangePasswordUserProfileRequest } from "../models/user-profile.model";
 import { UserResponse } from "../models/user.model";
 import repositories from "../repositories";
 import { UserRepository } from "../repositories/user.repository";
@@ -7,20 +7,20 @@ import { BadrequestError, InternalServerError, NotfoundError } from "../utils/er
 import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
 import responses from "../utils/responses";
-import { UserValidation } from "../utils/validations/user.validation";
+import { UserProfileValidation } from "../utils/validations/user-profile.validation";
 import { validation } from "../utils/validations/validation";
 
-export class ProfileService {
+export class UserProfileService {
 	static async get(user: Token) {
-		const result = await repositories.UserRepository.findById(user.id)
+		const result = await repositories.UserRepository.findById(user.id);
 
-		if (!result) throw new NotfoundError("Pengguna tidak ditemukan")
+		if (!result) throw new NotfoundError("Pengguna tidak ditemukan");
 
-		return responses.userResponse.toUserResponseWithRelation(result)
+		return responses.userResponse.toUserResponseWithRelation(result);
 	}
 
-	static async changePassword(req: ChangePasswordProfileRequest, user: Token): Promise<UserResponse> {
-		const validateFields = validation.validate(UserValidation.CHANGEPASSWORD, req);
+	static async changePassword(req: ChangePasswordUserProfileRequest, user: Token): Promise<UserResponse> {
+		const validateFields = validation.validate(UserProfileValidation.CHANGEPASSWORD, req);
 
 		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm password tidak sama");
 

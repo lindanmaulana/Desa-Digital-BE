@@ -16,8 +16,8 @@ route.post("/forgot-password", publicRateLimit, controllers.AuthController.forgo
 route.post("/verify-otp", publicRateLimit, controllers.AuthController.matchOtp)
 route.post("/reset-password", authenticatedVerificationUser, publicRateLimit, controllers.AuthController.resetPassword)
 
-route.get("/profile", authenticatedUser, publicRateLimit, controllers.ProfileController.getProfile)
-route.get("/profile/password", authenticatedUser, publicRateLimit, controllers.ProfileController.changePassword);
+route.get("/profile", authenticatedUser, publicRateLimit, controllers.UserProfileController.getProfile)
+route.get("/profile/password", authenticatedUser, publicRateLimit, controllers.UserProfileController.changePassword);
 
 
 export default route

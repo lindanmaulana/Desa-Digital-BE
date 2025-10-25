@@ -1,1 +1,1 @@
-{"version":3,"file":"multer.d.ts","sourceRoot":"","sources":["../../src/middlewares/multer.ts"],"names":[],"mappings":""}
+{"version":3,"file":"multer.d.ts","sourceRoot":"","sources":["../../src/middlewares/multer.ts"],"names":[],"mappings":"AACA,OAAO,MAA8B,MAAM,QAAQ,CAAA;AAmCnD,QAAA,MAAM,gBAAgB,eAMpB,CAAA;AAGF,eAAe,gBAAgB,CAAA"}

@@ -9,6 +9,7 @@ const express_1 = __importDefault(require("express"));
 const routes_1 = __importDefault(require("./api/v1/routes"));
 const handler_error_1 = require("./middlewares/handler-error");
 const notfound_1 = __importDefault(require("./middlewares/notfound"));
+const path_1 = __importDefault(require("path"));
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
 exports.app.use((0, cors_1.default)({
@@ -16,6 +17,8 @@ exports.app.use((0, cors_1.default)({
     credentials: true
 }));
 const V1 = "/api/v1";
+const publicPath = path_1.default.join(__dirname, "../public");
+exports.app.use(express_1.default.static(publicPath));
 exports.app.use(V1, routes_1.default);
 exports.app.use(handler_error_1.errorMiddleware);
 exports.app.use(notfound_1.default);
