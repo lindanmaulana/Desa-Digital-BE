@@ -10,12 +10,14 @@ const routes_1 = __importDefault(require("./api/v1/routes"));
 const handler_error_1 = require("./middlewares/handler-error");
 const notfound_1 = __importDefault(require("./middlewares/notfound"));
 const path_1 = __importDefault(require("path"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
 exports.app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials: true
 }));
+exports.app.use((0, cookie_parser_1.default)());
 const V1 = "/api/v1";
 const publicPath = path_1.default.join(__dirname, "../public");
 exports.app.use(express_1.default.static(publicPath));

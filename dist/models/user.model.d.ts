@@ -28,8 +28,6 @@ export interface UserResponseWithRelation extends UserResponse {
     head_of_family?: HeadOfFamilyResponse | null;
     image?: ImageResponse | null;
 }
-export interface PaginationRequest {
-}
 export interface GetAllUserRequest {
     keyword?: string;
     role?: UserRole;

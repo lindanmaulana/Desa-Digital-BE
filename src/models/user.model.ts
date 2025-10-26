@@ -33,8 +33,6 @@ export interface UserResponseWithRelation extends UserResponse {
 	image?: ImageResponse | null
 }
 
-export interface PaginationRequest {}
-
 export interface GetAllUserRequest {
 	keyword?: string;
 	role?: UserRole;

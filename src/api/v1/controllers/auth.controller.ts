@@ -31,11 +31,28 @@ export class AuthController {
 		try {
 			const result = await services.AuthService.signin(req.body);
 
+			res.cookie("jwt", result.token, {
+				httpOnly: true,
+				// secure: process.env.NODE_ENV === ""
+				// secure: false,
+				maxAge: 1 * 24 * 60 * 60 * 1000,
+				// sameSite: "lax"
+			});
+
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
 				message: "Login berhasil",
-				data: result,
+				data: {
+					id: result.id,
+					name: result.name,
+					email: result.email,
+					role: result.role,
+					is_active: result.is_active,
+					is_first_login: result.is_first_login,
+					created_at: result.created_at,
+					updated_at: result.updated_at,
+				},
 			});
 		} catch (err) {
 			next(err);
