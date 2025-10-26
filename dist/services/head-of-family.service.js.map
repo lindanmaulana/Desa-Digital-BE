@@ -1,1 +1,1 @@
-{"version":3,"file":"head-of-family.service.js","sourceRoot":"","sources":["../../src/services/head-of-family.service.ts"],"names":[],"mappings":";;;;;;;;;;;;AACA,8FAAwF;AACxF,gEAA6D;AAE7D,MAAa,mBAAmB;IAC/B,MAAM,CAAO,MAAM,CAAC,GAA8B;;YACjD,MAAM,cAAc,GAAG,uBAAU,CAAC,QAAQ,CAAC,kDAAsB,CAAC,MAAM,EAAE,GAAG,CAAC,CAAC;QAChF,CAAC;KAAA;CACD;AAJD,kDAIC"}
+{"version":3,"file":"head-of-family.service.js","sourceRoot":"","sources":["../../src/services/head-of-family.service.ts"],"names":[],"mappings":";;;AAKA,MAAa,mBAAmB;CAE/B;AAFD,kDAEC"}

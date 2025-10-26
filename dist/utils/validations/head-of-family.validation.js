@@ -10,7 +10,6 @@ class HeadOfFamilyValidation {
 exports.HeadOfFamilyValidation = HeadOfFamilyValidation;
 HeadOfFamilyValidation.CREATE = zod_1.default.object({
     user_id: zod_1.default.string().nonempty({ error: "Id Pengguna tidak boleh kosong" }),
-    profile_picture: zod_1.default.string().optional(),
     identity_number: zod_1.default.string().optional(),
     gender: zod_1.default.string().toUpperCase().optional(),
     date_of_birth: zod_1.default.string().optional(),

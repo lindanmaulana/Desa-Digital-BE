@@ -17,6 +17,10 @@ declare const _default: {
         limit: number;
         currentPage: number;
     };
+    fileHelpers: {
+        checkImage: (pathImage: string) => boolean;
+        deleteImage: (pathImage: string) => void;
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

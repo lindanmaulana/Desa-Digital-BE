@@ -15,6 +15,7 @@ import helpers from "../utils/helpers";
 import responses from "../utils/responses";
 import { UserValidation } from "../utils/validations/user.validation";
 import { validation } from "../utils/validations/validation";
+import CONSTS from "../utils/const/index"
 
 export class UserService {
 	static async registerStaffAccount(req: RegisterStaffRequest): Promise<UserResponse> {
@@ -42,7 +43,6 @@ export class UserService {
 			const newStaff = await tx.staff.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture ?? "/images/users/profile-user-default.png",
 					identity_number: validateFields.identity_number,
 					gender: validateFields.gender,
 					date_of_birth: validateFields.date_of_birth,
@@ -52,7 +52,16 @@ export class UserService {
 				},
 			});
 
-			return { newUser, newStaff };
+			const newImage = await tx.images.create({
+				data: {
+					user_id: newUser.id,
+					filename: "profile-user-default.png",
+					path: CONSTS.images.USERPATH,
+					entity_type: "USER",
+				}
+			})
+
+			return { newUser, newStaff, newImage };
 		});
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
@@ -87,7 +96,6 @@ export class UserService {
 			const newHeadOfFamily = await tx.headOfFamily.create({
 				data: {
 					user_id: newUser.id,
-					profile_picture: validateFields.profile_picture ?? "/images/users/profile-user-default.png",
 					identity_number: validateFields.identity_number,
 					gender: validateFields.gender,
 					date_of_birth: validateFields.date_of_birth,
@@ -97,7 +105,16 @@ export class UserService {
 				},
 			});
 
-			return { newUser, newHeadOfFamily };
+			const newImage = await tx.images.create({
+				data: {
+					user_id: newUser.id,
+					filename: "profile-user-default.png",
+					path: CONSTS.images.USERPATH,
+					entity_type: "USER",
+				}
+			})
+
+			return { newUser, newHeadOfFamily, newImage };
 		});
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
@@ -185,6 +202,7 @@ export class UserService {
 			include: {
 				staff: true,
 				head_of_family: true,
+				image: true
 			},
 			orderBy: {
 				created_at: "desc"

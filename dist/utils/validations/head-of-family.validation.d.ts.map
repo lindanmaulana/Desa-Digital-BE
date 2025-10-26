@@ -1,1 +1,1 @@
-{"version":3,"file":"head-of-family.validation.d.ts","sourceRoot":"","sources":["../../../src/utils/validations/head-of-family.validation.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;AAEpB,qBAAa,sBAAsB;IAClC,MAAM,CAAC,QAAQ,CAAC,MAAM;;;;;;;;;sBASpB;CACF"}
+{"version":3,"file":"head-of-family.validation.d.ts","sourceRoot":"","sources":["../../../src/utils/validations/head-of-family.validation.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;AAEpB,qBAAa,sBAAsB;IAClC,MAAM,CAAC,QAAQ,CAAC,MAAM;;;;;;;;sBAQpB;CACF"}

@@ -17,6 +17,18 @@ class StaffRepository {
             return db_1.prismaClient.staff.create(args);
         });
     }
+    static update(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.staff.update(args);
+        });
+    }
+    static findByUserId(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.staff.findFirst({
+                where: { user_id: userId }
+            });
+        });
+    }
 }
 exports.StaffRepository = StaffRepository;
 //# sourceMappingURL=staff.repository.js.map

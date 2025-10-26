@@ -71,6 +71,14 @@ enum Bank {
   MANDIRI
 }
 
+enum Entity {
+  USER
+  SOCIAL_ASSISTANCE
+  DEVELOPMENT
+  EVENT
+  PROFILE
+}
+
 model User {
   id String @id @default(uuid())
   name String @db.VarChar(100)
@@ -90,6 +98,7 @@ model User {
   family_member FamilyMember?
   staff Staff?
   development_applicant DevelopmentApplicant[]
+  image Images?
 
   @@map("users")
 }
@@ -97,7 +106,6 @@ model User {
 model Staff {
   id String @id @default(uuid())
   user_id String @unique
-  profile_picture String? @db.VarChar(250)
   identity_number String? @db.VarChar(20)
   gender Gender @default(MALE)
   date_of_birth DateTime? @db.Date
@@ -116,7 +124,6 @@ model Staff {
 model HeadOfFamily {
   id String @id @default(uuid())
   user_id String @unique
-  profile_picture String? @db.VarChar(150)
   identity_number String? @db.VarChar(20)
   gender Gender @default(MALE)
   date_of_birth DateTime? @db.Date
@@ -141,7 +148,6 @@ model FamilyMember {
   id String @id @default(uuid())
   head_of_family_id String
   user_id String @unique
-  profile_picture String? @db.VarChar()
   identity_number String? @db.VarChar(20)
   gender Gender @default(MALE)
   date_of_birth DateTime? @db.Date
@@ -175,6 +181,7 @@ model Development {
   updated_at DateTime @updatedAt
 
   development_applicant DevelopmentApplicant[]
+  image Images?
 
 
   @@map("developments")
@@ -210,6 +217,7 @@ model Event {
   updated_at DateTime @updatedAt
 
   event EventParticipant[]
+  image Images?
 
   @@map("events")
 }
@@ -231,38 +239,6 @@ model EventParticipant {
   @@map("event_participants")
 }
 
-model Profile {
-  id String @id @default(uuid())
-  thumbnail String @db.VarChar()
-  name String @db.VarChar()
-  about String @db.Text
-  headman String @db.VarChar()
-  people Int @db.Integer
-  agricultural_area Decimal @db.Decimal(10, 2)
-  total_area Decimal @db.Decimal(10, 2)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  profile_image ProfileImage[]
-
-  @@map("profiles")
-}
-
-model ProfileImage {
-  id String @id @default(uuid())
-  profile_id String
-  image String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("profile_images")
-}
-
-
 model SocialAssistance {
   id String @id @default(uuid())
   thumbnail String? @db.VarChar()
@@ -277,6 +253,7 @@ model SocialAssistance {
   updated_at DateTime @updatedAt
 
   sosial_assistance_recipient SocialAssistanceRecipient[]
+  image Images?
 
   @@map("social_assistance")
 }
@@ -300,4 +277,60 @@ model SocialAssistanceRecipient {
   head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("social_assistance_recipient")
+}
+
+model Profile {
+  id String @id @default(uuid())
+  thumbnail String @db.VarChar()
+  name String @db.VarChar()
+  about String @db.Text
+  headman String @db.VarChar()
+  people Int @db.Integer
+  agricultural_area Decimal @db.Decimal(10, 2)
+  total_area Decimal @db.Decimal(10, 2)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile_image ProfileImage[]
+  images Images[]
+
+  @@map("profiles")
+}
+
+model ProfileImage {
+  id String @id @default(uuid())
+  profile_id String
+  image String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("profile_images")
+}
+
+
+model Images {
+  id String @id @default(uuid())
+  filename String @db.VarChar()
+  path String @db.VarChar()
+  profile_id String?
+  user_id String? @unique
+  social_assistance_id String? @unique
+  event_id String? @unique
+  development_id String? @unique
+  entity_type Entity
+
+  profile Profile? @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  social_assistance SocialAssistance? @relation(fields: [social_assistance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  event Event? @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  development Development? @relation(fields: [development_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("images")
 }

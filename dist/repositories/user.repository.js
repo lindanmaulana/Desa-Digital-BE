@@ -36,7 +36,8 @@ class UserRepository {
                 },
                 include: {
                     staff: true,
-                    head_of_family: true
+                    head_of_family: true,
+                    image: true
                 }
             });
         });
@@ -74,6 +75,11 @@ class UserRepository {
                     password,
                 },
             });
+        });
+    }
+    static updateProfile(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update(args);
         });
     }
     static updateIsFirstLogin(id) {

@@ -1,6 +1,9 @@
-import { ChangePasswordUserProfileRequest } from "../models/user-profile.model";
+import { Gender, Marital, Prisma } from "@prisma/client";
+import { UpdateStaffRequest } from "../models/staff.model";
+import { ChangePasswordUserProfileRequest, UpdateUserProfileRequest } from "../models/user-profile.model";
 import { UserResponse } from "../models/user.model";
 import repositories from "../repositories";
+import { StaffRepository } from "../repositories/staff.repository";
 import { UserRepository } from "../repositories/user.repository";
 import { Token } from "../types/token.type";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
@@ -9,6 +12,7 @@ import helpers from "../utils/helpers";
 import responses from "../utils/responses";
 import { UserProfileValidation } from "../utils/validations/user-profile.validation";
 import { validation } from "../utils/validations/validation";
+import { removeUndefined } from "../utils/helpers/remove-undefined";
 
 export class UserProfileService {
 	static async get(user: Token) {
@@ -17,6 +21,45 @@ export class UserProfileService {
 		if (!result) throw new NotfoundError("Pengguna tidak ditemukan");
 
 		return responses.userResponse.toUserResponseWithRelation(result);
+	}
+
+	static async update(user: Token, req: UpdateUserProfileRequest): Promise<UserResponse> {
+		const validateFields = validation.validate(UserProfileValidation.UPDATE, req);
+
+		const checkUser = await UserRepository.findById(user.id);
+
+		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
+
+		const data = removeUndefined(validateFields)
+
+		if (checkUser.role === "STAFF" && !validateFields.head_of_family_id) {
+
+			const checkStaff = await repositories.StaffRepository.findByUserId(checkUser.id)
+
+			if (!checkStaff) throw new NotfoundError("Pengguna belum terdaftar sebagai Staf!")
+
+			const staffConditions: Prisma.StaffUpdateArgs = {
+				where: { id: checkStaff.id },
+				data
+			}
+
+			await repositories.StaffRepository.update(staffConditions);
+		}
+
+		if (checkUser.role === "HEAD_OF_FAMILY" && !validateFields.head_of_family_id) {
+			const checkHeadOfFamily = await repositories.HeadOfFamilyRepository.findByUserId(checkUser.id)
+
+			if (!checkHeadOfFamily) throw new NotfoundError("Pengguna belum terdaftar sebagai Kepala Keluarga!")
+
+			const headOfFamilyConditions: Prisma.HeadOfFamilyUpdateArgs = {
+				where: {user_id: checkUser.id},
+				data
+			}
+
+			await repositories.HeadOfFamilyRepository.update(headOfFamilyConditions)
+		}
+
+		return responses.userResponse.toUserResponseWithRelation(checkUser)
 	}
 
 	static async changePassword(req: ChangePasswordUserProfileRequest, user: Token): Promise<UserResponse> {

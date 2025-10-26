@@ -19,5 +19,9 @@
 ### 📝 Akan Dikerjakan (TODO)
 [] 1. Setup multer for upload image
 [] 2. Upload image for users -> head-of-family, staff, family-member
+[] 3. Atur Alur bagaimana update data beserta validasi image yang optimal
+[] 4. Tambahkan Table images yang di dalamnya ada fk optional dari tabel yang ingin ada image nya
 
 ### 🚧 Blocking / Notes
+- terakhir di bagian update staff image alur nya belum bener
+- penamaan image yang di upload [/users/namaImage, /social-assistance/namaImage]

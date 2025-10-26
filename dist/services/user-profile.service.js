@@ -21,6 +21,7 @@ const helpers_1 = __importDefault(require("../utils/helpers"));
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_profile_validation_1 = require("../utils/validations/user-profile.validation");
 const validation_1 = require("../utils/validations/validation");
+const remove_undefined_1 = require("../utils/helpers/remove-undefined");
 class UserProfileService {
     static get(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -28,6 +29,36 @@ class UserProfileService {
             if (!result)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
             return responses_1.default.userResponse.toUserResponseWithRelation(result);
+        });
+    }
+    static update(user, req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(user_profile_validation_1.UserProfileValidation.UPDATE, req);
+            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
+            if (!checkUser)
+                throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
+            const data = (0, remove_undefined_1.removeUndefined)(validateFields);
+            if (checkUser.role === "STAFF" && !validateFields.head_of_family_id) {
+                const checkStaff = yield repositories_1.default.StaffRepository.findByUserId(checkUser.id);
+                if (!checkStaff)
+                    throw new errors_1.NotfoundError("Pengguna belum terdaftar sebagai Staf!");
+                const staffConditions = {
+                    where: { id: checkStaff.id },
+                    data
+                };
+                yield repositories_1.default.StaffRepository.update(staffConditions);
+            }
+            if (checkUser.role === "HEAD_OF_FAMILY" && !validateFields.head_of_family_id) {
+                const checkHeadOfFamily = yield repositories_1.default.HeadOfFamilyRepository.findByUserId(checkUser.id);
+                if (!checkHeadOfFamily)
+                    throw new errors_1.NotfoundError("Pengguna belum terdaftar sebagai Kepala Keluarga!");
+                const headOfFamilyConditions = {
+                    where: { user_id: checkUser.id },
+                    data
+                };
+                yield repositories_1.default.HeadOfFamilyRepository.update(headOfFamilyConditions);
+            }
+            return responses_1.default.userResponse.toUserResponseWithRelation(checkUser);
         });
     }
     static changePassword(req, user) {

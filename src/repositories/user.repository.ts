@@ -25,7 +25,8 @@ export class UserRepository {
 			},
 			include: {
 				staff: true,
-				head_of_family: true
+				head_of_family: true,
+				image: true
 			}
 		});
 	}
@@ -60,6 +61,10 @@ export class UserRepository {
 				password,
 			},
 		});
+	}
+
+	static async updateProfile(args: Prisma.UserUpdateArgs) {
+		return prismaClient.user.update(args)
 	}
 
 	static async updateIsFirstLogin(id: string) {

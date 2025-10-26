@@ -4,11 +4,13 @@ export interface ChangePasswordUserProfileRequest {
 }
 
 export interface UpdateUserProfileRequest {
+	head_of_family_id?: string
 	profile_picture?: string;
 	identity_number?: string;
-	gender: string;
+	gender?: string;
 	date_of_birth?: string;
 	phone_number?: string;
 	occupation?: string;
-	marital_status: string;
+	marital_status?: string;
+	relation?: string
 }

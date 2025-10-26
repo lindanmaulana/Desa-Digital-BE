@@ -1,7 +1,6 @@
-import { Prisma, Relation, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { UserResponse, UserResponseWithRelation, UserWithRelations } from "../../models/user.model";
 import { toUserRole } from "../helpers/to-user-role";
-import { prismaClient } from "../../db";
 
 const toUserResponse = (user: User): UserResponse => {
 	return {
@@ -29,7 +28,6 @@ const toUserResponseWithRelation = (user: UserWithRelations): UserResponseWithRe
 		staff: user.staff && {
 			id: user.staff.id,
 			user_id: user.staff.user_id,
-			profile_picture: user.staff.profile_picture ?? "",
 			identity_number: user.staff.identity_number ?? "",
 			gender: user.staff.gender,
 			date_of_birth: user.staff.date_of_birth?.toString() ?? "",
@@ -40,11 +38,20 @@ const toUserResponseWithRelation = (user: UserWithRelations): UserResponseWithRe
 			updated_at: user.staff.updated_at,
 		},
 
+		image: user.image && {
+			id: user.image.id,
+			filename: user.image.filename,
+			path: user.image.path,
+			user_id: user.image.user_id ?? "",
+			entity_type: user.image.entity_type,
+			created_at: user.image.created_at,
+			updated_at: user.image.updated_at,
+		},
+
 		created_at: user.created_at,
 		updated_at: user.updated_at,
 	};
 };
-
 
 const toUserResponses = (users: User[]): UserResponse[] => {
 	return users.map((user) => ({
@@ -72,7 +79,6 @@ const toUserResponsesWithRelation = (users: UserWithRelations[]): UserResponseWi
 		staff: user.staff && {
 			id: user.staff.id,
 			user_id: user.staff.user_id,
-			profile_picture: user.staff.profile_picture ?? "",
 			identity_number: user.staff.identity_number ?? "",
 			gender: user.staff.gender,
 			date_of_birth: user.staff.date_of_birth?.toString() ?? "",
@@ -86,7 +92,6 @@ const toUserResponsesWithRelation = (users: UserWithRelations[]): UserResponseWi
 		head_of_family: user.head_of_family && {
 			id: user.head_of_family.id,
 			user_id: user.head_of_family.user_id,
-			profile_picture: user.head_of_family.profile_picture ?? "",
 			identity_number: user.head_of_family.identity_number ?? "",
 			gender: user.head_of_family.gender,
 			date_of_birth: user.head_of_family.date_of_birth?.toString() ?? "",
@@ -95,6 +100,16 @@ const toUserResponsesWithRelation = (users: UserWithRelations[]): UserResponseWi
 			marital_status: user.head_of_family.marital_status,
 			created_at: user.head_of_family.created_at,
 			updated_at: user.head_of_family.updated_at,
+		},
+
+		image: user.image && {
+			id: user.image.id,
+			filename: user.image.filename,
+			path: user.image.path,
+			user_id: user.image.user_id ?? "",
+			entity_type: user.image.entity_type,
+			created_at: user.image.created_at,
+			updated_at: user.image.updated_at,
 		},
 
 		created_at: user.created_at,

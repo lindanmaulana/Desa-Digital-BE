@@ -1,34 +1,39 @@
-import { Gender, Marital } from "@prisma/client";
-import { CreateStaffRequest, StaffResponse } from "../models/staff.model";
-import { StaffRepository } from "../repositories/staff.repository";
-import { UserRepository } from "../repositories/user.repository";
+import { StaffResponse, UpdateStaffRequest } from "../models/staff.model";
+import repositories from "../repositories";
+import { Token } from "../types/token.type";
 import { InternalServerError, NotfoundError } from "../utils/errors";
+import helpers from "../utils/helpers";
+import { removeUndefined } from "../utils/helpers/remove-undefined";
+import responses from "../utils/responses";
 import { StaffValidation } from "../utils/validations/staff.validation";
 import { validation } from "../utils/validations/validation";
-import responses from "../utils/responses";
 
 export class StaffService {
-	static async create(req: CreateStaffRequest): Promise<StaffResponse> {
-		const validateFields = validation.validate(StaffValidation.CREATE, req);
+	static async update(user: Token, req: UpdateStaffRequest): Promise<StaffResponse> {
+		const validateFields = validation.validate(StaffValidation.UPDATE, req)
 
-		const checkUser = await UserRepository.findById(req.user_id);
+		const checkUser = await repositories.UserRepository.findById(user.id)
+		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan!")
 
-		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
+		const checkStaff = await repositories.StaffRepository.findByUserId(checkUser.id)
+		if (!checkStaff) throw new NotfoundError("Pengguna belum terdaftar sebagai Staf")
 
-		const result = await StaffRepository.create({
-			data: {
-				user_id: validateFields.user_id,
-				profile_picture: validateFields.profile_picture ?? "",
-				identity_number: validateFields.identity_number ?? "",
-				gender: validateFields.gender as Gender,
-				date_of_birth: validateFields.date_of_birth ?? "",
-				phone_number: validateFields.phone_number ?? "",
-				occupation: validateFields.occupation ?? null,
-				marital_status: validateFields.marital_status as Marital,
-			},
-		});
+		// if (validateFields.profile_picture) {
+		// 	const imageExist = helpers.fileHelpers.checkImage(validateFields.profile_picture)
 
-		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
+		// 	if (!imageExist) throw new NotfoundError("Image tidak ditemukan")
+
+		// 	if (checkStaff.profile_picture) helpers.fileHelpers.deleteImage(checkStaff.profile_picture)
+		// }
+
+		const data = removeUndefined(validateFields)
+
+		const result = await repositories.StaffRepository.update({
+			where: {id: checkStaff.id},
+			data: data
+		})
+
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengupdate data, please try again later")
 
 		return responses.staffResponse.toStaffResponse(result)
 	}

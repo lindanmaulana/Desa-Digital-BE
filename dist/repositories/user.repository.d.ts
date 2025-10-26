@@ -9,7 +9,6 @@ export declare class UserRepository {
             created_at: Date;
             updated_at: Date;
             user_id: string;
-            profile_picture: string | null;
             identity_number: string | null;
             gender: import("@prisma/client").$Enums.Gender;
             date_of_birth: Date | null;
@@ -22,13 +21,25 @@ export declare class UserRepository {
             created_at: Date;
             updated_at: Date;
             user_id: string;
-            profile_picture: string | null;
             identity_number: string | null;
             gender: import("@prisma/client").$Enums.Gender;
             date_of_birth: Date | null;
             phone_number: string | null;
             occupation: string | null;
             marital_status: import("@prisma/client").$Enums.Marital;
+        } | null;
+        image: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            user_id: string | null;
+            filename: string;
+            path: string;
+            profile_id: string | null;
+            social_assistance_id: string | null;
+            event_id: string | null;
+            development_id: string | null;
+            entity_type: import("@prisma/client").$Enums.Entity;
         } | null;
     } & {
         name: string;
@@ -75,6 +86,19 @@ export declare class UserRepository {
         updated_at: Date;
     }>;
     static updatePassword(id: string, password: string): Promise<{
+        name: string;
+        id: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp_code: string | null;
+        otp_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
+    }>;
+    static updateProfile(args: Prisma.UserUpdateArgs): Promise<{
         name: string;
         id: string;
         email: string;

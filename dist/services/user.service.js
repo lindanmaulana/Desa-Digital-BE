@@ -22,6 +22,7 @@ const helpers_1 = __importDefault(require("../utils/helpers"));
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
 const validation_1 = require("../utils/validations/validation");
+const index_1 = __importDefault(require("../utils/const/index"));
 class UserService {
     static registerStaffAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,7 +33,6 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
-                var _a;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -46,7 +46,6 @@ class UserService {
                 const newStaff = yield tx.staff.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "/images/users/profile-user-default.png",
                         identity_number: validateFields.identity_number,
                         gender: validateFields.gender,
                         date_of_birth: validateFields.date_of_birth,
@@ -55,7 +54,15 @@ class UserService {
                         marital_status: validateFields.marital_status,
                     },
                 });
-                return { newUser, newStaff };
+                const newImage = yield tx.images.create({
+                    data: {
+                        user_id: newUser.id,
+                        filename: "profile-user-default.png",
+                        path: index_1.default.images.USERPATH,
+                        entity_type: "USER",
+                    }
+                });
+                return { newUser, newStaff, newImage };
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
@@ -72,7 +79,6 @@ class UserService {
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
-                var _a;
                 const newUser = yield tx.user.create({
                     data: {
                         email: validateFields.email,
@@ -86,7 +92,6 @@ class UserService {
                 const newHeadOfFamily = yield tx.headOfFamily.create({
                     data: {
                         user_id: newUser.id,
-                        profile_picture: (_a = validateFields.profile_picture) !== null && _a !== void 0 ? _a : "/images/users/profile-user-default.png",
                         identity_number: validateFields.identity_number,
                         gender: validateFields.gender,
                         date_of_birth: validateFields.date_of_birth,
@@ -95,7 +100,15 @@ class UserService {
                         marital_status: validateFields.marital_status,
                     },
                 });
-                return { newUser, newHeadOfFamily };
+                const newImage = yield tx.images.create({
+                    data: {
+                        user_id: newUser.id,
+                        filename: "profile-user-default.png",
+                        path: index_1.default.images.USERPATH,
+                        entity_type: "USER",
+                    }
+                });
+                return { newUser, newHeadOfFamily, newImage };
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
@@ -160,6 +173,7 @@ class UserService {
                 include: {
                     staff: true,
                     head_of_family: true,
+                    image: true
                 },
                 orderBy: {
                     created_at: "desc"

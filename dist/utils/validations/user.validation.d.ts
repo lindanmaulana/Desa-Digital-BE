@@ -1,7 +1,6 @@
 import z from "zod";
 export declare class UserValidation {
     static readonly PROFILE: {
-        profile_picture: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         identity_number: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         gender: z.ZodDefault<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
             MALE: "MALE";
@@ -19,7 +18,6 @@ export declare class UserValidation {
         name: z.ZodString;
         email: z.ZodEmail;
         password: z.ZodString;
-        profile_picture: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         identity_number: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         gender: z.ZodDefault<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
             MALE: "MALE";
@@ -37,7 +35,6 @@ export declare class UserValidation {
         name: z.ZodString;
         email: z.ZodEmail;
         password: z.ZodString;
-        profile_picture: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         identity_number: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         gender: z.ZodDefault<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
             MALE: "MALE";
@@ -62,10 +59,6 @@ export declare class UserValidation {
         is_active: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodBoolean>>;
         page: z.ZodOptional<z.ZodString>;
         limit: z.ZodOptional<z.ZodString>;
-    }, z.core.$strip>;
-    static readonly CHANGEPASSWORD: z.ZodObject<{
-        password: z.ZodString;
-        confirm_password: z.ZodString;
     }, z.core.$strip>;
 }
 //# sourceMappingURL=user.validation.d.ts.map

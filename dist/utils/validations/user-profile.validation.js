@@ -14,12 +14,13 @@ UserProfileValidation.CHANGEPASSWORD = zod_1.default.object({
     confirm_password: zod_1.default.string({ error: "Konfirm password tidak boleh kosong" }).min(8, "Confirm Password minimal 8 karakter"),
 });
 UserProfileValidation.UPDATE = zod_1.default.object({
-    profile_picture: zod_1.default.string().optional(),
-    identity_number: zod_1.default.string().optional(),
-    gender: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_GENDER)).optional(),
-    date_of_birth: zod_1.default.coerce.date().optional(),
-    phone_number: zod_1.default.string().optional(),
-    occupation: zod_1.default.string().optional(),
-    marital_status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_MARITAL)).optional()
+    head_of_family_id: zod_1.default.string().optional(),
+    identity_number: zod_1.default.string().nullable().optional(),
+    gender: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_GENDER)),
+    date_of_birth: zod_1.default.coerce.date().nullable().optional(),
+    phone_number: zod_1.default.string().nullable().optional(),
+    occupation: zod_1.default.string().nullable().optional(),
+    marital_status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_MARITAL)),
+    relation: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_RELATION))
 });
 //# sourceMappingURL=user-profile.validation.js.map

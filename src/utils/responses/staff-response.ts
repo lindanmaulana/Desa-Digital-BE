@@ -5,7 +5,6 @@ const toStaffResponse = (staff: Staff): StaffResponse => {
 	return {
 		id: staff.id,
 		user_id: staff.user_id,
-		profile_picture: staff.profile_picture ?? "",
 		identity_number: staff.identity_number ?? "",
 		gender: staff.gender ?? "",
 		date_of_birth: staff.date_of_birth?.toString() ?? "",
@@ -22,7 +21,6 @@ const toStaffResponses = (staff: Staff[]): StaffResponse[] => {
 	return staff.map((staf) => ({
 		id: staf.id,
 		user_id: staf.user_id,
-		profile_picture: staf.profile_picture ?? "",
 		identity_number: staf.identity_number ?? "",
 		gender: staf.gender ?? "",
 		date_of_birth: staf.date_of_birth?.toString() ?? "",

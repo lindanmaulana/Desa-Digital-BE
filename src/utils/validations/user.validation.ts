@@ -4,7 +4,6 @@ import { VALID_GENDER, VALID_MARITAL, VALID_ROLE } from "./validation";
 
 export class UserValidation {
 	static readonly PROFILE = z.object({
-		profile_picture: z.string().nullable().default(null),
 		identity_number: z.string().nullable().default(null),
 		gender: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_GENDER)).default("MALE"),
 		date_of_birth: z.coerce.date().nullable().default(null),
@@ -32,9 +31,4 @@ export class UserValidation {
 		page: z.string().optional(),
 		limit: z.string().optional()
 	})
-
-	static readonly CHANGEPASSWORD = z.object({
-		password: z.string({ error: "Password tidak boleh kosong" }).min(8, "Password minimal 8 karakter"),
-		confirm_password: z.string({ error: "Konfirm password tidak boleh kosong" }).min(8, "Confirm Password minimal 8 karakter"),
-	});
 }

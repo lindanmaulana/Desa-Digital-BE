@@ -3,10 +3,12 @@ import { SignupRequest } from "./auth.model";
 import { PaginationResponse } from "./pagination.model";
 import { StaffResponse } from "./staff.model";
 import { HeadOfFamilyResponse } from "./head-of-family.model";
+import { ImageResponse } from "./image.model";
 export type UserWithRelations = Prisma.UserGetPayload<{
     include: {
         staff: true;
         head_of_family: true;
+        image: true;
     };
 }>;
 export interface UserResponse {
@@ -24,6 +26,7 @@ export interface UserResponse {
 export interface UserResponseWithRelation extends UserResponse {
     staff?: StaffResponse | null;
     head_of_family?: HeadOfFamilyResponse | null;
+    image?: ImageResponse | null;
 }
 export interface PaginationRequest {
 }
@@ -39,7 +42,6 @@ export interface GetAllUserResponse {
     pagination: PaginationResponse;
 }
 export interface RegisterHeadOfFamilyRequest extends SignupRequest {
-    profile_picture?: string;
     identity_number?: string;
     gender?: string;
     date_of_birth?: string;
@@ -48,7 +50,6 @@ export interface RegisterHeadOfFamilyRequest extends SignupRequest {
     marital_status?: string;
 }
 export interface RegisterStaffRequest extends SignupRequest {
-    profile_picture?: string;
     identity_number?: string;
     gender?: string;
     date_of_birth?: string;

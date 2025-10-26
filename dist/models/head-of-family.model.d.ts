@@ -1,7 +1,6 @@
 import { Gender, Marital, Prisma } from "@prisma/client";
 export interface HeadOfFamilyResponse {
     user_id: string;
-    profile_picture?: string;
     identity_number?: string;
     gender: Gender;
     date_of_birth?: string;
@@ -20,7 +19,6 @@ export type HeadOfFamilyWithRelations = Prisma.HeadOfFamilyGetPayload<{
 }>;
 export interface CreateHeadOfFamilyRequest {
     user_id: string;
-    profile_picture?: string;
     identity_number?: string;
     gender: Gender;
     date_of_birth?: string;

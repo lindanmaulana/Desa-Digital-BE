@@ -1,18 +1,7 @@
 import { Gender, Marital } from "@prisma/client";
-export interface CreateStaffRequest {
-    user_id: string;
-    profile_picture?: string;
-    identity_number?: string;
-    gender: string;
-    date_of_birth?: string;
-    phone_number?: string;
-    occupation?: string;
-    marital_status: string;
-}
 export interface StaffResponse {
     id: string;
     user_id: string;
-    profile_picture?: string;
     identity_number?: string;
     gender: Gender;
     date_of_birth?: string;
@@ -21,5 +10,22 @@ export interface StaffResponse {
     marital_status: Marital;
     created_at: Date;
     updated_at: Date;
+}
+export interface CreateStaffRequest {
+    user_id: string;
+    identity_number?: string;
+    gender: string;
+    date_of_birth?: string;
+    phone_number?: string;
+    occupation?: string;
+    marital_status: string;
+}
+export interface UpdateStaffRequest {
+    identity_number?: string;
+    gender?: string;
+    date_of_birth?: string;
+    phone_number?: string;
+    occupation?: string;
+    marital_status?: string;
 }
 //# sourceMappingURL=staff.model.d.ts.map
