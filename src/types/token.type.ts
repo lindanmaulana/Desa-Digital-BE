@@ -1,5 +1,13 @@
 import { UserRole } from "@prisma/client"
 
+export type TypeToken = "ACCESS" | "VERIFY"
+
+export interface BasePayloadToken {
+	user_id: string
+	role: UserRole
+	type: TypeToken
+}
+
 export interface Token {
     id: string
     name: string

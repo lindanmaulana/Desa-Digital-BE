@@ -20,9 +20,9 @@ import { ManyRequestError } from "../utils/errors/many-request";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
 import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
-import { createToken } from "../utils/helpers/create-token";
-import { createTokenVerification } from "../utils/helpers/create-token-verification";
 import { generateOtp } from "../utils/helpers/generate-otp";
+import { createTokenUser } from "../utils/helpers/jwt/create-token-user";
+import { createTokenVerification } from "../utils/helpers/jwt/create-token-verification";
 import responses from "../utils/responses";
 import { AuthValidation } from "../utils/validations/auth.validation";
 import { validation } from "../utils/validations/validation";
@@ -47,7 +47,7 @@ export class AuthService {
 				otp_code: otp,
 				otp_last_sen_at: new Date(),
 			},
-		})
+		});
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later!");
 
@@ -70,7 +70,7 @@ export class AuthService {
 
 		if (!isPasswordValid) throw new UnauthorizedError("Invalid credentials");
 
-		const token = createToken(checkUser);
+		const token = createTokenUser(checkUser);
 
 		return {
 			...responses.userResponse.toUserResponse(checkUser),
@@ -132,7 +132,8 @@ export class AuthService {
 
 		return {
 			email: result.email,
-			otp_last_sent_at: new Date()
+			otp_last_sent_at: new Date(),
+			otp_expiry_seconds: RESEND_COOLDOWN_SECONDS,
 		};
 	}
 
@@ -158,7 +159,7 @@ export class AuthService {
 
 		return {
 			email: result.email,
-			otp_last_sent_at: new Date()
+			otp_last_sent_at: new Date(),
 		};
 	}
 

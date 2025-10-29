@@ -101,7 +101,8 @@ class AuthService {
             yield _1.default.EmailService.ResendOtpMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
-                otp_last_sent_at: new Date()
+                otp_last_sent_at: new Date(),
+                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS
             };
         });
     }

@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { createJwt } from "./create-jwt";
 
-export const createToken = (user: User): string => {
+export const createTokenUser = (user: User): string => {
 	const payloadToken = {
 		id: user.id,
 		name: user.name,
@@ -11,7 +11,7 @@ export const createToken = (user: User): string => {
 		is_first_login: user.is_first_login,
 	};
 
-	const token = createJwt({payload: payloadToken})
+	const token = createJwt({ payload: payloadToken });
 
-	return token
+	return token;
 };

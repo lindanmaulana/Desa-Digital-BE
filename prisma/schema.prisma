@@ -86,8 +86,11 @@ model User {
   password String @db.VarChar(100)
   role UserRole @default(RESIDENT)
 
-  otp_code String? @db.VarChar()
+  otp_code String? @db.VarChar(100)
   otp_last_sen_at DateTime? @db.Timestamp()
+
+  verify_token String? @db.VarChar(255)
+
   is_active Boolean @db.Boolean @default(false)
   is_first_login Boolean @db.Boolean @default(true)
 

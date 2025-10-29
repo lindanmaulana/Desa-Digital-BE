@@ -59,7 +59,7 @@ class EmailService {
                 const view = {
                     user_name: data.name,
                     otp_code: data.otp_code,
-                    title: "Kode Verifikasi Baru Terkirim",
+                    title: "Kode Verifikasi",
                     description: "Kode verifikasi baru dari",
                     app_name: "Desa Digital",
                     app_website: "https://desadigital.com",
@@ -85,7 +85,7 @@ class EmailService {
                     user_name: data.name,
                     otp_code: data.otp_code,
                     app_name: "Desa Digital",
-                    verification_link: `${config_1.BASEURL_CLIENT}?${email}`,
+                    verification_link: `${config_1.BASEURL_CLIENT}?account=${email}`,
                 };
                 let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
                 const htmlOutput = mustache_1.default.render(template, view);

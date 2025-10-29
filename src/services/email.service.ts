@@ -47,7 +47,7 @@ export class EmailService {
 			const view = {
 				user_name: data.name,
 				otp_code: data.otp_code,
-				title: "Kode Verifikasi Baru Terkirim",
+				title: "Kode Verifikasi",
 				description: "Kode verifikasi baru dari",
 				app_name: "Desa Digital",
 				app_website: "https://desadigital.com",
@@ -73,7 +73,7 @@ export class EmailService {
 				user_name: data.name,
 				otp_code: data.otp_code,
 				app_name: "Desa Digital",
-				verification_link: `${BASEURL_CLIENT}?${email}`,
+				verification_link: `${BASEURL_CLIENT}?account=${email}`,
 			};
 
 			let template = fs.readFileSync("src/utils/views/verify-account-mail.html", "utf-8")

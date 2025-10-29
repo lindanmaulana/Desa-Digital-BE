@@ -1,9 +1,9 @@
-import { JWTSECRETKEY } from "../../config";
-import { Token, TokenVerification } from "../../types/token.type";
+import { JWTSECRETKEY } from "../../../config";
+import { Token, TokenVerification } from "../../../types/token.type";
 import jwt from "jsonwebtoken";
-import { BadrequestError } from "../errors";
-import { logger } from "../../logging";
-import { UnauthenticatedError } from "../errors/unauthenticated";
+import { BadrequestError } from "../../errors";
+import { logger } from "../../../logging";
+import { UnauthenticatedError } from "../../errors/unauthenticated";
 
 export interface CreateJwtParams {
 	payload: Token | TokenVerification;
@@ -16,7 +16,7 @@ export const createJwt = ({ payload }: CreateJwtParams): string => {
 	}
 
 	const token = jwt.sign(payload, JWTSECRETKEY, {
-		expiresIn: "24h"
+		expiresIn: "24h",
 	});
 
 	return token;

@@ -133,7 +133,8 @@ Response Body (success) :
 {
   "data": {
     "email": "jhondoe@gmail.com",
-    "otp_last_sent_at": "Date"
+    "otp_last_sent_at": "Date",
+    "otp_expiry_seconds": 60
   }
 }
 ```

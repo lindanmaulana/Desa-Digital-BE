@@ -23,6 +23,7 @@ export interface ResendOtpRequest {
 export interface ResendOtpResponse {
     email: string;
     otp_last_sent_at: Date;
+    otp_expiry_seconds: number;
 }
 export interface ForgotPasswordRequest {
     email: string;
