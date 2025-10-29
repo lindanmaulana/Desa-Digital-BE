@@ -20,9 +20,9 @@ const many_request_1 = require("../utils/errors/many-request");
 const unauthenticated_1 = require("../utils/errors/unauthenticated");
 const unauthorized_1 = require("../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../utils/helpers"));
-const create_token_1 = require("../utils/helpers/create-token");
-const create_token_verification_1 = require("../utils/helpers/create-token-verification");
 const generate_otp_1 = require("../utils/helpers/generate-otp");
+const create_token_user_1 = require("../utils/helpers/jwt/create-token-user");
+const create_token_verification_1 = require("../utils/helpers/jwt/create-token-verification");
 const responses_1 = __importDefault(require("../utils/responses"));
 const auth_validation_1 = require("../utils/validations/auth.validation");
 const validation_1 = require("../utils/validations/validation");
@@ -56,7 +56,7 @@ class AuthService {
             const isPasswordValid = yield helpers_1.default.comparePassword(validateFields.password, checkUser.password);
             if (!isPasswordValid)
                 throw new unauthorized_1.UnauthorizedError("Invalid credentials");
-            const token = (0, create_token_1.createToken)(checkUser);
+            const token = (0, create_token_user_1.createTokenUser)(checkUser);
             return Object.assign(Object.assign({}, responses_1.default.userResponse.toUserResponse(checkUser)), { token });
         });
     }
@@ -102,7 +102,7 @@ class AuthService {
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
-                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS
+                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS,
             };
         });
     }
@@ -120,7 +120,7 @@ class AuthService {
             yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
-                otp_last_sent_at: new Date()
+                otp_last_sent_at: new Date(),
             };
         });
     }
