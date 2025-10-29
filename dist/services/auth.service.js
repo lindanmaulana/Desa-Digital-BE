@@ -98,7 +98,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
+            yield _1.default.EmailService.ResendOtpMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date()

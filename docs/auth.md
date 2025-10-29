@@ -181,7 +181,7 @@ Response Body (failed)
 }
 ```
 
-## 7. VERIFYOTP user
+## 7. MATCH-OTP user
 
 Endpoint : POST /api/v1/auth/verify-otp
 

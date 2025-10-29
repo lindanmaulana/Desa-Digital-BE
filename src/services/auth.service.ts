@@ -128,7 +128,7 @@ export class AuthService {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		await services.EmailService.SendOtpMail(validateFields.email, valueOTP);
+		await services.EmailService.ResendOtpMail(validateFields.email, valueOTP);
 
 		return {
 			email: result.email,

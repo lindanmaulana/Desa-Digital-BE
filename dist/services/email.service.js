@@ -34,6 +34,8 @@ class EmailService {
                 const view = {
                     user_name: data.name,
                     otp_code: data.otp_code,
+                    title: "Verifikasi Akun",
+                    description: "Terima kasih telah mendaftar di",
                     app_name: "Desa Digital",
                     app_website: "https://desadigital.com",
                 };
@@ -44,6 +46,31 @@ class EmailService {
                     to: email,
                     subject: "Kode Verifikasi Akun Anda",
                     html: htmlOutput,
+                });
+            }
+            catch (err) {
+                logging_1.logger.error(err);
+            }
+        });
+    }
+    static ResendOtpMail(email, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const view = {
+                    user_name: data.name,
+                    otp_code: data.otp_code,
+                    title: "Kode Verifikasi Baru Terkirim",
+                    description: "Kode verifikasi baru dari",
+                    app_name: "Desa Digital",
+                    app_website: "https://desadigital.com",
+                };
+                let template = fs_1.default.readFileSync("src/utils/views/otp-mail.html", "utf-8");
+                const htmlOutput = mustache_1.default.render(template, view);
+                yield transporter.sendMail({
+                    from: config_1.MAIL_USERNAME,
+                    to: email,
+                    subject: "Kode Verifikasi Akun Anda",
+                    html: htmlOutput
                 });
             }
             catch (err) {
