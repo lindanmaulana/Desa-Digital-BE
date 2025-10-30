@@ -1,18 +1,17 @@
 import { StaffResponse, UpdateStaffRequest } from "../models/staff.model";
 import repositories from "../repositories";
-import { Token } from "../types/token.type";
+import { TokenUser } from "../types/token.type";
 import { InternalServerError, NotfoundError } from "../utils/errors";
-import helpers from "../utils/helpers";
 import { removeUndefined } from "../utils/helpers/remove-undefined";
 import responses from "../utils/responses";
 import { StaffValidation } from "../utils/validations/staff.validation";
 import { validation } from "../utils/validations/validation";
 
 export class StaffService {
-	static async update(user: Token, req: UpdateStaffRequest): Promise<StaffResponse> {
+	static async update(user: TokenUser, req: UpdateStaffRequest): Promise<StaffResponse> {
 		const validateFields = validation.validate(StaffValidation.UPDATE, req)
 
-		const checkUser = await repositories.UserRepository.findById(user.id)
+		const checkUser = await repositories.UserRepository.findById(user.user_id)
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan!")
 
 		const checkStaff = await repositories.StaffRepository.findByUserId(checkUser.id)

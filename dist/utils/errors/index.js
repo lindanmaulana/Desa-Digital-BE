@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InternalServerError = exports.NeedActivation = exports.NotfoundError = exports.BadrequestError = exports.CustomAPIError = void 0;
+exports.ExpiredError = exports.ForbiddenError = exports.InternalServerError = exports.NeedActivation = exports.NotfoundError = exports.BadrequestError = exports.CustomAPIError = void 0;
 const bad_request_1 = require("./bad-request");
 Object.defineProperty(exports, "BadrequestError", { enumerable: true, get: function () { return bad_request_1.BadrequestError; } });
 const custom_api_error_1 = require("./custom-api-error");
@@ -11,4 +11,8 @@ const not_found_1 = require("./not-found");
 Object.defineProperty(exports, "NotfoundError", { enumerable: true, get: function () { return not_found_1.NotfoundError; } });
 const need_activation_1 = require("./need-activation");
 Object.defineProperty(exports, "NeedActivation", { enumerable: true, get: function () { return need_activation_1.NeedActivation; } });
+const forbidden_1 = require("./forbidden");
+Object.defineProperty(exports, "ForbiddenError", { enumerable: true, get: function () { return forbidden_1.ForbiddenError; } });
+const expired_1 = require("./expired");
+Object.defineProperty(exports, "ExpiredError", { enumerable: true, get: function () { return expired_1.ExpiredError; } });
 //# sourceMappingURL=index.js.map

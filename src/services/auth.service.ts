@@ -1,3 +1,4 @@
+import { isValidJWT } from "zod/v4/core";
 import services from ".";
 import {
 	ActivationRequest,
@@ -14,15 +15,17 @@ import {
 } from "../models/auth.model";
 import { UserResponse } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
-import { TokenVerification } from "../types/token.type";
+import { TokenResetPassword, TokenVerifyAccount } from "../types/token.type";
 import { BadrequestError, InternalServerError, NeedActivation, NotfoundError } from "../utils/errors";
 import { ManyRequestError } from "../utils/errors/many-request";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
 import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
 import { generateOtp } from "../utils/helpers/generate-otp";
+import { generateUUID } from "../utils/helpers/generate-uuid";
+import { createTokenResetPassword } from "../utils/helpers/jwt/create-token-reset-password";
 import { createTokenUser } from "../utils/helpers/jwt/create-token-user";
-import { createTokenVerification } from "../utils/helpers/jwt/create-token-verification";
+import { createTokenVerifyAccount } from "../utils/helpers/jwt/create-token-verify-account";
 import responses from "../utils/responses";
 import { AuthValidation } from "../utils/validations/auth.validation";
 import { validation } from "../utils/validations/validation";
@@ -39,6 +42,7 @@ export class AuthService {
 
 		const hashPassword = await helpers.hashPassword(validateFields.password);
 		const otp = helpers.generateOtp();
+		const jti = generateUUID()
 
 		const result = await UserRepository.create({
 			data: {
@@ -46,12 +50,15 @@ export class AuthService {
 				password: hashPassword,
 				otp_code: otp,
 				otp_last_sen_at: new Date(),
+				verify_token: jti
 			},
 		});
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later!");
 
-		await services.EmailService.SendOtpMail(result.email, result);
+		const verify_token = createTokenVerifyAccount({user_id: result.id, jti, email: result.email, role: result.role, type: "VERIFY_ACCOUNT"})
+
+		await services.EmailService.SendVerifyAccountMail(result.email, verify_token, result);
 
 		return responses.userResponse.toUserResponse(result);
 	}
@@ -78,7 +85,7 @@ export class AuthService {
 		};
 	}
 
-	static async activation(req: ActivationRequest): Promise<UserResponse> {
+	static async activation(req: ActivationRequest, user: TokenVerifyAccount): Promise<UserResponse> {
 		const validateFields = validation.validate(AuthValidation.ACTIVATION, req);
 
 		const checkUser = await UserRepository.findByEmail(req.email);
@@ -86,6 +93,8 @@ export class AuthService {
 		if (!checkUser) throw new UnauthenticatedError("Email tidak valid atau pengguna telah terhapus");
 
 		if (checkUser.is_active) throw new BadrequestError("Akun anda sudah aktif");
+
+		if (user.jti !== checkUser.verify_token) throw new BadrequestError("Token tidak valid")
 
 		if (checkUser.otp_code !== validateFields.otp_code) throw new BadrequestError("Kode OTP yang Anda masukan salah");
 
@@ -99,7 +108,9 @@ export class AuthService {
 	static async resendOtp(req: ResendOtpRequest): Promise<ResendOtpResponse> {
 		const validateFields = validation.validate(AuthValidation.RESENDOTP, req);
 
-		const checkUser = await UserRepository.findByEmail(validateFields.email);
+		const payloadToken = helpers.isTokenValid({token: validateFields.token}) as TokenVerifyAccount
+
+		const checkUser = await UserRepository.findByEmail(payloadToken.email);
 
 		if (!checkUser) throw new BadrequestError("Pengguna tidak ditemukan");
 
@@ -128,7 +139,7 @@ export class AuthService {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		await services.EmailService.ResendOtpMail(validateFields.email, valueOTP);
+		await services.EmailService.ResendOtpMail(checkUser.email, valueOTP);
 
 		return {
 			email: result.email,
@@ -172,7 +183,7 @@ export class AuthService {
 
 		if (validateFields.otp_code !== checkUser.otp_code) throw new BadrequestError("Kode OTP yang anda masukan salah");
 
-		const token = createTokenVerification({ id: checkUser.id, email: checkUser.email, role: checkUser.role });
+		const token = createTokenResetPassword({ user_id: checkUser.id, type: "RESET_PASSWORD" , email: checkUser.email, role: checkUser.role });
 
 		await UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
 
@@ -181,7 +192,7 @@ export class AuthService {
 		};
 	}
 
-	static async resetPassword(req: ResetPasswordRequest, user: TokenVerification): Promise<UserResponse> {
+	static async resetPassword(req: ResetPasswordRequest, user: TokenResetPassword): Promise<UserResponse> {
 		const validateFields = validation.validate(AuthValidation.RESETPASSWORD, req);
 
 		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm Password tidak sama");

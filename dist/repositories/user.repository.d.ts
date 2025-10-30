@@ -49,6 +49,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -62,6 +63,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -80,6 +82,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -93,6 +96,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -106,6 +110,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -119,6 +124,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -132,6 +138,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -145,6 +152,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -159,6 +167,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -172,6 +181,7 @@ export declare class UserRepository {
         role: import("@prisma/client").$Enums.UserRole;
         otp_code: string | null;
         otp_last_sen_at: Date | null;
+        verify_token: string | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;

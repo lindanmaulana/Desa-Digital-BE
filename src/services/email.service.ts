@@ -51,41 +51,41 @@ export class EmailService {
 				description: "Kode verifikasi baru dari",
 				app_name: "Desa Digital",
 				app_website: "https://desadigital.com",
-			}
+			};
 
-			let template = fs.readFileSync("src/utils/views/otp-mail.html", "utf-8")
-			const htmlOutput = mustache.render(template, view)
+			let template = fs.readFileSync("src/utils/views/otp-mail.html", "utf-8");
+			const htmlOutput = mustache.render(template, view);
 
 			await transporter.sendMail({
 				from: MAIL_USERNAME,
 				to: email,
 				subject: "Kode Verifikasi Akun Anda",
-				html: htmlOutput
-			})
+				html: htmlOutput,
+			});
 		} catch (err) {
-			logger.error(err)
+			logger.error(err);
 		}
 	}
 
-	static async SendVerifyAccountMail(email: string, data: User) {
+	static async SendVerifyAccountMail(email: string, token: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
 				otp_code: data.otp_code,
 				app_name: "Desa Digital",
-				verification_link: `${BASEURL_CLIENT}?account=${email}`,
+				verification_link: `${BASEURL_CLIENT}?token=${token}`,
 			};
 
-			let template = fs.readFileSync("src/utils/views/verify-account-mail.html", "utf-8")
+			let template = fs.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
 
-			const htmlOutput = mustache.render(template, view)
+			const htmlOutput = mustache.render(template, view);
 
 			await transporter.sendMail({
 				from: MAIL_USERNAME,
 				to: email,
 				subject: "Verifikasi Akun Anda",
-				html: htmlOutput
-			})
+				html: htmlOutput,
+			});
 		} catch (err) {
 			logger.error("Send verify-account mail", err);
 		}

@@ -9,7 +9,7 @@ import {
 } from "../../../models/auth.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
-import { TokenVerification } from "../../../types/token.type";
+import { TokenResetPassword, TokenVerifyAccount } from "../../../types/token.type";
 
 export class AuthController {
 	static async signup(req: CustomeRequest, res: Response, next: NextFunction) {
@@ -61,9 +61,10 @@ export class AuthController {
 
 	static async activation(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
+			const token = req.user as TokenVerifyAccount
 			const reqBody = req.body as ActivationRequest;
 
-			const result = await services.AuthService.activation(reqBody);
+			const result = await services.AuthService.activation(reqBody, token);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -129,7 +130,7 @@ export class AuthController {
 
 	static async resetPassword(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const token = req.user as TokenVerification;
+			const token = req.user as TokenResetPassword;
 			const reqBody = req.body as ResetPasswordRequest;
 
 			const result = await services.AuthService.resetPassword(reqBody, token);

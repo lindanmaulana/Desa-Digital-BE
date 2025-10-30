@@ -23,7 +23,7 @@ class StaffService {
     static update(user, req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(staff_validation_1.StaffValidation.UPDATE, req);
-            const checkUser = yield repositories_1.default.UserRepository.findById(user.id);
+            const checkUser = yield repositories_1.default.UserRepository.findById(user.user_id);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
             const checkStaff = yield repositories_1.default.StaffRepository.findByUserId(checkUser.id);

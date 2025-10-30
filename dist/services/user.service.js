@@ -17,12 +17,14 @@ const client_1 = require("@prisma/client");
 const _1 = __importDefault(require("."));
 const db_1 = require("../db");
 const user_repository_1 = require("../repositories/user.repository");
+const index_1 = __importDefault(require("../utils/const/index"));
 const errors_1 = require("../utils/errors");
 const helpers_1 = __importDefault(require("../utils/helpers"));
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
 const validation_1 = require("../utils/validations/validation");
-const index_1 = __importDefault(require("../utils/const/index"));
+const generate_uuid_1 = require("../utils/helpers/generate-uuid");
+const create_token_verify_account_1 = require("../utils/helpers/jwt/create-token-verify-account");
 class UserService {
     static registerStaffAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,6 +34,7 @@ class UserService {
                 throw new errors_1.BadrequestError("Email telah digunakan");
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
+            const jti = (0, generate_uuid_1.generateUUID)();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                 const newUser = yield tx.user.create({
                     data: {
@@ -41,6 +44,7 @@ class UserService {
                         role: "STAFF",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
+                        verify_token: jti
                     },
                 });
                 const newStaff = yield tx.staff.create({
@@ -66,7 +70,8 @@ class UserService {
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
-            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
+            const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT" });
+            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }
@@ -78,6 +83,7 @@ class UserService {
                 throw new errors_1.BadrequestError("Email telah digunakan");
             const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
             const otp = helpers_1.default.generateOtp();
+            const jti = (0, generate_uuid_1.generateUUID)();
             const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                 const newUser = yield tx.user.create({
                     data: {
@@ -87,6 +93,7 @@ class UserService {
                         role: "HEAD_OF_FAMILY",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
+                        verify_token: jti
                     },
                 });
                 const newHeadOfFamily = yield tx.headOfFamily.create({
@@ -112,7 +119,8 @@ class UserService {
             }));
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
-            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
+            const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT" });
+            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }

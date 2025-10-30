@@ -1,1 +1,1 @@
-{"version":3,"file":"create-token-user.d.ts","sourceRoot":"","sources":["../../../../src/utils/helpers/jwt/create-token-user.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,gBAAgB,CAAC;AAGtC,eAAO,MAAM,eAAe,GAAI,MAAM,IAAI,KAAG,MAa5C,CAAC"}
+{"version":3,"file":"create-token-user.d.ts","sourceRoot":"","sources":["../../../../src/utils/helpers/jwt/create-token-user.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,gBAAgB,CAAC;AAItC,eAAO,MAAM,eAAe,GAAI,MAAM,IAAI,KAAG,MAc5C,CAAC"}

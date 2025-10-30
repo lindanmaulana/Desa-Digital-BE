@@ -23,7 +23,7 @@ export interface ActivationRequest {
 }
 
 export interface ResendOtpRequest {
-	email: string
+	token: string
 }
 
 export interface ResendOtpResponse {

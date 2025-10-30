@@ -18,14 +18,14 @@ const user_repository_1 = require("../repositories/user.repository");
 const errors_1 = require("../utils/errors");
 const unauthorized_1 = require("../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../utils/helpers"));
+const remove_undefined_1 = require("../utils/helpers/remove-undefined");
 const responses_1 = __importDefault(require("../utils/responses"));
 const user_profile_validation_1 = require("../utils/validations/user-profile.validation");
 const validation_1 = require("../utils/validations/validation");
-const remove_undefined_1 = require("../utils/helpers/remove-undefined");
 class UserProfileService {
     static get(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield repositories_1.default.UserRepository.findById(user.id);
+            const result = yield repositories_1.default.UserRepository.findById(user.user_id);
             if (!result)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
             return responses_1.default.userResponse.toUserResponseWithRelation(result);
@@ -34,7 +34,7 @@ class UserProfileService {
     static update(user, req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(user_profile_validation_1.UserProfileValidation.UPDATE, req);
-            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
+            const checkUser = yield user_repository_1.UserRepository.findById(user.user_id);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
             const data = (0, remove_undefined_1.removeUndefined)(validateFields);
@@ -66,7 +66,7 @@ class UserProfileService {
             const validateFields = validation_1.validation.validate(user_profile_validation_1.UserProfileValidation.CHANGEPASSWORD, req);
             if (validateFields.password !== validateFields.confirm_password)
                 throw new errors_1.BadrequestError("Password dan Konfirm password tidak sama");
-            const checkUser = yield user_repository_1.UserRepository.findById(user.id);
+            const checkUser = yield user_repository_1.UserRepository.findById(user.user_id);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak di temukan");
             if (!checkUser.is_active)

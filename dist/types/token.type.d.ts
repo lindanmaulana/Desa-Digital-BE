@@ -1,22 +1,21 @@
 import { UserRole } from "@prisma/client";
-export type TypeToken = "ACCESS" | "VERIFY";
+export type TypeToken = "ACCESS" | "VERIFY_ACCOUNT" | "RESET_PASSWORD";
 export interface BasePayloadToken {
     user_id: string;
     role: UserRole;
     type: TypeToken;
 }
-export interface Token {
-    id: string;
+export interface TokenUser extends BasePayloadToken {
     name: string;
     email: string;
-    role: UserRole;
     is_active: boolean;
     is_first_login: boolean;
 }
-export interface TokenVerification {
-    id: string;
+export interface TokenResetPassword extends BasePayloadToken {
     email: string;
-    purpose: string;
-    role: UserRole;
+}
+export interface TokenVerifyAccount extends BasePayloadToken {
+    jti: string;
+    email: string;
 }
 //# sourceMappingURL=token.type.d.ts.map

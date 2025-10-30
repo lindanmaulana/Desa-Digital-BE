@@ -1,6 +1,6 @@
 import { StaffResponse, UpdateStaffRequest } from "../models/staff.model";
-import { Token } from "../types/token.type";
+import { TokenUser } from "../types/token.type";
 export declare class StaffService {
-    static update(user: Token, req: UpdateStaffRequest): Promise<StaffResponse>;
+    static update(user: TokenUser, req: UpdateStaffRequest): Promise<StaffResponse>;
 }
 //# sourceMappingURL=staff.service.d.ts.map

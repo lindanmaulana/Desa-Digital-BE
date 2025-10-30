@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isTokenValid = exports.createJwt = void 0;
-const config_1 = require("../../../config");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const errors_1 = require("../../errors");
+const config_1 = require("../../../config");
 const logging_1 = require("../../../logging");
+const errors_1 = require("../../errors");
 const unauthenticated_1 = require("../../errors/unauthenticated");
+const expired_1 = require("../../errors/expired");
 const createJwt = ({ payload }) => {
     if (!config_1.JWTSECRETKEY) {
         logging_1.logger.error("jwt secret key is not defined");
@@ -36,6 +37,7 @@ const isTokenValid = ({ token }) => {
         }
         if (err instanceof jsonwebtoken_1.default.TokenExpiredError) {
             errorMessage = `Token expired : ${err.message}`;
+            throw new expired_1.ExpiredError(errorMessage);
         }
         if (err instanceof jsonwebtoken_1.default.NotBeforeError) {
             errorMessage = `Token not active : ${err.message}`;

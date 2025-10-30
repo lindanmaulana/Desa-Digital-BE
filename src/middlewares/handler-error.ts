@@ -16,10 +16,6 @@ export const errorMiddleware = async (error: Error, request: Request, res: Respo
 		responseData = { errors };
 
 	} else if (error instanceof CustomAPIError) {
-		console.log("CustomApi Error");
-
-		console.log({error})
-
 		statusCodes = error.StatusCodes;
 		errors = error.message;
 		responseData = { errors };
@@ -28,6 +24,8 @@ export const errorMiddleware = async (error: Error, request: Request, res: Respo
 			responseData.email = error.email;
 			responseData.status = "need_activation";
 		}
+
+		if (error.type_error) responseData.type_error = error.type_error
 	} else if (error instanceof Prisma.PrismaClientKnownRequestError) {
 		console.log("Prisma client Error");
 

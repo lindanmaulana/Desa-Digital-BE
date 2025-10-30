@@ -22,7 +22,7 @@ AuthValidation.ACTIVATION = zod_1.default.object({
     otp_code: zod_1.default.string().nonempty({ error: "Kode OTP tidak boleh kosong" }),
 });
 AuthValidation.RESENDOTP = zod_1.default.object({
-    email: zod_1.default.email({ error: "Format email tidak valid" }).nonempty({ error: "Email tidak boleh kosong" }),
+    token: zod_1.default.string().nonempty({ error: "Token tidak boleh kosong" }),
 });
 AuthValidation.FORGOTPASSWORD = zod_1.default.object({
     email: zod_1.default.email({ error: "Format email tidak valid" }).nonempty({ error: "Email tidak boleh kosong" })

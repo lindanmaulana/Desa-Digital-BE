@@ -1,9 +1,9 @@
-import { Token, TokenVerification } from "../../../types/token.type";
+import { TokenResetPassword, TokenUser, TokenVerifyAccount } from "../../../types/token.type";
 export interface CreateJwtParams {
-    payload: Token | TokenVerification;
+    payload: TokenUser | TokenResetPassword | TokenVerifyAccount;
 }
 export declare const createJwt: ({ payload }: CreateJwtParams) => string;
 export declare const isTokenValid: ({ token }: {
     token: string;
-}) => Token | TokenVerification;
+}) => TokenUser | TokenResetPassword | TokenVerifyAccount;
 //# sourceMappingURL=create-jwt.d.ts.map

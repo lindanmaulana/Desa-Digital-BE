@@ -18,7 +18,7 @@ export interface ActivationRequest {
     otp_code: string;
 }
 export interface ResendOtpRequest {
-    email: string;
+    token: string;
 }
 export interface ResendOtpResponse {
     email: string;

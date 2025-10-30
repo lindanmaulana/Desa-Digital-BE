@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizedRoles = exports.authenticatedVerificationUser = exports.authenticatedUser = void 0;
+exports.authorizedRoles = exports.authenticatedVerifyAccount = exports.authenticatedUser = exports.authenticatedResetPassword = void 0;
+const errors_1 = require("../utils/errors");
 const unauthenticated_1 = require("../utils/errors/unauthenticated");
-const unauthorized_1 = require("../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../utils/helpers"));
 const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -26,8 +26,11 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authenticated invalid");
         const payload = helpers_1.default.isTokenValid({ token });
+        if (payload.type !== "ACCESS")
+            throw new errors_1.ForbiddenError("Token is valid but not authorized for access");
         req.user = {
-            id: payload.id,
+            user_id: payload.user_id,
+            type: payload.type,
             name: payload.name,
             email: payload.email,
             role: payload.role,
@@ -40,7 +43,7 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.authenticatedUser = authenticatedUser;
-const authenticatedVerificationUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const authenticatedVerifyAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let token;
         const authHeader = req.headers.authorization;
@@ -49,12 +52,14 @@ const authenticatedVerificationUser = (req, res, next) => __awaiter(void 0, void
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
         const payload = helpers_1.default.isTokenValid({ token });
-        if (payload.purpose !== "password_reset")
-            throw new unauthorized_1.UnauthorizedError("Token is valid but not authorized for password reset.");
+        if (payload.type !== "VERIFY_ACCOUNT")
+            throw new errors_1.ForbiddenError("Token is valid but not authorized for verify account");
         req.user = {
-            id: payload.id,
-            email: payload.email,
-            purpose: payload.purpose
+            user_id: payload.user_id,
+            jti: payload.jti,
+            role: payload.role,
+            type: payload.type,
+            email: payload.email
         };
         next();
     }
@@ -62,7 +67,31 @@ const authenticatedVerificationUser = (req, res, next) => __awaiter(void 0, void
         next(err);
     }
 });
-exports.authenticatedVerificationUser = authenticatedVerificationUser;
+exports.authenticatedVerifyAccount = authenticatedVerifyAccount;
+const authenticatedResetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let token;
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith("Bearer"))
+            token = authHeader.split(" ")[1];
+        if (!token)
+            throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
+        const payload = helpers_1.default.isTokenValid({ token });
+        if (payload.type !== "RESET_PASSWORD")
+            throw new errors_1.ForbiddenError("Token is valid but not authorized for password reset.");
+        req.user = {
+            user_id: payload.user_id,
+            type: payload.type,
+            role: payload.role,
+            email: payload.email,
+        };
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.authenticatedResetPassword = authenticatedResetPassword;
 const authorizedRoles = (...roles) => {
     return (req, res, next) => {
         var _a;

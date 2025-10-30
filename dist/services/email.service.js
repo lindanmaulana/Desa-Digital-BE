@@ -70,7 +70,7 @@ class EmailService {
                     from: config_1.MAIL_USERNAME,
                     to: email,
                     subject: "Kode Verifikasi Akun Anda",
-                    html: htmlOutput
+                    html: htmlOutput,
                 });
             }
             catch (err) {
@@ -78,14 +78,14 @@ class EmailService {
             }
         });
     }
-    static SendVerifyAccountMail(email, data) {
+    static SendVerifyAccountMail(email, token, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
                     user_name: data.name,
                     otp_code: data.otp_code,
                     app_name: "Desa Digital",
-                    verification_link: `${config_1.BASEURL_CLIENT}?account=${email}`,
+                    verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
                 };
                 let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
                 const htmlOutput = mustache_1.default.render(template, view);
@@ -93,7 +93,7 @@ class EmailService {
                     from: config_1.MAIL_USERNAME,
                     to: email,
                     subject: "Verifikasi Akun Anda",
-                    html: htmlOutput
+                    html: htmlOutput,
                 });
             }
             catch (err) {

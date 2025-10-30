@@ -1,8 +1,8 @@
 import { Request } from "express";
-import { Token, TokenVerification } from "./token.type";
+import { TokenResetPassword, TokenUser, TokenVerifyAccount } from "./token.type";
 
 export interface CustomeRequest extends Request {
-	user?: Token | TokenVerification
+	user?: TokenUser | TokenResetPassword | TokenVerifyAccount
 }
 
 

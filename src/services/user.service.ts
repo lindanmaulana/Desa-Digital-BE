@@ -9,13 +9,15 @@ import {
 	UserResponse
 } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
-import { Token } from "../types/token.type";
+import { TokenUser } from "../types/token.type";
+import CONSTS from "../utils/const/index";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
 import helpers from "../utils/helpers";
 import responses from "../utils/responses";
 import { UserValidation } from "../utils/validations/user.validation";
 import { validation } from "../utils/validations/validation";
-import CONSTS from "../utils/const/index"
+import { generateUUID } from "../utils/helpers/generate-uuid";
+import { createTokenVerifyAccount } from "../utils/helpers/jwt/create-token-verify-account";
 
 export class UserService {
 	static async registerStaffAccount(req: RegisterStaffRequest): Promise<UserResponse> {
@@ -27,6 +29,7 @@ export class UserService {
 
 		const hashPassword = await helpers.hashPassword(validateFields.password);
 		const otp = helpers.generateOtp();
+		const jti = generateUUID()
 
 		const result = await prismaClient.$transaction(async (tx) => {
 			const newUser = await tx.user.create({
@@ -37,6 +40,7 @@ export class UserService {
 					role: "STAFF",
 					otp_code: otp,
 					otp_last_sen_at: new Date(),
+					verify_token: jti
 				},
 			});
 
@@ -66,7 +70,9 @@ export class UserService {
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
-		await services.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
+		const verify_token = createTokenVerifyAccount({user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT"})
+
+		await services.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}
@@ -80,6 +86,7 @@ export class UserService {
 
 		const hashPassword = await helpers.hashPassword(validateFields.password);
 		const otp = helpers.generateOtp();
+		const jti = generateUUID()
 
 		const result = await prismaClient.$transaction(async (tx) => {
 			const newUser = await tx.user.create({
@@ -90,6 +97,7 @@ export class UserService {
 					role: "HEAD_OF_FAMILY",
 					otp_code: otp,
 					otp_last_sen_at: new Date(),
+					verify_token: jti
 				},
 			});
 
@@ -119,12 +127,13 @@ export class UserService {
 
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
-		await services.EmailService.SendVerifyAccountMail(result.newUser.email, result.newUser);
+		const verify_token = createTokenVerifyAccount({user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT"})
+		await services.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}
 
-	static async getAll(req: GetAllUserRequest, user: Token): Promise<GetAllUserResponse> {
+	static async getAll(req: GetAllUserRequest, user: TokenUser): Promise<GetAllUserResponse> {
 		const validateFields = validation.validate(UserValidation.GETALL, req);
 
 		const hiddenRoles = [UserRole.ADMIN];

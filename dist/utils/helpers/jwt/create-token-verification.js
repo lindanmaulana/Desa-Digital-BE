@@ -4,10 +4,11 @@ exports.createTokenVerification = void 0;
 const create_jwt_1 = require("./create-jwt");
 const createTokenVerification = (payload) => {
     const payloadToken = {
-        id: payload.id,
+        user_id: payload.user_id,
+        type: payload.type,
         email: payload.email,
         role: payload.role,
-        purpose: "password_reset",
+        purpose: payload.purpose,
     };
     const token = (0, create_jwt_1.createJwt)({ payload: payloadToken });
     return token;

@@ -1,12 +1,14 @@
 import { User } from "@prisma/client";
 import { createJwt } from "./create-jwt";
+import { TokenUser } from "../../../types/token.type";
 
 export const createTokenUser = (user: User): string => {
-	const payloadToken = {
-		id: user.id,
+	const payloadToken: TokenUser = {
+		user_id: user.id,
+		role: user.role,
+		type: "ACCESS",
 		name: user.name,
 		email: user.email,
-		role: user.role,
 		is_active: user.is_active,
 		is_first_login: user.is_first_login,
 	};

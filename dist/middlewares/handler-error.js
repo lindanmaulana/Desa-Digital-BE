@@ -25,8 +25,6 @@ const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0,
         responseData = { errors };
     }
     else if (error instanceof errors_1.CustomAPIError) {
-        console.log("CustomApi Error");
-        console.log({ error });
         statusCodes = error.StatusCodes;
         errors = error.message;
         responseData = { errors };
@@ -34,6 +32,8 @@ const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0,
             responseData.email = error.email;
             responseData.status = "need_activation";
         }
+        if (error.type_error)
+            responseData.type_error = error.type_error;
     }
     else if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
         console.log("Prisma client Error");

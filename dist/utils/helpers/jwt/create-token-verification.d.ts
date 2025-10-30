@@ -1,9 +1,3 @@
-import { UserRole } from "@prisma/client";
-interface TokenVerification {
-    id: string;
-    email: string;
-    role: UserRole;
-}
-export declare const createTokenVerification: (payload: TokenVerification) => string;
-export {};
+import { TokenResetPassword } from "../../../types/token.type";
+export declare const createTokenVerification: (payload: TokenResetPassword) => string;
 //# sourceMappingURL=create-token-verification.d.ts.map

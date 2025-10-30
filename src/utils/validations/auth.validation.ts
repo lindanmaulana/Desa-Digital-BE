@@ -18,7 +18,7 @@ export class AuthValidation {
 	});
 
 	static readonly RESENDOTP = z.object({
-		email: z.email({ error: "Format email tidak valid" }).nonempty({ error: "Email tidak boleh kosong" }),
+		token: z.string().nonempty({ error: "Token tidak boleh kosong" }),
 	});
 
 	static readonly FORGOTPASSWORD = z.object({

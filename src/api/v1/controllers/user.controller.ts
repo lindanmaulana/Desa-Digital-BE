@@ -4,7 +4,7 @@ import { logger } from "../../../logging";
 import { GetAllUserRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
-import { Token } from "../../../types/token.type";
+import { TokenUser } from "../../../types/token.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
 
 export class UserController {
@@ -45,7 +45,7 @@ export class UserController {
 
 	static async getUsers(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const token = req.user as Token;
+			const token = req.user as TokenUser;
 			const reqParams = req.query as GetAllUserRequest
 
 			const result = await services.UserService.getAll(reqParams, token);

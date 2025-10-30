@@ -14,7 +14,7 @@ export declare class AuthValidation {
         otp_code: z.ZodString;
     }, z.core.$strip>;
     static readonly RESENDOTP: z.ZodObject<{
-        email: z.ZodEmail;
+        token: z.ZodString;
     }, z.core.$strip>;
     static readonly FORGOTPASSWORD: z.ZodObject<{
         email: z.ZodEmail;

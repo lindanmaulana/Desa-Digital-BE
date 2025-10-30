@@ -3,5 +3,7 @@ import { CustomAPIError } from "./custom-api-error";
 import { InternalServerError } from "./internal-server";
 import { NotfoundError } from "./not-found";
 import { NeedActivation } from "./need-activation";
-export { CustomAPIError, BadrequestError, NotfoundError, NeedActivation, InternalServerError, };
+import { ForbiddenError } from "./forbidden";
+import { ExpiredError } from "./expired";
+export { CustomAPIError, BadrequestError, NotfoundError, NeedActivation, InternalServerError, ForbiddenError, ExpiredError };
 //# sourceMappingURL=index.d.ts.map

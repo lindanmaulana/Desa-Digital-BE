@@ -1,12 +1,13 @@
-import { JWTSECRETKEY } from "../../../config";
-import { Token, TokenVerification } from "../../../types/token.type";
 import jwt from "jsonwebtoken";
-import { BadrequestError } from "../../errors";
+import { JWTSECRETKEY } from "../../../config";
 import { logger } from "../../../logging";
+import { TokenResetPassword, TokenUser, TokenVerifyAccount } from "../../../types/token.type";
+import { BadrequestError } from "../../errors";
 import { UnauthenticatedError } from "../../errors/unauthenticated";
+import { ExpiredError } from "../../errors/expired";
 
 export interface CreateJwtParams {
-	payload: Token | TokenVerification;
+	payload: TokenUser | TokenResetPassword | TokenVerifyAccount;
 }
 
 export const createJwt = ({ payload }: CreateJwtParams): string => {
@@ -30,7 +31,7 @@ export const isTokenValid = ({ token }: { token: string }) => {
 	}
 
 	try {
-		const isValid = jwt.verify(token, JWTSECRETKEY) as Token | TokenVerification;
+		const isValid = jwt.verify(token, JWTSECRETKEY) as TokenUser | TokenResetPassword | TokenVerifyAccount;
 
 		return isValid;
 	} catch (err) {
@@ -42,6 +43,8 @@ export const isTokenValid = ({ token }: { token: string }) => {
 
 		if (err instanceof jwt.TokenExpiredError) {
 			errorMessage = `Token expired : ${err.message}`;
+
+			throw new ExpiredError(errorMessage)
 		}
 
 		if (err instanceof jwt.NotBeforeError) {

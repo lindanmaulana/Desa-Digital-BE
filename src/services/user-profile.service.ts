@@ -1,32 +1,30 @@
-import { Gender, Marital, Prisma } from "@prisma/client";
-import { UpdateStaffRequest } from "../models/staff.model";
+import { Prisma } from "@prisma/client";
 import { ChangePasswordUserProfileRequest, UpdateUserProfileRequest } from "../models/user-profile.model";
 import { UserResponse } from "../models/user.model";
 import repositories from "../repositories";
-import { StaffRepository } from "../repositories/staff.repository";
 import { UserRepository } from "../repositories/user.repository";
-import { Token } from "../types/token.type";
+import { TokenUser } from "../types/token.type";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
 import { UnauthorizedError } from "../utils/errors/unauthorized";
 import helpers from "../utils/helpers";
+import { removeUndefined } from "../utils/helpers/remove-undefined";
 import responses from "../utils/responses";
 import { UserProfileValidation } from "../utils/validations/user-profile.validation";
 import { validation } from "../utils/validations/validation";
-import { removeUndefined } from "../utils/helpers/remove-undefined";
 
 export class UserProfileService {
-	static async get(user: Token) {
-		const result = await repositories.UserRepository.findById(user.id);
+	static async get(user: TokenUser) {
+		const result = await repositories.UserRepository.findById(user.user_id);
 
 		if (!result) throw new NotfoundError("Pengguna tidak ditemukan");
 
 		return responses.userResponse.toUserResponseWithRelation(result);
 	}
 
-	static async update(user: Token, req: UpdateUserProfileRequest): Promise<UserResponse> {
+	static async update(user: TokenUser, req: UpdateUserProfileRequest): Promise<UserResponse> {
 		const validateFields = validation.validate(UserProfileValidation.UPDATE, req);
 
-		const checkUser = await UserRepository.findById(user.id);
+		const checkUser = await UserRepository.findById(user.user_id);
 
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
 
@@ -62,12 +60,12 @@ export class UserProfileService {
 		return responses.userResponse.toUserResponseWithRelation(checkUser)
 	}
 
-	static async changePassword(req: ChangePasswordUserProfileRequest, user: Token): Promise<UserResponse> {
+	static async changePassword(req: ChangePasswordUserProfileRequest, user: TokenUser): Promise<UserResponse> {
 		const validateFields = validation.validate(UserProfileValidation.CHANGEPASSWORD, req);
 
 		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm password tidak sama");
 
-		const checkUser = await UserRepository.findById(user.id);
+		const checkUser = await UserRepository.findById(user.user_id);
 
 		if (!checkUser) throw new NotfoundError("Pengguna tidak di temukan");
 

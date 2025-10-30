@@ -4,10 +4,11 @@ exports.createTokenUser = void 0;
 const create_jwt_1 = require("./create-jwt");
 const createTokenUser = (user) => {
     const payloadToken = {
-        id: user.id,
+        user_id: user.id,
+        role: user.role,
+        type: "ACCESS",
         name: user.name,
         email: user.email,
-        role: user.role,
         is_active: user.is_active,
         is_first_login: user.is_first_login,
     };
