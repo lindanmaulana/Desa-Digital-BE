@@ -1,11 +1,12 @@
 import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import {
-	ActivationRequest,
 	ForgotPasswordRequest,
 	MatchOtpRequest,
 	ResendOtpRequest,
+	ResendVerifyAccountTokenRequest,
 	ResetPasswordRequest,
+	VerifyAccountRequest,
 } from "../../../models/auth.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
@@ -59,17 +60,33 @@ export class AuthController {
 		}
 	}
 
-	static async activation(req: CustomeRequest, res: Response, next: NextFunction) {
+	static async verifyAccount(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const token = req.user as TokenVerifyAccount
-			const reqBody = req.body as ActivationRequest;
+			const reqBody = req.body as VerifyAccountRequest;
 
-			const result = await services.AuthService.activation(reqBody, token);
+			const result = await services.AuthService.verifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
 				message: "Aktivasi akun berhasil",
+				data: result,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	static async resendVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const reqBody = req.body as ResendVerifyAccountTokenRequest;
+
+			const result = await services.AuthService.resendVerifyAccountToken(reqBody);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: "Link verifikasi telah dikirimkan. Cek email Anda.",
 				data: result,
 			});
 		} catch (err) {

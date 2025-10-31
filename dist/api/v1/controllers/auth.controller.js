@@ -64,16 +64,32 @@ class AuthController {
             }
         });
     }
-    static activation(req, res, next) {
+    static verifyAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const token = req.user;
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.activation(reqBody, token);
+                const result = yield services_1.default.AuthService.verifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
                     message: "Aktivasi akun berhasil",
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static resendVerifyAccount(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const reqBody = req.body;
+                const result = yield services_1.default.AuthService.resendVerifyAccountToken(reqBody);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: "Link verifikasi telah dikirimkan. Cek email Anda.",
                     data: result,
                 });
             }

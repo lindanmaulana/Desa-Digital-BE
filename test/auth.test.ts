@@ -114,10 +114,9 @@ describe("POST /api/v1/auth/signin", () => {
 		expect(response.body.data).toBeDefined();
 
 		expect(response.body.data).toHaveProperty("id");
-		expect(response.body.data).toHaveProperty("token");
 		expect(typeof response.body.data.id).toBe("string");
-		expect(typeof response.body.data.token).toBe("string");
 
+		expect(response.body.data).not.toHaveProperty("token");
 		expect(response.body.data).not.toHaveProperty("password");
 	});
 });
@@ -138,7 +137,7 @@ describe("POST /api/v1/auth/verify-account", () => {
 
 	it("Should reject activation if request body invalid", async () => {
 		const response = await supertest(app).post("/api/v1/auth/verify-account").send({
-			email: "",
+			token: "",
 			otp_code: "",
 		});
 
@@ -148,17 +147,16 @@ describe("POST /api/v1/auth/verify-account", () => {
 		expect(response.body.errors).toBeDefined();
 	});
 
-	it("Should reject activation if email invalid", async () => {
+	it("Should reject activation if token invalid", async () => {
 		const response = await supertest(app).post("/api/v1/auth/verify-account").send({
-			email: "example@gmail.com",
+			email: "sdhiadhadihedhasd",
 			otp_code: "237899",
 		});
 
 		logger.debug(response.body);
-		expect(response.status).toBe(401);
+		expect(response.status).toBe(400);
 
 		expect(response.body.errors).toBeDefined();
-		expect(response.body.errors).toBe("Email tidak valid atau pengguna telah terhapus");
 	});
 
 	it("Should reject activation if is_active account true", async () => {

@@ -44,7 +44,8 @@ class UserService {
                         role: "STAFF",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
-                        verify_token: jti
+                        verify_token: jti,
+                        verify_token_last_sen_at: new Date()
                     },
                 });
                 const newStaff = yield tx.staff.create({
@@ -93,7 +94,8 @@ class UserService {
                         role: "HEAD_OF_FAMILY",
                         otp_code: otp,
                         otp_last_sen_at: new Date(),
-                        verify_token: jti
+                        verify_token: jti,
+                        verify_token_last_sen_at: new Date()
                     },
                 });
                 const newHeadOfFamily = yield tx.headOfFamily.create({

@@ -12,14 +12,18 @@ export class AuthValidation {
 		password: z.string().nonempty({ error: "password tidak boleh kosong!" }),
 	});
 
-	static readonly ACTIVATION = z.object({
-		email: z.email({ error: "Format email tidak valid" }).nonempty({ error: "Email tidak boleh kosong" }),
+	static readonly VERIFYACCOUNT = z.object({
+		token: z.string().nonempty({error: "Token verifikasi tidak boleh kosong!"}),
 		otp_code: z.string().nonempty({ error: "Kode OTP tidak boleh kosong" }),
 	});
 
 	static readonly RESENDOTP = z.object({
 		token: z.string().nonempty({ error: "Token tidak boleh kosong" }),
 	});
+
+	static readonly RESENDVERIFYACCOUNTTOKEN = z.object({
+		email: z.email({error: "Format email tidak valid"}).nonempty({error: "Email tidak boleh kosong"})
+	})
 
 	static readonly FORGOTPASSWORD = z.object({
 		email: z.email({error: "Format email tidak valid"}).nonempty({error: "Email tidak boleh kosong"})

@@ -83,7 +83,7 @@ Response Body (failed)
 }
 ```
 
-## 3. ACTIVATION user
+## 3. VERIFYACCOUNT user
 
 Endpoint : POST /api/v1/auth/verify-account
 
@@ -91,6 +91,7 @@ Request Body :
 
 ```json
 {
+  "token": "token",
   "otp_code": "278788"
 }
 ```
@@ -144,6 +145,25 @@ Response Body (failed)
 ```json
 {
   "errors": "errormessage"
+}
+```
+
+## 6. RESENDVERIFYTOKEN user
+Endpoint : POST /api/v1/auth/resend-verify-token
+
+Request Body (success) :
+```json
+{
+  "data": {
+    "email": "emailUer@gmail.com"
+  }
+}
+```
+
+Response Body (failed) :
+```json
+{
+  "errors": "error - fail"
 }
 ```
 

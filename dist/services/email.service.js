@@ -101,6 +101,29 @@ class EmailService {
             }
         });
     }
+    static ResendVerifyAccountMail(email, token, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const view = {
+                    user_name: data.name,
+                    otp_code: data.otp_code,
+                    app_name: "Desa Digital",
+                    verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
+                };
+                let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
+                const htmlOutput = mustache_1.default.render(template, view);
+                yield transporter.sendMail({
+                    from: config_1.MAIL_USERNAME,
+                    to: email,
+                    subject: "Verifikasi Akun Anda",
+                    html: htmlOutput,
+                });
+            }
+            catch (err) {
+                logging_1.logger.error("Send verify-account mail", err);
+            }
+        });
+    }
 }
 exports.EmailService = EmailService;
 //# sourceMappingURL=email.service.js.map

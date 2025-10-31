@@ -1,11 +1,12 @@
-import { ActivationRequest, ForgotPasswordRequest, ForgotPasswordResponse, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResendOtpResponse, ResetPasswordRequest, SigninRequest, SigninResponse, SignupRequest } from "../models/auth.model";
+import { ForgotPasswordRequest, ForgotPasswordResponse, MatchOtpRequest, MathOtpResponse, ResendOtpRequest, ResendOtpResponse, ResendVerifyAccountTokenRequest, ResendVerifyAccountTokenResponse, ResetPasswordRequest, SigninRequest, SigninResponse, SignupRequest, VerifyAccountRequest } from "../models/auth.model";
 import { UserResponse } from "../models/user.model";
-import { TokenResetPassword, TokenVerifyAccount } from "../types/token.type";
+import { TokenResetPassword } from "../types/token.type";
 export declare class AuthService {
     static signup(req: SignupRequest): Promise<UserResponse>;
     static signin(req: SigninRequest): Promise<SigninResponse>;
-    static activation(req: ActivationRequest, user: TokenVerifyAccount): Promise<UserResponse>;
+    static verifyAccount(req: VerifyAccountRequest): Promise<UserResponse>;
     static resendOtp(req: ResendOtpRequest): Promise<ResendOtpResponse>;
+    static resendVerifyAccountToken(req: ResendVerifyAccountTokenRequest): Promise<ResendVerifyAccountTokenResponse>;
     static forgotPassword(req: ForgotPasswordRequest): Promise<ForgotPasswordResponse>;
     static matchOtp(req: MatchOtpRequest): Promise<MathOtpResponse>;
     static resetPassword(req: ResetPasswordRequest, user: TokenResetPassword): Promise<UserResponse>;

@@ -94,6 +94,16 @@ export class UserRepository {
 		})
 	}
 
+	static async updateVerifyToken(id: string, jti: string) {
+		return prismaClient.user.update({
+			where: {id},
+			data: {
+				verify_token: jti,
+				verify_token_last_sen_at: new Date()
+			}
+		})
+	}
+
 	static async deleteAll() {
 		return prismaClient.user.deleteMany();
 	}

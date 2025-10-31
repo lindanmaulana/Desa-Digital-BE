@@ -9,12 +9,15 @@ export declare class AuthValidation {
         email: z.ZodEmail;
         password: z.ZodString;
     }, z.core.$strip>;
-    static readonly ACTIVATION: z.ZodObject<{
-        email: z.ZodEmail;
+    static readonly VERIFYACCOUNT: z.ZodObject<{
+        token: z.ZodString;
         otp_code: z.ZodString;
     }, z.core.$strip>;
     static readonly RESENDOTP: z.ZodObject<{
         token: z.ZodString;
+    }, z.core.$strip>;
+    static readonly RESENDVERIFYACCOUNTTOKEN: z.ZodObject<{
+        email: z.ZodEmail;
     }, z.core.$strip>;
     static readonly FORGOTPASSWORD: z.ZodObject<{
         email: z.ZodEmail;

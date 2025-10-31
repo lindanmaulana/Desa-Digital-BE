@@ -50,6 +50,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -64,6 +65,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -83,6 +85,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -97,6 +100,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -111,6 +115,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -125,6 +130,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -139,6 +145,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -153,6 +160,22 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
+    }>;
+    static updateVerifyToken(id: string, jti: string): Promise<{
+        name: string;
+        id: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp_code: string | null;
+        otp_last_sen_at: Date | null;
+        verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -168,6 +191,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;
@@ -182,6 +206,7 @@ export declare class UserRepository {
         otp_code: string | null;
         otp_last_sen_at: Date | null;
         verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
         is_active: boolean;
         is_first_login: boolean;
         created_at: Date;

@@ -34,7 +34,7 @@
     // Opsi yang dihapus/dinonaktifkan karena tidak diperlukan untuk CommonJS/Express:
     // "jsx": "react-jsx",
     // "verbatimModuleSyntax": true,
-    // "isolatedModules": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "moduleDetection": "auto",
     "noUncheckedSideEffectImports": false

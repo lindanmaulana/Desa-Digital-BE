@@ -1,22 +1,23 @@
-import { isValidJWT } from "zod/v4/core";
 import services from ".";
 import {
-	ActivationRequest,
 	ForgotPasswordRequest,
 	ForgotPasswordResponse,
 	MatchOtpRequest,
 	MathOtpResponse,
 	ResendOtpRequest,
 	ResendOtpResponse,
+	ResendVerifyAccountTokenRequest,
+	ResendVerifyAccountTokenResponse,
 	ResetPasswordRequest,
 	SigninRequest,
 	SigninResponse,
 	SignupRequest,
+	VerifyAccountRequest,
 } from "../models/auth.model";
 import { UserResponse } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
 import { TokenResetPassword, TokenVerifyAccount } from "../types/token.type";
-import { BadrequestError, InternalServerError, NeedActivation, NotfoundError } from "../utils/errors";
+import { BadrequestError, ForbiddenError, InternalServerError, NeedActivation, NotfoundError } from "../utils/errors";
 import { ManyRequestError } from "../utils/errors/many-request";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
 import { UnauthorizedError } from "../utils/errors/unauthorized";
@@ -29,6 +30,7 @@ import { createTokenVerifyAccount } from "../utils/helpers/jwt/create-token-veri
 import responses from "../utils/responses";
 import { AuthValidation } from "../utils/validations/auth.validation";
 import { validation } from "../utils/validations/validation";
+import { EmailService } from "./email.service";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -85,21 +87,22 @@ export class AuthService {
 		};
 	}
 
-	static async activation(req: ActivationRequest, user: TokenVerifyAccount): Promise<UserResponse> {
-		const validateFields = validation.validate(AuthValidation.ACTIVATION, req);
+	static async verifyAccount(req: VerifyAccountRequest): Promise<UserResponse> {
+		const validateFields = validation.validate(AuthValidation.VERIFYACCOUNT, req);
 
-		const checkUser = await UserRepository.findByEmail(req.email);
+		const payload = helpers.isTokenValid({token: validateFields.token}) as TokenVerifyAccount
+		if (payload.type !== "VERIFY_ACCOUNT") throw new ForbiddenError("Token is valid but not authorized for verify account")
 
+		const checkUser = await UserRepository.findByEmail(payload.email);
 		if (!checkUser) throw new UnauthenticatedError("Email tidak valid atau pengguna telah terhapus");
 
 		if (checkUser.is_active) throw new BadrequestError("Akun anda sudah aktif");
 
-		if (user.jti !== checkUser.verify_token) throw new BadrequestError("Token tidak valid")
+		if (payload.jti !== checkUser.verify_token) throw new BadrequestError("Token tidak valid")
 
 		if (checkUser.otp_code !== validateFields.otp_code) throw new BadrequestError("Kode OTP yang Anda masukan salah");
 
 		const result = await UserRepository.updateIsActive(checkUser.id);
-
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
 		return responses.userResponse.toUserResponse(result);
@@ -146,6 +149,39 @@ export class AuthService {
 			otp_last_sent_at: new Date(),
 			otp_expiry_seconds: RESEND_COOLDOWN_SECONDS,
 		};
+	}
+
+	static async resendVerifyAccountToken(req: ResendVerifyAccountTokenRequest): Promise<ResendVerifyAccountTokenResponse> {
+		const validateFields = validation.validate(AuthValidation.RESENDVERIFYACCOUNTTOKEN, req)
+
+		const checkUser = await UserRepository.findByEmail(validateFields.email)
+		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan")
+
+		if (checkUser.is_active) throw new BadrequestError("Akun anda sudah aktif")
+
+		if (checkUser.verify_token_last_sen_at) {
+			const lastSentTime = checkUser.verify_token_last_sen_at.getTime()
+			const currentTime = new Date().getTime()
+			const timeElapsed = (currentTime - lastSentTime) / 1000
+
+			if (timeElapsed < RESEND_COOLDOWN_SECONDS) {
+				const remainingTime = Math.ceil(RESEND_COOLDOWN_SECONDS - timeElapsed)
+
+				throw new ManyRequestError(`Mohon tunggu ${remainingTime} detik sebelum meminta link verifikasi baru`)
+			}
+		}
+
+		const jti = generateUUID()
+		const verify_token = createTokenVerifyAccount({user_id: checkUser.id, jti, email: checkUser.email, role: checkUser.role, type: "VERIFY_ACCOUNT"})
+
+		const result = await UserRepository.updateVerifyToken(checkUser.id, jti)
+
+		if (!result) throw new InternalServerError("Gagal memperbarui token verifikasi, pleaset try again later")
+		await EmailService.ResendVerifyAccountMail(result.email, verify_token, result)
+
+		return {
+			verify_token_last_sen_at: result.verify_token_last_sen_at
+		}
 	}
 
 	static async forgotPassword(req: ForgotPasswordRequest): Promise<ForgotPasswordResponse> {

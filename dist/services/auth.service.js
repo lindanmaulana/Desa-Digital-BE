@@ -28,6 +28,7 @@ const create_token_verify_account_1 = require("../utils/helpers/jwt/create-token
 const responses_1 = __importDefault(require("../utils/responses"));
 const auth_validation_1 = require("../utils/validations/auth.validation");
 const validation_1 = require("../utils/validations/validation");
+const email_service_1 = require("./email.service");
 const RESEND_COOLDOWN_SECONDS = 60;
 class AuthService {
     static signup(req) {
@@ -64,15 +65,18 @@ class AuthService {
             return Object.assign(Object.assign({}, responses_1.default.userResponse.toUserResponse(checkUser)), { token });
         });
     }
-    static activation(req, user) {
+    static verifyAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.ACTIVATION, req);
-            const checkUser = yield user_repository_1.UserRepository.findByEmail(req.email);
+            const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.VERIFYACCOUNT, req);
+            const payload = helpers_1.default.isTokenValid({ token: validateFields.token });
+            if (payload.type !== "VERIFY_ACCOUNT")
+                throw new errors_1.ForbiddenError("Token is valid but not authorized for verify account");
+            const checkUser = yield user_repository_1.UserRepository.findByEmail(payload.email);
             if (!checkUser)
                 throw new unauthenticated_1.UnauthenticatedError("Email tidak valid atau pengguna telah terhapus");
             if (checkUser.is_active)
                 throw new errors_1.BadrequestError("Akun anda sudah aktif");
-            if (user.jti !== checkUser.verify_token)
+            if (payload.jti !== checkUser.verify_token)
                 throw new errors_1.BadrequestError("Token tidak valid");
             if (checkUser.otp_code !== validateFields.otp_code)
                 throw new errors_1.BadrequestError("Kode OTP yang Anda masukan salah");
@@ -110,6 +114,34 @@ class AuthService {
                 email: result.email,
                 otp_last_sent_at: new Date(),
                 otp_expiry_seconds: RESEND_COOLDOWN_SECONDS,
+            };
+        });
+    }
+    static resendVerifyAccountToken(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.RESENDVERIFYACCOUNTTOKEN, req);
+            const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
+            if (!checkUser)
+                throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
+            if (checkUser.is_active)
+                throw new errors_1.BadrequestError("Akun anda sudah aktif");
+            if (checkUser.verify_token_last_sen_at) {
+                const lastSentTime = checkUser.verify_token_last_sen_at.getTime();
+                const currentTime = new Date().getTime();
+                const timeElapsed = (currentTime - lastSentTime) / 1000;
+                if (timeElapsed < RESEND_COOLDOWN_SECONDS) {
+                    const remainingTime = Math.ceil(RESEND_COOLDOWN_SECONDS - timeElapsed);
+                    throw new many_request_1.ManyRequestError(`Mohon tunggu ${remainingTime} detik sebelum meminta link verifikasi baru`);
+                }
+            }
+            const jti = (0, generate_uuid_1.generateUUID)();
+            const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: checkUser.id, jti, email: checkUser.email, role: checkUser.role, type: "VERIFY_ACCOUNT" });
+            const result = yield user_repository_1.UserRepository.updateVerifyToken(checkUser.id, jti);
+            if (!result)
+                throw new errors_1.InternalServerError("Gagal memperbarui token verifikasi, pleaset try again later");
+            yield email_service_1.EmailService.ResendVerifyAccountMail(result.email, verify_token, result);
+            return {
+                verify_token_last_sen_at: result.verify_token_last_sen_at
             };
         });
     }

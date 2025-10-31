@@ -90,6 +90,7 @@ model User {
   otp_last_sen_at DateTime? @db.Timestamp()
 
   verify_token String? @db.VarChar(255)
+  verify_token_last_sen_at DateTime? @db.Timestamp()
 
   is_active Boolean @db.Boolean @default(false)
   is_first_login Boolean @db.Boolean @default(true)

@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { authenticatedResetPassword, authenticatedUser } from "../../../middlewares/auth"
+import { authenticatedResetPassword, authenticatedUser, authenticatedVerifyAccount } from "../../../middlewares/auth"
 import { publicRateLimit } from "../../../middlewares/rateLimit"
 import controllers from "../controllers"
 
@@ -8,7 +8,8 @@ const route = Router()
 route.post("/signup", publicRateLimit, controllers.AuthController.signup)
 route.post("/signin", publicRateLimit, controllers.AuthController.signin)
 
-route.post("/verify-account", publicRateLimit, controllers.AuthController.activation)
+route.post("/verify-account", publicRateLimit, controllers.AuthController.verifyAccount)
+route.post("/resend-verify-account", publicRateLimit, controllers.AuthController.resendVerifyAccount)
 
 route.post("/resend-otp", publicRateLimit, controllers.AuthController.resendOtp)
 

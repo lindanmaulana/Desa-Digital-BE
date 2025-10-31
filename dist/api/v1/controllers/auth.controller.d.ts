@@ -3,7 +3,8 @@ import { CustomeRequest } from "../../../types/express.type";
 export declare class AuthController {
     static signup(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static signin(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
-    static activation(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static verifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static resendVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static resendOtp(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static forgotPassword(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static matchOtp(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;

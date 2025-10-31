@@ -26,6 +26,7 @@ export const errorMiddleware = async (error: Error, request: Request, res: Respo
 		}
 
 		if (error.type_error) responseData.type_error = error.type_error
+		
 	} else if (error instanceof Prisma.PrismaClientKnownRequestError) {
 		console.log("Prisma client Error");
 
