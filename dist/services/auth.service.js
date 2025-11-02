@@ -41,7 +41,7 @@ class AuthService {
             const otp = helpers_1.default.generateOtp();
             const jti = (0, generate_uuid_1.generateUUID)();
             const result = yield user_repository_1.UserRepository.create({
-                data: Object.assign(Object.assign({}, validateFields), { password: hashPassword, otp_code: otp, otp_last_sen_at: new Date(), verify_token: jti }),
+                data: Object.assign(Object.assign({}, validateFields), { password: hashPassword, otp: otp, otp_last_sen_at: new Date(), verify_token: jti }),
             });
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later!");
@@ -78,7 +78,7 @@ class AuthService {
                 throw new errors_1.BadrequestError("Akun anda sudah aktif");
             if (payload.jti !== checkUser.verify_token)
                 throw new errors_1.BadrequestError("Token tidak valid");
-            if (checkUser.otp_code !== validateFields.otp_code)
+            if (checkUser.otp !== validateFields.otp_code)
                 throw new errors_1.BadrequestError("Kode OTP yang Anda masukan salah");
             const result = yield user_repository_1.UserRepository.updateIsActive(checkUser.id);
             if (!result)
@@ -86,7 +86,7 @@ class AuthService {
             return responses_1.default.userResponse.toUserResponse(result);
         });
     }
-    static resendOtp(req) {
+    static resendOtpVerifyAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.RESENDOTP, req);
             const payloadToken = helpers_1.default.isTokenValid({ token: validateFields.token });
@@ -105,8 +105,8 @@ class AuthService {
                 }
             }
             const newOtp = (0, generate_otp_1.generateOtp)();
-            const valueOTP = Object.assign(Object.assign({}, checkUser), { otp_code: newOtp });
-            const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp);
+            const valueOTP = Object.assign(Object.assign({}, checkUser), { otp: newOtp });
+            const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp, "ACTIVATION");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
             yield _1.default.EmailService.ResendOtpMail(checkUser.email, valueOTP);
@@ -117,7 +117,7 @@ class AuthService {
             };
         });
     }
-    static resendVerifyAccountToken(req) {
+    static resendTokenVerifyAccount(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.RESENDVERIFYACCOUNTTOKEN, req);
             const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
@@ -151,12 +151,39 @@ class AuthService {
             const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
-            const newOtp = (0, generate_otp_1.generateOtp)();
-            const valueOTP = Object.assign(Object.assign({}, checkUser), { otp_code: newOtp });
-            const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp);
+            const otp = (0, generate_otp_1.generateOtp)();
+            const valueOTP = Object.assign(Object.assign({}, checkUser), { otp: otp });
+            const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.SendOtpMail(validateFields.email, valueOTP);
+            yield _1.default.EmailService.SendOtpResetPasswordMail(validateFields.email, valueOTP);
+            return {
+                email: result.email,
+                otp_last_sent_at: new Date(),
+            };
+        });
+    }
+    static resendOtpForgotPassword(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.FORGOTPASSWORD, req);
+            const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
+            if (!checkUser)
+                throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
+            if (checkUser.otp_purpose === "RESET_PASSWORD" && checkUser.otp_last_sen_at) {
+                const lastSentTime = checkUser.otp_last_sen_at.getTime();
+                const currentTime = new Date().getTime();
+                const timeElapsed = (currentTime - lastSentTime) / 1000;
+                if (timeElapsed < RESEND_COOLDOWN_SECONDS) {
+                    const remainingTime = Math.ceil(RESEND_COOLDOWN_SECONDS - timeElapsed);
+                    throw new many_request_1.ManyRequestError(`Mohon tunggu ${remainingTime} detik sebelum meminta link verifikasi baru`);
+                }
+            }
+            const otp = (0, generate_otp_1.generateOtp)();
+            const valueOTP = Object.assign(Object.assign({}, checkUser), { otp: otp });
+            const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
+            if (!result)
+                throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
+            yield _1.default.EmailService.ReSendOtpResetPasswordMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
@@ -169,9 +196,9 @@ class AuthService {
             const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
-            if (validateFields.otp_code !== checkUser.otp_code)
+            if (validateFields.otp_code !== checkUser.otp)
                 throw new errors_1.BadrequestError("Kode OTP yang anda masukan salah");
-            const token = (0, create_token_reset_password_1.createTokenResetPassword)({ user_id: checkUser.id, type: "RESET_PASSWORD", email: checkUser.email, role: checkUser.role });
+            const token = (0, create_token_reset_password_1.createTokenResetPassword)({ user_id: checkUser.id, type: "RESET_PASSWORD", jti: "", email: checkUser.email, role: checkUser.role });
             yield user_repository_1.UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
             return {
                 verify_token: token,

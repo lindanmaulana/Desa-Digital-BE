@@ -10,13 +10,13 @@ const logging_1 = require("../../../logging");
 const errors_1 = require("../../errors");
 const unauthenticated_1 = require("../../errors/unauthenticated");
 const expired_1 = require("../../errors/expired");
-const createJwt = ({ payload }) => {
+const createJwt = ({ payload, expired }) => {
     if (!config_1.JWTSECRETKEY) {
         logging_1.logger.error("jwt secret key is not defined");
         throw new errors_1.BadrequestError("Server Error");
     }
     const token = jsonwebtoken_1.default.sign(payload, config_1.JWTSECRETKEY, {
-        expiresIn: "24h",
+        expiresIn: expired !== null && expired !== void 0 ? expired : "24h",
     });
     return token;
 };

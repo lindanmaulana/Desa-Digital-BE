@@ -16,6 +16,7 @@ export interface TokenUser extends BasePayloadToken {
 }
 
 export interface TokenResetPassword extends BasePayloadToken {
+	jti: string
 	email: string
 }
 

@@ -1,5 +1,5 @@
 declare const _default: {
-    createJwt: ({ payload }: import("./jwt/create-jwt").CreateJwtParams) => string;
+    createJwt: ({ payload, expired }: import("./jwt/create-jwt").CreateJwtParams) => string;
     isTokenValid: ({ token }: {
         token: string;
     }) => import("../../types/token.type").TokenUser | import("../../types/token.type").TokenResetPassword | import("../../types/token.type").TokenVerifyAccount;

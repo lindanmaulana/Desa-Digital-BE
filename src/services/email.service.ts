@@ -4,6 +4,7 @@ import mustache from "mustache";
 import nodemailer from "nodemailer";
 import { BASEURL_CLIENT, MAIL_PASSWORD, MAIL_USERNAME } from "../config";
 import { logger } from "../logging";
+import { string } from "zod";
 
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
@@ -16,18 +17,18 @@ const transporter = nodemailer.createTransport({
 });
 
 export class EmailService {
-	static async SendOtpMail(email: string, data: User) {
+	static async SendOtpMails(email: string, title: string, message: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
-				otp_code: data.otp_code,
-				title: "Verifikasi Akun",
-				description: "Terima kasih telah mendaftar di",
+				otp_code: data.otp,
+				title: title,
+				description: message,
 				app_name: "Desa Digital",
 				app_website: "https://desadigital.com",
 			};
 
-			let template = fs.readFileSync("src/utils/views/otp-mail.html", "utf-8");
+			let template = fs.readFileSync("src/utils/views/example.html", "utf-8");
 
 			const htmlOutput = mustache.render(template, view);
 
@@ -46,7 +47,7 @@ export class EmailService {
 		try {
 			const view = {
 				user_name: data.name,
-				otp_code: data.otp_code,
+				otp_code: data.otp,
 				title: "Kode Verifikasi",
 				description: "Kode verifikasi baru dari",
 				app_name: "Desa Digital",
@@ -67,11 +68,59 @@ export class EmailService {
 		}
 	}
 
+	static async SendOtpResetPasswordMail(email: string, data: User) {
+		try {
+			const view = {
+				user_name: data.name,
+				otp: data.otp,
+				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
+				app_website: "https://desadigital.com",
+			}
+
+			let template = fs.readFileSync("src/utils/views/reset-password-otp-mail.html", "utf-8")
+			const htmlOutput = mustache.render(template, view)
+
+			await transporter.sendMail({
+				from: MAIL_USERNAME,
+				to: email,
+				subject: "Kode Reset Password Akun Anda",
+				html: htmlOutput
+			})
+		} catch (err) {
+			logger.error(err)
+		}
+	}
+
+	static async ReSendOtpResetPasswordMail(email: string, data: User) {
+		try {
+			const view = {
+				user_name: data.name,
+				otp: data.otp,
+				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
+				app_website: "https://desadigital.com",
+			}
+
+			let template = fs.readFileSync("src/utils/views/resend-reset-password-otp-mail.html", "utf-8")
+			const htmlOutput = mustache.render(template, view)
+
+			await transporter.sendMail({
+				from: MAIL_USERNAME,
+				to: email,
+				subject: "Kode Reset Password Akun Anda",
+				html: htmlOutput
+			})
+		} catch (err) {
+			logger.error(err)
+		}
+	}
+
 	static async SendVerifyAccountMail(email: string, token: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
-				otp_code: data.otp_code,
+				otp: data.otp,
 				app_name: "Desa Digital",
 				verification_link: `${BASEURL_CLIENT}?token=${token}`,
 			};
@@ -95,7 +144,7 @@ export class EmailService {
 		try {
 			const view = {
 				user_name: data.name,
-				otp_code: data.otp_code,
+				otp_code: data.otp,
 				app_name: "Desa Digital",
 				verification_link: `${BASEURL_CLIENT}?token=${token}`,
 			};

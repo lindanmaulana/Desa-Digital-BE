@@ -77,11 +77,11 @@ export class AuthController {
 		}
 	}
 
-	static async resendVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction) {
+	static async resendTokenVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqBody = req.body as ResendVerifyAccountTokenRequest;
 
-			const result = await services.AuthService.resendVerifyAccountToken(reqBody);
+			const result = await services.AuthService.resendTokenVerifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -94,11 +94,11 @@ export class AuthController {
 		}
 	}
 
-	static async resendOtp(req: CustomeRequest, res: Response, next: NextFunction) {
+	static async resendOtpVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqBody = req.body as ResendOtpRequest;
 
-			const result = await services.AuthService.resendOtp(reqBody);
+			const result = await services.AuthService.resendOtpVerifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -120,7 +120,24 @@ export class AuthController {
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
-				message: "Pengguna ditemukan, kode verifikasi anda terkirim",
+				message: "Kode verifikasi telah dikirimkan, Cek email Anda.",
+				data: result,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	static async resendOtpForgotPassword(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const reqBody = req.body as ForgotPasswordRequest;
+
+			const result = await services.AuthService.resendOtpForgotPassword(reqBody);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: "Kode verifikasi telah dikirimkan ulang, Cek email Anda.",
 				data: result,
 			});
 		} catch (err) {

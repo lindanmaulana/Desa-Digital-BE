@@ -81,11 +81,11 @@ class AuthController {
             }
         });
     }
-    static resendVerifyAccount(req, res, next) {
+    static resendTokenVerifyAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resendVerifyAccountToken(reqBody);
+                const result = yield services_1.default.AuthService.resendTokenVerifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -98,11 +98,11 @@ class AuthController {
             }
         });
     }
-    static resendOtp(req, res, next) {
+    static resendOtpVerifyAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resendOtp(reqBody);
+                const result = yield services_1.default.AuthService.resendOtpVerifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -123,7 +123,24 @@ class AuthController {
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
-                    message: "Pengguna ditemukan, kode verifikasi anda terkirim",
+                    message: "Kode verifikasi telah dikirimkan, Cek email Anda.",
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static resendOtpForgotPassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const reqBody = req.body;
+                const result = yield services_1.default.AuthService.resendOtpForgotPassword(reqBody);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: "Kode verifikasi telah dikirimkan ulang, Cek email Anda.",
                     data: result,
                 });
             }

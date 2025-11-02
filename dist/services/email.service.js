@@ -28,18 +28,18 @@ const transporter = nodemailer_1.default.createTransport({
     },
 });
 class EmailService {
-    static SendOtpMail(email, data) {
+    static SendOtpMails(email, title, message, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
                     user_name: data.name,
-                    otp_code: data.otp_code,
-                    title: "Verifikasi Akun",
-                    description: "Terima kasih telah mendaftar di",
+                    otp_code: data.otp,
+                    title: title,
+                    description: message,
                     app_name: "Desa Digital",
                     app_website: "https://desadigital.com",
                 };
-                let template = fs_1.default.readFileSync("src/utils/views/otp-mail.html", "utf-8");
+                let template = fs_1.default.readFileSync("src/utils/views/example.html", "utf-8");
                 const htmlOutput = mustache_1.default.render(template, view);
                 yield transporter.sendMail({
                     from: config_1.MAIL_USERNAME,
@@ -58,7 +58,7 @@ class EmailService {
             try {
                 const view = {
                     user_name: data.name,
-                    otp_code: data.otp_code,
+                    otp_code: data.otp,
                     title: "Kode Verifikasi",
                     description: "Kode verifikasi baru dari",
                     app_name: "Desa Digital",
@@ -78,12 +78,60 @@ class EmailService {
             }
         });
     }
+    static SendOtpResetPasswordMail(email, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const view = {
+                    user_name: data.name,
+                    otp: data.otp,
+                    app_name: "Desa Digital",
+                    expiry_minutes: "15 menit",
+                    app_website: "https://desadigital.com",
+                };
+                let template = fs_1.default.readFileSync("src/utils/views/reset-password-otp-mail.html", "utf-8");
+                const htmlOutput = mustache_1.default.render(template, view);
+                yield transporter.sendMail({
+                    from: config_1.MAIL_USERNAME,
+                    to: email,
+                    subject: "Kode Reset Password Akun Anda",
+                    html: htmlOutput
+                });
+            }
+            catch (err) {
+                logging_1.logger.error(err);
+            }
+        });
+    }
+    static ReSendOtpResetPasswordMail(email, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const view = {
+                    user_name: data.name,
+                    otp: data.otp,
+                    app_name: "Desa Digital",
+                    expiry_minutes: "15 menit",
+                    app_website: "https://desadigital.com",
+                };
+                let template = fs_1.default.readFileSync("src/utils/views/resend-reset-password-otp-mail.html", "utf-8");
+                const htmlOutput = mustache_1.default.render(template, view);
+                yield transporter.sendMail({
+                    from: config_1.MAIL_USERNAME,
+                    to: email,
+                    subject: "Kode Reset Password Akun Anda",
+                    html: htmlOutput
+                });
+            }
+            catch (err) {
+                logging_1.logger.error(err);
+            }
+        });
+    }
     static SendVerifyAccountMail(email, token, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
                     user_name: data.name,
-                    otp_code: data.otp_code,
+                    otp: data.otp,
                     app_name: "Desa Digital",
                     verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
                 };
@@ -106,7 +154,7 @@ class EmailService {
             try {
                 const view = {
                     user_name: data.name,
-                    otp_code: data.otp_code,
+                    otp_code: data.otp,
                     app_name: "Desa Digital",
                     verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
                 };

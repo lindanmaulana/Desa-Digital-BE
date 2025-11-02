@@ -8,16 +8,17 @@ import { ExpiredError } from "../../errors/expired";
 
 export interface CreateJwtParams {
 	payload: TokenUser | TokenResetPassword | TokenVerifyAccount;
+	expired?: number | "7d" | "24h" | "1h" | "15m" | "60s"
 }
 
-export const createJwt = ({ payload }: CreateJwtParams): string => {
+export const createJwt = ({ payload, expired }: CreateJwtParams): string => {
 	if (!JWTSECRETKEY) {
 		logger.error("jwt secret key is not defined");
 		throw new BadrequestError("Server Error");
 	}
 
 	const token = jwt.sign(payload, JWTSECRETKEY, {
-		expiresIn: "24h",
+		expiresIn: expired ?? "24h",
 	});
 
 	return token;

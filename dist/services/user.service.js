@@ -42,7 +42,8 @@ class UserService {
                         name: validateFields.name,
                         password: hashPassword,
                         role: "STAFF",
-                        otp_code: otp,
+                        otp: otp,
+                        otp_purpose: "ACTIVATION",
                         otp_last_sen_at: new Date(),
                         verify_token: jti,
                         verify_token_last_sen_at: new Date()
@@ -92,7 +93,8 @@ class UserService {
                         name: validateFields.name,
                         password: hashPassword,
                         role: "HEAD_OF_FAMILY",
-                        otp_code: otp,
+                        otp: otp,
+                        otp_purpose: "ACTIVATION",
                         otp_last_sen_at: new Date(),
                         verify_token: jti,
                         verify_token_last_sen_at: new Date()

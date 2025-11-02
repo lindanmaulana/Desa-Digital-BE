@@ -12,6 +12,7 @@ export interface TokenUser extends BasePayloadToken {
     is_first_login: boolean;
 }
 export interface TokenResetPassword extends BasePayloadToken {
+    jti: string;
     email: string;
 }
 export interface TokenVerifyAccount extends BasePayloadToken {

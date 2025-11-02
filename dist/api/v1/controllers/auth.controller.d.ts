@@ -4,9 +4,10 @@ export declare class AuthController {
     static signup(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static signin(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static verifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
-    static resendVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
-    static resendOtp(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static resendTokenVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static resendOtpVerifyAccount(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static forgotPassword(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static resendOtpForgotPassword(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static matchOtp(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static resetPassword(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
 }

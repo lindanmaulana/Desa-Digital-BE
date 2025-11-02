@@ -6,10 +6,11 @@ const createTokenResetPassword = (payload) => {
     const payloadToken = {
         user_id: payload.user_id,
         type: payload.type,
+        jti: payload.jti,
         email: payload.email,
         role: payload.role,
     };
-    const token = (0, create_jwt_1.createJwt)({ payload: payloadToken });
+    const token = (0, create_jwt_1.createJwt)({ payload: payloadToken, expired: "15m" });
     return token;
 };
 exports.createTokenResetPassword = createTokenResetPassword;

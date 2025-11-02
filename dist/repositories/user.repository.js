@@ -56,7 +56,7 @@ class UserRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.findUnique({
                 where: { id, is_active: false },
-                select: { id: true, is_active: true, otp_code: true },
+                select: { id: true, is_active: true, otp: true },
             });
         });
     }
@@ -96,17 +96,18 @@ class UserRepository {
                 where: { id, is_active: false },
                 data: {
                     is_active: true,
-                    otp_code: null,
+                    otp: null,
                 },
             });
         });
     }
-    static updateOtp(id, otp_code) {
+    static updateOtp(id, otp, otp_purpose) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.update({
                 where: { id },
                 data: {
-                    otp_code,
+                    otp,
+                    otp_purpose,
                     otp_last_sen_at: new Date()
                 }
             });
@@ -142,7 +143,9 @@ class UserRepository {
             return db_1.prismaClient.user.update({
                 where: { id },
                 data: {
-                    otp_code: null
+                    otp: null,
+                    otp_purpose: null,
+                    otp_last_sen_at: null
                 }
             });
         });

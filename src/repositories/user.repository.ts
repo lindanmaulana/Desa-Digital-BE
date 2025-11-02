@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, UserOtpPurpose } from "@prisma/client";
 import { prismaClient } from "../db";
 import { UserWithRelations } from "../models/user.model";
 
@@ -44,7 +44,7 @@ export class UserRepository {
 	static async findUserForActivation(id: string) {
 		return prismaClient.user.findUnique({
 			where: { id, is_active: false },
-			select: { id: true, is_active: true, otp_code: true },
+			select: { id: true, is_active: true, otp: true },
 		});
 	}
 
@@ -79,16 +79,17 @@ export class UserRepository {
 			where: { id, is_active: false },
 			data: {
 				is_active: true,
-				otp_code: null,
+				otp: null,
 			},
 		});
 	}
 
-	static async updateOtp(id: string, otp_code: string) {
+	static async updateOtp(id: string, otp: string, otp_purpose: UserOtpPurpose) {
 		return prismaClient.user.update({
 			where: {id},
 			data: {
-				otp_code,
+				otp,
+				otp_purpose,
 				otp_last_sen_at: new Date()
 			}
 		})
@@ -120,7 +121,9 @@ export class UserRepository {
 		return prismaClient.user.update({
 			where: {id},
 			data: {
-				otp_code: null
+				otp: null,
+				otp_purpose: null,
+				otp_last_sen_at: null
 			}
 		})
 	}
