@@ -124,6 +124,17 @@ class UserRepository {
             });
         });
     }
+    static updateResetToken(id, jti) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id },
+                data: {
+                    reset_token: jti,
+                    reset_token_last_sen_at: new Date()
+                }
+            });
+        });
+    }
     static deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.deleteMany();

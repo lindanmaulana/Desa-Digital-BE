@@ -43,18 +43,17 @@ export class EmailService {
 		}
 	}
 
-	static async ResendOtpMail(email: string, data: User) {
+	static async ResendOtpVerifyAccountMail(email: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
-				otp_code: data.otp,
-				title: "Kode Verifikasi",
-				description: "Kode verifikasi baru dari",
+				otp: data.otp,
 				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
 				app_website: "https://desadigital.com",
 			};
 
-			let template = fs.readFileSync("src/utils/views/otp-mail.html", "utf-8");
+			let template = fs.readFileSync("src/utils/views/resend-otp-verify-account-mail.html", "utf-8");
 			const htmlOutput = mustache.render(template, view);
 
 			await transporter.sendMail({
@@ -65,54 +64,6 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error(err);
-		}
-	}
-
-	static async SendOtpResetPasswordMail(email: string, data: User) {
-		try {
-			const view = {
-				user_name: data.name,
-				otp: data.otp,
-				app_name: "Desa Digital",
-				expiry_minutes: "15 menit",
-				app_website: "https://desadigital.com",
-			}
-
-			let template = fs.readFileSync("src/utils/views/reset-password-otp-mail.html", "utf-8")
-			const htmlOutput = mustache.render(template, view)
-
-			await transporter.sendMail({
-				from: MAIL_USERNAME,
-				to: email,
-				subject: "Kode Reset Password Akun Anda",
-				html: htmlOutput
-			})
-		} catch (err) {
-			logger.error(err)
-		}
-	}
-
-	static async ReSendOtpResetPasswordMail(email: string, data: User) {
-		try {
-			const view = {
-				user_name: data.name,
-				otp: data.otp,
-				app_name: "Desa Digital",
-				expiry_minutes: "15 menit",
-				app_website: "https://desadigital.com",
-			}
-
-			let template = fs.readFileSync("src/utils/views/resend-reset-password-otp-mail.html", "utf-8")
-			const htmlOutput = mustache.render(template, view)
-
-			await transporter.sendMail({
-				from: MAIL_USERNAME,
-				to: email,
-				subject: "Kode Reset Password Akun Anda",
-				html: htmlOutput
-			})
-		} catch (err) {
-			logger.error(err)
 		}
 	}
 
@@ -161,6 +112,62 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error("Send verify-account mail", err);
+		}
+	}
+
+	static async SendOtpResetPasswordMail(email: string, data: User) {
+		try {
+			const view = {
+				user_name: data.name,
+				otp: data.otp,
+				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
+				app_website: "https://desadigital.com",
+			};
+
+			let template = fs.readFileSync("src/utils/views/forgot-password-otp-mail.html", "utf-8");
+			const htmlOutput = mustache.render(template, view);
+
+			await transporter.sendMail({
+				from: MAIL_USERNAME,
+				to: email,
+				subject: "Kode Reset Password Akun Anda",
+				html: htmlOutput,
+			});
+		} catch (err) {
+			logger.error(err);
+		}
+	}
+
+	static async ReSendOtpResetPasswordMail(email: string, data: User) {
+		try {
+			const view = {
+				user_name: data.name,
+				otp: data.otp,
+				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
+				app_website: "https://desadigital.com",
+			};
+
+			let template = fs.readFileSync("src/utils/views/resend-forgot-password-otp-mail.html", "utf-8");
+			const htmlOutput = mustache.render(template, view);
+
+			await transporter.sendMail({
+				from: MAIL_USERNAME,
+				to: email,
+				subject: "Kode Reset Password Akun Anda",
+				html: htmlOutput,
+			});
+		} catch (err) {
+			logger.error(err);
+		}
+	}
+
+	static async SendTokenForgotPasswordMail() {
+		try {
+			
+		} catch (err) {
+			logger.error(err)
 		}
 	}
 }

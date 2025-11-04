@@ -2,8 +2,6 @@ import services from ".";
 import {
 	ForgotPasswordRequest,
 	ForgotPasswordResponse,
-	MatchOtpRequest,
-	MathOtpResponse,
 	ResendOtpRequest,
 	ResendOtpResponse,
 	ResendVerifyAccountTokenRequest,
@@ -13,6 +11,8 @@ import {
 	SigninResponse,
 	SignupRequest,
 	VerifyAccountRequest,
+	VerifyOtpForgotPasswordRequest,
+	verifyOtpForgotPasswordResponse
 } from "../models/auth.model";
 import { UserResponse } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
@@ -108,13 +108,10 @@ export class AuthService {
 
 	static async resendOtpVerifyAccount(req: ResendOtpRequest): Promise<ResendOtpResponse> {
 		const validateFields = validation.validate(AuthValidation.RESENDOTP, req);
-
 		const payloadToken = helpers.isTokenValid({token: validateFields.token}) as TokenVerifyAccount
 
 		const checkUser = await UserRepository.findByEmail(payloadToken.email);
-
 		if (!checkUser) throw new BadrequestError("Pengguna tidak ditemukan");
-
 		if (checkUser.is_active) throw new BadrequestError("Akun Anda sudah aktif, Tidak dapat mengirim kode OTP");
 
 		if (checkUser.otp_last_sen_at) {
@@ -140,7 +137,7 @@ export class AuthService {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		await services.EmailService.ResendOtpMail(checkUser.email, valueOTP);
+		await services.EmailService.ResendOtpVerifyAccountMail(checkUser.email, valueOTP);
 
 		return {
 			email: result.email,
@@ -235,24 +232,27 @@ export class AuthService {
 		return {
 			email: result.email,
 			otp_last_sent_at: new Date(),
+			otp_expiry_seconds: RESEND_COOLDOWN_SECONDS
 		};
 	}
 
-	static async matchOtp(req: MatchOtpRequest): Promise<MathOtpResponse> {
+	static async verifyOtpForgotPassword(req: VerifyOtpForgotPasswordRequest): Promise<verifyOtpForgotPasswordResponse> {
 		const validateFields = validation.validate(AuthValidation.MATCHOTP, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
-
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
-
 		if (validateFields.otp_code !== checkUser.otp) throw new BadrequestError("Kode OTP yang anda masukan salah");
 
-		const token = createTokenResetPassword({ user_id: checkUser.id, type: "RESET_PASSWORD" , jti: "", email: checkUser.email, role: checkUser.role });
+		const jti = generateUUID()
 
+		const result = await UserRepository.updateResetToken(checkUser.id, jti)
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat verifikasi otp anda, please try again later")
+
+		const token = createTokenResetPassword({ user_id: checkUser.id, type: "RESET_PASSWORD" , jti, email: checkUser.email, role: checkUser.role });
 		await UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
 
 		return {
-			verify_token: token,
+			verify_token_last_sen_at: new Date()
 		};
 	}
 

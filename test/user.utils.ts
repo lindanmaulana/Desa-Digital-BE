@@ -21,6 +21,16 @@ export class UserTest {
 		});
 	}
 
+	static async createAdminTest(): Promise<void> {
+		await prismaClient.user.create({
+			data: {
+				name: "admin",
+				email: `admin_testing@gmail.com`,
+				password: this.HASHED_PASSWORD_USERTEST
+			}
+		})
+	}
+
 	static async createUserTestActive(): Promise<void> {
 		await prismaClient.user.create({
 			data: {
@@ -38,7 +48,7 @@ export class UserTest {
 				name: "user otp",
 				email: "userotp@gmail.com",
 				password: this.HASHED_PASSWORD_USERTEST,
-				otp_code: "223344",
+				otp: "223344",
 				is_active: false,
 			},
 		});
@@ -50,7 +60,7 @@ export class UserTest {
 				name: "user forgotPass",
 				email: "userforgot@gmail.com",
 				password: this.HASHED_PASSWORD_USERTEST,
-				otp_code: "223344",
+				otp: "223344",
 				is_active: true,
 				is_first_login: false
 			},
@@ -76,5 +86,16 @@ export class UserTest {
 				email: "admin@gmail.com",
 			},
 		});
+	}
+
+	static async deleteAdminTest(): Promise<void> {
+		await prismaClient.user.deleteMany({
+			where: {
+				email: {
+					startsWith: "admin",
+					endsWith: "@gmail.com"
+				}
+			}
+		})
 	}
 }

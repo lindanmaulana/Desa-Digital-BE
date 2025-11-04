@@ -46,16 +46,17 @@ export interface ForgotPasswordRequest {
 
 export interface ForgotPasswordResponse {
 	email: string
-	otp_last_sent_at: Date
+	otp_last_sent_at: Date,
+	otp_expiry_seconds?: number
 }
 
-export interface MatchOtpRequest {
+export interface VerifyOtpForgotPasswordRequest {
 	email: string
 	otp_code: string
 }
 
-export interface MathOtpResponse {
-	verify_token: string
+export interface verifyOtpForgotPasswordResponse {
+	verify_token_last_sen_at: Date | null
 }
 
 export interface ResetPasswordRequest {

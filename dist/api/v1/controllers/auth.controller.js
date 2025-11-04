@@ -153,7 +153,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.matchOtp(reqBody);
+                const result = yield services_1.default.AuthService.verifyOtpForgotPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,

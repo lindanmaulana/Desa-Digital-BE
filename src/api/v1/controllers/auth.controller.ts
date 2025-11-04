@@ -2,15 +2,15 @@ import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import {
 	ForgotPasswordRequest,
-	MatchOtpRequest,
 	ResendOtpRequest,
 	ResendVerifyAccountTokenRequest,
 	ResetPasswordRequest,
 	VerifyAccountRequest,
+	VerifyOtpForgotPasswordRequest,
 } from "../../../models/auth.model";
 import services from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
-import { TokenResetPassword, TokenVerifyAccount } from "../../../types/token.type";
+import { TokenResetPassword } from "../../../types/token.type";
 
 export class AuthController {
 	static async signup(req: CustomeRequest, res: Response, next: NextFunction) {
@@ -147,9 +147,9 @@ export class AuthController {
 
 	static async matchOtp(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqBody = req.body as MatchOtpRequest;
+			const reqBody = req.body as VerifyOtpForgotPasswordRequest;
 
-			const result = await services.AuthService.matchOtp(reqBody);
+			const result = await services.AuthService.verifyOtpForgotPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

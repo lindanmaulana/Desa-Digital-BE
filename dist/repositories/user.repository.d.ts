@@ -208,6 +208,24 @@ export declare class UserRepository {
         created_at: Date;
         updated_at: Date;
     }>;
+    static updateResetToken(id: string, jti: string): Promise<{
+        name: string;
+        id: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp: string | null;
+        otp_purpose: import("@prisma/client").$Enums.UserOtpPurpose | null;
+        otp_last_sen_at: Date | null;
+        verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
+        reset_token: string | null;
+        reset_token_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
+    }>;
     static deleteAll(): Promise<Prisma.BatchPayload>;
     static deleteById(id: string): Promise<{
         name: string;

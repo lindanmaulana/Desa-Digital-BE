@@ -425,6 +425,7 @@ describe("POST /api/v1/auth/reset-password", () => {
 			email: userData.email,
 			otp_code: userData.otp_code,
 		});
+		
 		logger.info(response.body.data.verify_token)
 		verifyToken = response.body.data.verify_token;
 	});

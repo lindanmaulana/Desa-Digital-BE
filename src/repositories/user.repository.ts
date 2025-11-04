@@ -105,6 +105,16 @@ export class UserRepository {
 		})
 	}
 
+	static async updateResetToken(id: string, jti: string) {
+		return prismaClient.user.update({
+			where: {id},
+			data: {
+				reset_token: jti,
+				reset_token_last_sen_at: new Date()
+			}
+		})
+	}
+
 	static async deleteAll() {
 		return prismaClient.user.deleteMany();
 	}

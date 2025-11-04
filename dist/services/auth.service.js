@@ -109,7 +109,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp, "ACTIVATION");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.ResendOtpMail(checkUser.email, valueOTP);
+            yield _1.default.EmailService.ResendOtpVerifyAccountMail(checkUser.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
@@ -187,10 +187,11 @@ class AuthService {
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
+                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS
             };
         });
     }
-    static matchOtp(req) {
+    static verifyOtpForgotPassword(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(auth_validation_1.AuthValidation.MATCHOTP, req);
             const checkUser = yield user_repository_1.UserRepository.findByEmail(validateFields.email);
@@ -198,10 +199,14 @@ class AuthService {
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
             if (validateFields.otp_code !== checkUser.otp)
                 throw new errors_1.BadrequestError("Kode OTP yang anda masukan salah");
-            const token = (0, create_token_reset_password_1.createTokenResetPassword)({ user_id: checkUser.id, type: "RESET_PASSWORD", jti: "", email: checkUser.email, role: checkUser.role });
+            const jti = (0, generate_uuid_1.generateUUID)();
+            const result = yield user_repository_1.UserRepository.updateResetToken(checkUser.id, jti);
+            if (!result)
+                throw new errors_1.InternalServerError("Terjadi kesalahan saat verifikasi otp anda, please try again later");
+            const token = (0, create_token_reset_password_1.createTokenResetPassword)({ user_id: checkUser.id, type: "RESET_PASSWORD", jti, email: checkUser.email, role: checkUser.role });
             yield user_repository_1.UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
             return {
-                verify_token: token,
+                verify_token_last_sen_at: new Date()
             };
         });
     }
