@@ -1,4 +1,5 @@
 import services from ".";
+import { logger } from "../logging";
 import {
 	ForgotPasswordRequest,
 	ForgotPasswordResponse,
@@ -28,6 +29,7 @@ import { createTokenResetPassword } from "../utils/helpers/jwt/create-token-rese
 import { createTokenUser } from "../utils/helpers/jwt/create-token-user";
 import { createTokenVerifyAccount } from "../utils/helpers/jwt/create-token-verify-account";
 import responses from "../utils/responses";
+import userResponse from "../utils/responses/user.,response";
 import { AuthValidation } from "../utils/validations/auth.validation";
 import { validation } from "../utils/validations/validation";
 import { EmailService } from "./email.service";
@@ -35,36 +37,6 @@ import { EmailService } from "./email.service";
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export class AuthService {
-	static async signup(req: SignupRequest): Promise<UserResponse> {
-		const validateFields = validation.validate(AuthValidation.SIGNUP, req);
-
-		const checkEmailUser = await UserRepository.isEmailTaken(validateFields.email);
-
-		if (checkEmailUser) throw new BadrequestError("Email telah di gunakan");
-
-		const hashPassword = await helpers.hashPassword(validateFields.password);
-		const otp = helpers.generateOtp();
-		const jti = generateUUID()
-
-		const result = await UserRepository.create({
-			data: {
-				...validateFields,
-				password: hashPassword,
-				otp: otp,
-				otp_last_sen_at: new Date(),
-				verify_token: jti
-			},
-		});
-
-		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later!");
-
-		const verify_token = createTokenVerifyAccount({user_id: result.id, jti, email: result.email, role: result.role, type: "VERIFY_ACCOUNT"})
-
-		await services.EmailService.SendVerifyAccountMail(result.email, verify_token, result);
-
-		return responses.userResponse.toUserResponse(result);
-	}
-
 	static async signin(req: SigninRequest): Promise<SigninResponse> {
 		const validateFields = validation.validate(AuthValidation.SIGNIN, req);
 
@@ -134,7 +106,6 @@ export class AuthService {
 		};
 
 		const result = await UserRepository.updateOtp(checkUser.id, newOtp, "ACTIVATION");
-
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
 		await services.EmailService.ResendOtpVerifyAccountMail(checkUser.email, valueOTP);
@@ -172,7 +143,7 @@ export class AuthService {
 		const result = await UserRepository.updateVerifyToken(checkUser.id, jti)
 
 		if (!result) throw new InternalServerError("Gagal memperbarui token verifikasi, pleaset try again later")
-		await EmailService.ResendVerifyAccountMail(result.email, verify_token, result)
+		await EmailService.ResendTokenVerifyAccountMail(result.email, verify_token, result)
 
 		return {
 			verify_token_last_sen_at: result.verify_token_last_sen_at
@@ -183,17 +154,16 @@ export class AuthService {
 		const validateFields = validation.validate(AuthValidation.FORGOTPASSWORD, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
-
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
+		if (!checkUser.is_active) throw new BadrequestError("Akun anda belum aktif haraf aktivasi terlebih dahulu")
 
 		const otp = generateOtp();
 		const valueOTP = {...checkUser, otp: otp};
 
 		const result = await UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
-
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		await services.EmailService.SendOtpResetPasswordMail(validateFields.email, valueOTP);
+		await services.EmailService.SendOtpForgotPasswordMail(validateFields.email, valueOTP);
 
 		return {
 			email: result.email,
@@ -205,7 +175,6 @@ export class AuthService {
 		const validateFields = validation.validate(AuthValidation.FORGOTPASSWORD, req);
 
 		const checkUser = await UserRepository.findByEmail(validateFields.email);
-
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
 
 		if (checkUser.otp_purpose === "RESET_PASSWORD" && checkUser.otp_last_sen_at) {
@@ -224,10 +193,9 @@ export class AuthService {
 		const valueOTP = {...checkUser, otp: otp};
 
 		const result = await UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
-
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		await services.EmailService.ReSendOtpResetPasswordMail(validateFields.email, valueOTP);
+		await services.EmailService.ReSendOtpForgotPasswordMail(validateFields.email, valueOTP);
 
 		return {
 			email: result.email,
@@ -244,31 +212,33 @@ export class AuthService {
 		if (validateFields.otp_code !== checkUser.otp) throw new BadrequestError("Kode OTP yang anda masukan salah");
 
 		const jti = generateUUID()
-
 		const result = await UserRepository.updateResetToken(checkUser.id, jti)
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat verifikasi otp anda, please try again later")
 
 		const token = createTokenResetPassword({ user_id: checkUser.id, type: "RESET_PASSWORD" , jti, email: checkUser.email, role: checkUser.role });
-		await UserRepository.deleteOtp(checkUser.id, checkUser.is_active);
+		await UserRepository.deleteOtp(checkUser.id);
+		await EmailService.SendTokenForgotPasswordMail(result.email, token, result)
 
 		return {
 			verify_token_last_sen_at: new Date()
 		};
 	}
 
-	static async resetPassword(req: ResetPasswordRequest, user: TokenResetPassword): Promise<UserResponse> {
+	static async resetPassword(req: ResetPasswordRequest): Promise<UserResponse> {
 		const validateFields = validation.validate(AuthValidation.RESETPASSWORD, req);
 
 		if (validateFields.password !== validateFields.confirm_password) throw new BadrequestError("Password dan Konfirm Password tidak sama");
+		const token = helpers.isTokenValid({token: validateFields.token})
 
-		const checkUser = await UserRepository.findByEmail(user.email);
-
+		const checkUser = await UserRepository.findByEmail(token.email);
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
 
 		const result = await UserRepository.updatePassword(checkUser.id, validateFields.password);
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengubah password anda, please try again later");
 
-		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
+		const resultDeleteToken = await UserRepository.deleteResetToken(result.id)
+		if (!resultDeleteToken) logger.error("Gagal menghapus reset_token, dan reset_token_last_sen_at")
 
-		return responses.userResponse.toUserResponse(result);
+		return userResponse.toUserResponse(result);
 	}
 }

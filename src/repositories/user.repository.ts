@@ -127,13 +127,23 @@ export class UserRepository {
 		});
 	}
 
-	static async deleteOtp(id: string, is_active: boolean) {
+	static async deleteOtp(id: string) {
 		return prismaClient.user.update({
 			where: {id},
 			data: {
 				otp: null,
 				otp_purpose: null,
 				otp_last_sen_at: null
+			}
+		})
+	}
+
+	static async deleteResetToken(id: string) {
+		return prismaClient.user.update({
+			where: {id},
+			data: {
+				reset_token: null,
+				reset_token_last_sen_at: null
 			}
 		})
 	}

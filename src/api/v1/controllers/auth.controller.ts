@@ -13,20 +13,6 @@ import { CustomeRequest } from "../../../types/express.type";
 import { TokenResetPassword } from "../../../types/token.type";
 
 export class AuthController {
-	static async signup(req: CustomeRequest, res: Response, next: NextFunction) {
-		try {
-			const result = await services.AuthService.signup(req.body);
-
-			res.status(StatusCodes.CREATED).json({
-				status: "success",
-				code: StatusCodes.CREATED,
-				message: "Pendaftaran berhasil",
-				data: result,
-			});
-		} catch (err) {
-			next(err);
-		}
-	}
 
 	static async signin(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
@@ -145,7 +131,7 @@ export class AuthController {
 		}
 	}
 
-	static async matchOtp(req: CustomeRequest, res: Response, next: NextFunction) {
+	static async verifyOtpForgotPassword(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqBody = req.body as VerifyOtpForgotPasswordRequest;
 
@@ -164,10 +150,9 @@ export class AuthController {
 
 	static async resetPassword(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const token = req.user as TokenResetPassword;
 			const reqBody = req.body as ResetPasswordRequest;
 
-			const result = await services.AuthService.resetPassword(reqBody, token);
+			const result = await services.AuthService.resetPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

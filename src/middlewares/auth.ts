@@ -5,19 +5,13 @@ import { ForbiddenError } from "../utils/errors";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
 import helpers from "../utils/helpers";
 
+
 const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextFunction) => {
 	try {
-		let token;
+		const token = req.cookies.jwt
+		if (!token) throw new UnauthenticatedError("Authenticated invalid")
 
-		const authHeader = req.headers.authorization;
-		if (authHeader && authHeader.startsWith("Bearer")) {
-			token = authHeader.split(" ")[1];
-		}
-
-		if (!token) throw new UnauthenticatedError("Authenticated invalid");
-
-		const payload = helpers.isTokenValid({ token }) as TokenUser;
-
+		const payload = helpers.isTokenValid({token}) as TokenUser
 		if (payload.type !== "ACCESS") throw new ForbiddenError("Token is valid but not authorized for access")
 
 		req.user = {
@@ -26,27 +20,22 @@ const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextF
 			name: payload.name,
 			email: payload.email,
 			role: payload.role,
-			is_first_login: payload.is_first_login,
-		} as TokenUser;
+			is_active: payload.is_active,
+			is_first_login: payload.is_first_login
+		}
 
-		next();
+		next()
 	} catch (err) {
-		next(err);
+		next(err)
 	}
-};
+}
 
 const authenticatedVerifyAccount = async (req: CustomeRequest, res: Response, next: NextFunction) => {
 	try {
-		let token;
-
-		const authHeader = req.headers.authorization
-
-		if(authHeader && authHeader.startsWith("Bearer")) token = authHeader.split(" ")[1]
-
+		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
 
 		const payload = helpers.isTokenValid({token}) as TokenVerifyAccount
-
 		if (payload.type !== "VERIFY_ACCOUNT") throw new ForbiddenError("Token is valid but not authorized for verify account")
 
 		req.user = {
@@ -65,16 +54,10 @@ const authenticatedVerifyAccount = async (req: CustomeRequest, res: Response, ne
 
 const authenticatedResetPassword = async (req: CustomeRequest, res: Response, next: NextFunction) => {
 	try {
-		let token;
-
-		const authHeader = req.headers.authorization
-
-		if(authHeader && authHeader.startsWith("Bearer")) token = authHeader.split(" ")[1]
-
+		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
 
 		const payload = helpers.isTokenValid({token}) as TokenResetPassword
-
 		if(payload.type !== "RESET_PASSWORD")  throw new ForbiddenError("Token is valid but not authorized for password reset.")
 
 		req.user = {

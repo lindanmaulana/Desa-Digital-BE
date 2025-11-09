@@ -27,6 +27,7 @@ export declare class AuthValidation {
         otp_code: z.ZodString;
     }, z.core.$strip>;
     static readonly RESETPASSWORD: z.ZodObject<{
+        token: z.ZodString;
         password: z.ZodString;
         confirm_password: z.ZodString;
     }, z.core.$strip>;

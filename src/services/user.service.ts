@@ -74,7 +74,7 @@ export class UserService {
 
 		const verify_token = createTokenVerifyAccount({user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT"})
 
-		await services.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+		await services.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}
@@ -132,7 +132,7 @@ export class UserService {
 		if (!result) throw new InternalServerError("Pendaftaran gagal, please try again later");
 
 		const verify_token = createTokenVerifyAccount({user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT"})
-		await services.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+		await services.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
 		return responses.userResponse.toUserResponse(result.newUser);
 	}

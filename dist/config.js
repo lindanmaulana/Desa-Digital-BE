@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BASEURL_CLIENT = exports.MAIL_PASSWORD = exports.MAIL_USERNAME = exports.JWTEXPIRATION = exports.JWTSECRETKEYREFRESH = exports.JWTSECRETKEY = void 0;
+exports.BASEURL_AUTHENTICATION = exports.BASEURL_CLIENT = exports.MAIL_PASSWORD = exports.MAIL_USERNAME = exports.JWTEXPIRATION = exports.JWTSECRETKEYREFRESH = exports.JWTSECRETKEY = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const JWTSECRETKEY = process.env.JWT_SECRET;
@@ -18,4 +18,6 @@ const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 exports.MAIL_PASSWORD = MAIL_PASSWORD;
 const BASEURL_CLIENT = process.env.BASEURL_CLIENT;
 exports.BASEURL_CLIENT = BASEURL_CLIENT;
+const BASEURL_AUTHENTICATION = process.env.BASEURL_AUTHENTICATION;
+exports.BASEURL_AUTHENTICATION = BASEURL_AUTHENTICATION;
 //# sourceMappingURL=config.js.map

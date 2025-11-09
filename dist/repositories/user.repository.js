@@ -149,7 +149,7 @@ class UserRepository {
             });
         });
     }
-    static deleteOtp(id, is_active) {
+    static deleteOtp(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.update({
                 where: { id },
@@ -157,6 +157,17 @@ class UserRepository {
                     otp: null,
                     otp_purpose: null,
                     otp_last_sen_at: null
+                }
+            });
+        });
+    }
+    static deleteResetToken(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.update({
+                where: { id },
+                data: {
+                    reset_token: null,
+                    reset_token_last_sen_at: null
                 }
             });
         });

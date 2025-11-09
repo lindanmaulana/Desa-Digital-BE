@@ -16,22 +16,6 @@ exports.AuthController = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const services_1 = __importDefault(require("../../../services"));
 class AuthController {
-    static signup(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield services_1.default.AuthService.signup(req.body);
-                res.status(http_status_codes_1.StatusCodes.CREATED).json({
-                    status: "success",
-                    code: http_status_codes_1.StatusCodes.CREATED,
-                    message: "Pendaftaran berhasil",
-                    data: result,
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
     static signin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -149,7 +133,7 @@ class AuthController {
             }
         });
     }
-    static matchOtp(req, res, next) {
+    static verifyOtpForgotPassword(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
@@ -169,9 +153,8 @@ class AuthController {
     static resetPassword(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const token = req.user;
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resetPassword(reqBody, token);
+                const result = yield services_1.default.AuthService.resetPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,

@@ -2,9 +2,9 @@ import { User } from "@prisma/client";
 import fs from "fs";
 import mustache from "mustache";
 import nodemailer from "nodemailer";
-import { BASEURL_CLIENT, MAIL_PASSWORD, MAIL_USERNAME } from "../config";
+import { BASEURL_AUTHENTICATION, BASEURL_CLIENT, MAIL_PASSWORD, MAIL_USERNAME } from "../config";
 import { logger } from "../logging";
-import { string } from "zod";
+import { InternalServerError } from "../utils/errors";
 
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
@@ -40,6 +40,8 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error(err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
 	}
 
@@ -64,10 +66,12 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error(err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
 	}
 
-	static async SendVerifyAccountMail(email: string, token: string, data: User) {
+	static async SendTokenVerifyAccountMail(email: string, token: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
@@ -88,10 +92,12 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error("Send verify-account mail", err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
 	}
 
-	static async ResendVerifyAccountMail(email: string, token: string, data: User) {
+	static async ResendTokenVerifyAccountMail(email: string, token: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
@@ -112,10 +118,12 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error("Send verify-account mail", err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
 	}
 
-	static async SendOtpResetPasswordMail(email: string, data: User) {
+	static async SendOtpForgotPasswordMail(email: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
@@ -136,10 +144,12 @@ export class EmailService {
 			});
 		} catch (err) {
 			logger.error(err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
 	}
 
-	static async ReSendOtpResetPasswordMail(email: string, data: User) {
+	static async ReSendOtpForgotPasswordMail(email: string, data: User) {
 		try {
 			const view = {
 				user_name: data.name,
@@ -159,15 +169,36 @@ export class EmailService {
 				html: htmlOutput,
 			});
 		} catch (err) {
-			logger.error(err);
+			logger.error("Resend OTP forgot password", err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
 	}
 
-	static async SendTokenForgotPasswordMail() {
+	static async SendTokenForgotPasswordMail(email: string, token: string, data: User) {
 		try {
-			
+			const view = {
+				user_name: data.name,
+				otp: data.otp,
+				app_name: "Desa Digital",
+				expiry_minutes: "15 menit",
+				app_website: "https://desadigital.com",
+				reset_link: `${BASEURL_AUTHENTICATION}/forgot-password/reset?token=${token}`,
+			};
+
+			let template = fs.readFileSync("src/utils/views/forgot-password-token-mail.html", "utf-8");
+			const htmlOutput = mustache.render(template, view);
+
+			await transporter.sendMail({
+				from: MAIL_USERNAME,
+				to: email,
+				subject: "Kode Reset Password Akun Anda",
+				html: htmlOutput,
+			});
 		} catch (err) {
-			logger.error(err)
+			logger.error("Send TOKEN forgot-password", err);
+
+			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
 	}
 }

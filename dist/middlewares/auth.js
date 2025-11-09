@@ -18,11 +18,7 @@ const unauthenticated_1 = require("../utils/errors/unauthenticated");
 const helpers_1 = __importDefault(require("../utils/helpers"));
 const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let token;
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith("Bearer")) {
-            token = authHeader.split(" ")[1];
-        }
+        const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authenticated invalid");
         const payload = helpers_1.default.isTokenValid({ token });
@@ -34,7 +30,8 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             name: payload.name,
             email: payload.email,
             role: payload.role,
-            is_first_login: payload.is_first_login,
+            is_active: payload.is_active,
+            is_first_login: payload.is_first_login
         };
         next();
     }
@@ -45,10 +42,7 @@ const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
 exports.authenticatedUser = authenticatedUser;
 const authenticatedVerifyAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let token;
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith("Bearer"))
-            token = authHeader.split(" ")[1];
+        const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
         const payload = helpers_1.default.isTokenValid({ token });
@@ -70,10 +64,7 @@ const authenticatedVerifyAccount = (req, res, next) => __awaiter(void 0, void 0,
 exports.authenticatedVerifyAccount = authenticatedVerifyAccount;
 const authenticatedResetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let token;
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith("Bearer"))
-            token = authHeader.split(" ")[1];
+        const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
         const payload = helpers_1.default.isTokenValid({ token });

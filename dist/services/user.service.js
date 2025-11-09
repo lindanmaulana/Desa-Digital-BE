@@ -73,7 +73,7 @@ class UserService {
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
             const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT" });
-            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+            yield _1.default.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }
@@ -124,7 +124,7 @@ class UserService {
             if (!result)
                 throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
             const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: result.newUser.id, jti, email: result.newUser.email, role: result.newUser.role, type: "VERIFY_ACCOUNT" });
-            yield _1.default.EmailService.SendVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+            yield _1.default.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
             return responses_1.default.userResponse.toUserResponse(result.newUser);
         });
     }

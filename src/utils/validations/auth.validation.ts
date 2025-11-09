@@ -35,6 +35,7 @@ export class AuthValidation {
 	})
 
 	static readonly RESETPASSWORD = z.object({
+		token: z.string().nonempty({error: "Token tidak boleh kosong"}),
 		password: z.string().min(8, {error: "Password minimal 8 karakter"}),
 		confirm_password: z.string().min(8, {error: "Konfirm password minimal 8 karakter"})
 	})

@@ -1,41 +1,44 @@
 import bcrypt from "bcryptjs";
-import { prismaClient } from "../src/db";
+import { prismaClient } from "../../src/db";
 import { User } from "@prisma/client";
 
 export class UserTest {
 	static HASHED_PASSWORD_USERTEST: string;
+	static uniqueEmail = `testuser${Date.now()}@gmail.com`;
 
 	static async setupHashedPassword() {
 		const saltRounds = 4;
 
-		this.HASHED_PASSWORD_USERTEST = await bcrypt.hash("usertest123", saltRounds);
+		this.HASHED_PASSWORD_USERTEST = await bcrypt.hash("testpassword123", saltRounds);
 	}
 
-	static async createUserTest(): Promise<void> {
-		await prismaClient.user.create({
+	static async createUserTest(): Promise<User> {
+		console.log("Created Test user");
+		return await prismaClient.user.create({
 			data: {
-				name: "user test",
-				email: "usertest@gmail.com",
+				name: "user test example",
+				email: `testuserexample@gmail.com`,
 				password: this.HASHED_PASSWORD_USERTEST,
 			},
 		});
 	}
 
-	static async createAdminTest(): Promise<void> {
+	static async createUserTestAdmin(): Promise<void> {
 		await prismaClient.user.create({
 			data: {
 				name: "admin",
-				email: `admin_testing@gmail.com`,
-				password: this.HASHED_PASSWORD_USERTEST
-			}
-		})
+				email: `testuseradmin@gmail.com`,
+				password: this.HASHED_PASSWORD_USERTEST,
+			},
+		});
 	}
 
 	static async createUserTestActive(): Promise<void> {
+		console.log("Creating Test user active");
 		await prismaClient.user.create({
 			data: {
 				name: "user active",
-				email: "useractive@gmail.com",
+				email: "testuseractive@gmail.com",
 				password: this.HASHED_PASSWORD_USERTEST,
 				is_active: true,
 			},
@@ -46,7 +49,7 @@ export class UserTest {
 		await prismaClient.user.create({
 			data: {
 				name: "user otp",
-				email: "userotp@gmail.com",
+				email: "testuserotp@gmail.com",
 				password: this.HASHED_PASSWORD_USERTEST,
 				otp: "223344",
 				is_active: false,
@@ -55,47 +58,28 @@ export class UserTest {
 	}
 
 	static async createUserForgotPassword(): Promise<User> {
+		console.log("Create Test user forgot");
 		const result = await prismaClient.user.create({
 			data: {
 				name: "user forgotPass",
-				email: "userforgot@gmail.com",
+				email: "testuserforgot@gmail.com",
 				password: this.HASHED_PASSWORD_USERTEST,
 				otp: "223344",
 				is_active: true,
-				is_first_login: false
+				is_first_login: false,
 			},
 		});
 
-		return result
+		return result;
 	}
 
 	static async deleteUserTest(): Promise<void> {
 		await prismaClient.user.deleteMany({
 			where: {
 				email: {
-					startsWith: "user",
-					endsWith: "@gmail.com",
+					contains: "test",
 				},
 			},
 		});
-	}
-
-	static async deleteAdmin(): Promise<void> {
-		await prismaClient.user.deleteMany({
-			where: {
-				email: "admin@gmail.com",
-			},
-		});
-	}
-
-	static async deleteAdminTest(): Promise<void> {
-		await prismaClient.user.deleteMany({
-			where: {
-				email: {
-					startsWith: "admin",
-					endsWith: "@gmail.com"
-				}
-			}
-		})
 	}
 }

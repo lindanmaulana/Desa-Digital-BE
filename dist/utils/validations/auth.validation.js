@@ -35,6 +35,7 @@ AuthValidation.MATCHOTP = zod_1.default.object({
     otp_code: zod_1.default.string().nonempty({ error: "Kode OTP tidak boleh kosong" })
 });
 AuthValidation.RESETPASSWORD = zod_1.default.object({
+    token: zod_1.default.string().nonempty({ error: "Token tidak boleh kosong" }),
     password: zod_1.default.string().min(8, { error: "Password minimal 8 karakter" }),
     confirm_password: zod_1.default.string().min(8, { error: "Konfirm password minimal 8 karakter" })
 });

@@ -47,6 +47,7 @@ export interface verifyOtpForgotPasswordResponse {
     verify_token_last_sen_at: Date | null;
 }
 export interface ResetPasswordRequest {
+    token: string;
     password: string;
     confirm_password: string;
 }

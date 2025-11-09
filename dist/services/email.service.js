@@ -18,6 +18,7 @@ const mustache_1 = __importDefault(require("mustache"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = require("../config");
 const logging_1 = require("../logging");
+const errors_1 = require("../utils/errors");
 const transporter = nodemailer_1.default.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -50,6 +51,7 @@ class EmailService {
             }
             catch (err) {
                 logging_1.logger.error(err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
             }
         });
     }
@@ -74,10 +76,11 @@ class EmailService {
             }
             catch (err) {
                 logging_1.logger.error(err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
             }
         });
     }
-    static SendVerifyAccountMail(email, token, data) {
+    static SendTokenVerifyAccountMail(email, token, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
@@ -97,10 +100,11 @@ class EmailService {
             }
             catch (err) {
                 logging_1.logger.error("Send verify-account mail", err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
             }
         });
     }
-    static ResendVerifyAccountMail(email, token, data) {
+    static ResendTokenVerifyAccountMail(email, token, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
@@ -120,10 +124,11 @@ class EmailService {
             }
             catch (err) {
                 logging_1.logger.error("Send verify-account mail", err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
             }
         });
     }
-    static SendOtpResetPasswordMail(email, data) {
+    static SendOtpForgotPasswordMail(email, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
@@ -144,10 +149,11 @@ class EmailService {
             }
             catch (err) {
                 logging_1.logger.error(err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
             }
         });
     }
-    static ReSendOtpResetPasswordMail(email, data) {
+    static ReSendOtpForgotPasswordMail(email, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const view = {
@@ -167,12 +173,35 @@ class EmailService {
                 });
             }
             catch (err) {
-                logging_1.logger.error(err);
+                logging_1.logger.error("Resend OTP forgot password", err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
             }
         });
     }
-    static SendTokenForgotPasswordMail() {
+    static SendTokenForgotPasswordMail(email, token, data) {
         return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const view = {
+                    user_name: data.name,
+                    otp: data.otp,
+                    app_name: "Desa Digital",
+                    expiry_minutes: "15 menit",
+                    app_website: "https://desadigital.com",
+                    reset_link: `${config_1.BASEURL_AUTHENTICATION}/forgot-password/reset?token=${token}`,
+                };
+                let template = fs_1.default.readFileSync("src/utils/views/forgot-password-token-mail.html", "utf-8");
+                const htmlOutput = mustache_1.default.render(template, view);
+                yield transporter.sendMail({
+                    from: config_1.MAIL_USERNAME,
+                    to: email,
+                    subject: "Kode Reset Password Akun Anda",
+                    html: htmlOutput,
+                });
+            }
+            catch (err) {
+                logging_1.logger.error("Send TOKEN forgot-password", err);
+                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
+            }
         });
     }
 }
