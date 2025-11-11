@@ -8,18 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const services_1 = __importDefault(require("../../../services"));
+const services_1 = require("../../../services");
 class AuthController {
     static signin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield services_1.default.AuthService.signin(req.body);
+                const result = yield services_1.AuthService.signin(req.body);
                 res.cookie("jwt", result.token, {
                     httpOnly: true,
                     // secure: process.env.NODE_ENV === ""
@@ -52,7 +49,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.verifyAccount(reqBody);
+                const result = yield services_1.VerifyAccountAuthService.verifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -69,7 +66,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resendTokenVerifyAccount(reqBody);
+                const result = yield services_1.VerifyAccountAuthService.resendTokenVerifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -86,7 +83,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resendOtpVerifyAccount(reqBody);
+                const result = yield services_1.VerifyAccountAuthService.resendOtpVerifyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -103,7 +100,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.forgotPassword(reqBody);
+                const result = yield services_1.ForgotPasswordAuthService.forgotPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -120,7 +117,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resendOtpForgotPassword(reqBody);
+                const result = yield services_1.ForgotPasswordAuthService.resendOtpForgotPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -137,7 +134,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.verifyOtpForgotPassword(reqBody);
+                const result = yield services_1.ForgotPasswordAuthService.verifyOtpForgotPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -154,7 +151,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.default.AuthService.resetPassword(reqBody);
+                const result = yield services_1.ForgotPasswordAuthService.resetPassword(reqBody);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,

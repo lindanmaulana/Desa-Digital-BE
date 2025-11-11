@@ -1,0 +1,1 @@
+{"version":3,"file":"head-of-family.route.js","sourceRoot":"","sources":["../../../../../src/api/v1/routes/admin/head-of-family.route.ts"],"names":[],"mappings":";;AAAA,qCAAiC;AACjC,uDAAkF;AAClF,2FAAyF;AAEzF,MAAM,sBAAsB,GAAG,IAAA,gBAAM,GAAE,CAAC;AAExC,sBAAsB,CAAC,GAAG,CAAC,GAAG,EAAE,wBAAiB,EAAE,IAAA,sBAAe,EAAC,OAAO,CAAC,EAAE,sDAA0B,CAAC,iBAAiB,CAAC,CAAC;AAE3H,kBAAe,sBAAsB,CAAC"}

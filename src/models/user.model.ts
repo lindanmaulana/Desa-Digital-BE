@@ -9,7 +9,7 @@ export type UserWithRelations = Prisma.UserGetPayload<{
 	include: {
 		staff: true;
 		head_of_family: true;
-		image: true
+		image: true;
 	};
 }>;
 
@@ -30,7 +30,24 @@ export interface UserResponse {
 export interface UserResponseWithRelation extends UserResponse {
 	staff?: StaffResponse | null;
 	head_of_family?: HeadOfFamilyResponse | null;
-	image?: ImageResponse | null
+	image?: ImageResponse | null;
+}
+
+export interface ChangePasswordUserProfileRequest {
+	password: string;
+	confirm_password: string;
+}
+
+export interface UpdateUserProfileRequest {
+	head_of_family_id?: string;
+	profile_picture?: string;
+	identity_number?: string;
+	gender?: string;
+	date_of_birth?: string;
+	phone_number?: string;
+	occupation?: string;
+	marital_status?: string;
+	relation?: string;
 }
 
 export interface GetAllUserRequest {

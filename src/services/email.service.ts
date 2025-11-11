@@ -16,8 +16,8 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-export class EmailService {
-	static async SendOtpMails(email: string, title: string, message: string, data: User) {
+export const EmailService = {
+	SendOtpMails: async (email: string, title: string, message: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -43,9 +43,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
-	}
+	},
 
-	static async ResendOtpVerifyAccountMail(email: string, data: User) {
+	ResendOtpVerifyAccountMail: async (email: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -69,9 +69,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
-	}
+	},
 
-	static async SendTokenVerifyAccountMail(email: string, token: string, data: User) {
+	SendTokenVerifyAccountMail: async (email: string, token: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -95,9 +95,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
-	}
+	},
 
-	static async ResendTokenVerifyAccountMail(email: string, token: string, data: User) {
+	ResendTokenVerifyAccountMail: async (email: string, token: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -121,9 +121,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
-	}
+	},
 
-	static async SendOtpForgotPasswordMail(email: string, data: User) {
+	SendOtpForgotPasswordMail: async (email: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -147,9 +147,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
-	}
+	},
 
-	static async ReSendOtpForgotPasswordMail(email: string, data: User) {
+	ReSendOtpForgotPasswordMail: async (email: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -173,9 +173,9 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
 		}
-	}
+	},
 
-	static async SendTokenForgotPasswordMail(email: string, token: string, data: User) {
+	SendTokenForgotPasswordMail: async (email: string, token: string, data: User) => {
 		try {
 			const view = {
 				user_name: data.name,
@@ -200,5 +200,5 @@ export class EmailService {
 
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
-	}
+	},
 }

@@ -14,25 +14,62 @@ exports.UserValidation = UserValidation;
 _a = UserValidation;
 UserValidation.PROFILE = zod_1.default.object({
     identity_number: zod_1.default.string().nullable().default(null),
-    gender: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_GENDER)).default("MALE"),
+    gender: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_GENDER))
+        .default("MALE"),
     date_of_birth: zod_1.default.coerce.date().nullable().default(null),
     phone_number: zod_1.default.string().nullable().default(null),
     occupation: zod_1.default.string().nullable().default(null),
-    marital_status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_MARITAL)).default("SINGLE")
+    marital_status: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_MARITAL))
+        .default("SINGLE"),
 }).shape;
 UserValidation.REGISTERSTAFF = auth_validation_1.AuthValidation.SIGNUP.extend(_a.PROFILE);
 UserValidation.REGISTERHEADOFFAMILY = auth_validation_1.AuthValidation.SIGNUP.extend(_a.PROFILE);
 UserValidation.GETALL = zod_1.default.object({
     keyword: zod_1.default.string().optional(),
-    role: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_ROLE)).optional(),
-    is_active: zod_1.default.preprocess((val) => {
+    role: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_ROLE))
+        .optional(),
+    is_active: zod_1.default
+        .preprocess((val) => {
         if (typeof val === "string") {
             const lowerCaseVal = val.toLocaleLowerCase();
             return lowerCaseVal === "true";
         }
         return val;
-    }, zod_1.default.boolean()).optional(),
+    }, zod_1.default.boolean())
+        .optional(),
     page: zod_1.default.string().optional(),
-    limit: zod_1.default.string().optional()
+    limit: zod_1.default.string().optional(),
+});
+UserValidation.UPDATEPROFILE = zod_1.default.object({
+    head_of_family_id: zod_1.default.string().optional(),
+    identity_number: zod_1.default.string().nullable().optional(),
+    gender: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_GENDER)),
+    date_of_birth: zod_1.default.coerce.date().nullable().optional(),
+    phone_number: zod_1.default.string().nullable().optional(),
+    occupation: zod_1.default.string().nullable().optional(),
+    marital_status: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_MARITAL)),
+    relation: zod_1.default
+        .string()
+        .transform((val) => val.toUpperCase())
+        .pipe(zod_1.default.enum(validation_1.VALID_RELATION)),
+});
+UserValidation.CHANGEPASSWORD = zod_1.default.object({
+    password: zod_1.default.string({ error: "Password tidak boleh kosong" }).min(8, "Password minimal 8 karakter"),
+    confirm_password: zod_1.default.string({ error: "Konfirm password tidak boleh kosong" }).min(8, "Confirm Password minimal 8 karakter"),
 });
 //# sourceMappingURL=user.validation.js.map

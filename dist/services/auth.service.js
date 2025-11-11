@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
-const _1 = __importDefault(require("."));
 const logging_1 = require("../logging");
 const user_repository_1 = require("../repositories/user.repository");
 const errors_1 = require("../utils/errors");
@@ -92,7 +91,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, newOtp, "ACTIVATION");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.ResendOtpVerifyAccountMail(checkUser.email, valueOTP);
+            yield email_service_1.EmailService.ResendOtpVerifyAccountMail(checkUser.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
@@ -118,13 +117,19 @@ class AuthService {
                 }
             }
             const jti = (0, generate_uuid_1.generateUUID)();
-            const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({ user_id: checkUser.id, jti, email: checkUser.email, role: checkUser.role, type: "VERIFY_ACCOUNT" });
+            const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({
+                user_id: checkUser.id,
+                jti,
+                email: checkUser.email,
+                role: checkUser.role,
+                type: "VERIFY_ACCOUNT",
+            });
             const result = yield user_repository_1.UserRepository.updateVerifyToken(checkUser.id, jti);
             if (!result)
                 throw new errors_1.InternalServerError("Gagal memperbarui token verifikasi, pleaset try again later");
             yield email_service_1.EmailService.ResendTokenVerifyAccountMail(result.email, verify_token, result);
             return {
-                verify_token_last_sen_at: result.verify_token_last_sen_at
+                verify_token_last_sen_at: result.verify_token_last_sen_at,
             };
         });
     }
@@ -141,7 +146,7 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.SendOtpForgotPasswordMail(validateFields.email, valueOTP);
+            yield email_service_1.EmailService.SendOtpForgotPasswordMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
@@ -168,11 +173,11 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateOtp(checkUser.id, otp, "RESET_PASSWORD");
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-            yield _1.default.EmailService.ReSendOtpForgotPasswordMail(validateFields.email, valueOTP);
+            yield email_service_1.EmailService.ReSendOtpForgotPasswordMail(validateFields.email, valueOTP);
             return {
                 email: result.email,
                 otp_last_sent_at: new Date(),
-                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS
+                otp_expiry_seconds: RESEND_COOLDOWN_SECONDS,
             };
         });
     }
@@ -188,11 +193,17 @@ class AuthService {
             const result = yield user_repository_1.UserRepository.updateResetToken(checkUser.id, jti);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat verifikasi otp anda, please try again later");
-            const token = (0, create_token_reset_password_1.createTokenResetPassword)({ user_id: checkUser.id, type: "RESET_PASSWORD", jti, email: checkUser.email, role: checkUser.role });
+            const token = (0, create_token_reset_password_1.createTokenResetPassword)({
+                user_id: checkUser.id,
+                type: "RESET_PASSWORD",
+                jti,
+                email: checkUser.email,
+                role: checkUser.role,
+            });
             yield user_repository_1.UserRepository.deleteOtp(checkUser.id);
             yield email_service_1.EmailService.SendTokenForgotPasswordMail(result.email, token, result);
             return {
-                verify_token_last_sen_at: new Date()
+                verify_token_last_sen_at: new Date(),
             };
         });
     }

@@ -37,6 +37,7 @@ export declare class UserRepository {
             path: string;
             profile_id: string | null;
             social_assistance_id: string | null;
+            social_assistance_recipient_id: string | null;
             event_id: string | null;
             development_id: string | null;
             entity_type: import("@prisma/client").$Enums.Entity;

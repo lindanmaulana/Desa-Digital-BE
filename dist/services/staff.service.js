@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffService = void 0;
-const repositories_1 = __importDefault(require("../repositories"));
+const repositories_1 = require("../repositories");
 const errors_1 = require("../utils/errors");
 const remove_undefined_1 = require("../utils/helpers/remove-undefined");
 const responses_1 = __importDefault(require("../utils/responses"));
@@ -23,10 +23,10 @@ class StaffService {
     static update(user, req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(staff_validation_1.StaffValidation.UPDATE, req);
-            const checkUser = yield repositories_1.default.UserRepository.findById(user.user_id);
+            const checkUser = yield repositories_1.UserRepository.findById(user.user_id);
             if (!checkUser)
                 throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
-            const checkStaff = yield repositories_1.default.StaffRepository.findByUserId(checkUser.id);
+            const checkStaff = yield repositories_1.StaffRepository.findByUserId(checkUser.id);
             if (!checkStaff)
                 throw new errors_1.NotfoundError("Pengguna belum terdaftar sebagai Staf");
             // if (validateFields.profile_picture) {
@@ -35,9 +35,9 @@ class StaffService {
             // 	if (checkStaff.profile_picture) helpers.fileHelpers.deleteImage(checkStaff.profile_picture)
             // }
             const data = (0, remove_undefined_1.removeUndefined)(validateFields);
-            const result = yield repositories_1.default.StaffRepository.update({
+            const result = yield repositories_1.StaffRepository.update({
                 where: { id: checkStaff.id },
-                data: data
+                data: data,
             });
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat mengupdate data, please try again later");

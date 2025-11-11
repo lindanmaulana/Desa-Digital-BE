@@ -1,5 +1,5 @@
 import { ForgotPasswordRequest, ForgotPasswordResponse, ResendOtpRequest, ResendOtpResponse, ResendVerifyAccountTokenRequest, ResendVerifyAccountTokenResponse, ResetPasswordRequest, SigninRequest, SigninResponse, VerifyAccountRequest, VerifyOtpForgotPasswordRequest, verifyOtpForgotPasswordResponse } from "../models/auth.model";
-import { UserResponse } from "../models/user.model";
+import { UserResponse } from "../models/users/user.model";
 export declare class AuthService {
     static signin(req: SigninRequest): Promise<SigninResponse>;
     static verifyAccount(req: VerifyAccountRequest): Promise<UserResponse>;

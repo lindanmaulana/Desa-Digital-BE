@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VillageProfileService = void 0;
-const repositories_1 = __importDefault(require("../repositories"));
+const repositories_1 = require("../repositories");
 const errors_1 = require("../utils/errors");
 const responses_1 = __importDefault(require("../utils/responses"));
 const validation_1 = require("../utils/validations/validation");
@@ -22,10 +22,10 @@ class VillageProfileService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const validateFields = validation_1.validation.validate(village_profile_validation_1.VillageProfileValidation.CREATE, req);
-            const checkVillageProfile = yield repositories_1.default.VillageProfileRepository.checkCount();
+            const checkVillageProfile = yield repositories_1.VillageProfileRepository.checkCount();
             if (checkVillageProfile)
                 throw new errors_1.BadrequestError("Maaf Profile Desa sudah ada, tidak dapat menambahkan kembali Profile Desa baru");
-            const result = yield repositories_1.default.VillageProfileRepository.create({
+            const result = yield repositories_1.VillageProfileRepository.create({
                 data: validateFields
             });
             if (!result)
@@ -35,7 +35,7 @@ class VillageProfileService {
     }
     static get() {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield repositories_1.default.VillageProfileRepository.findOne();
+            const result = yield repositories_1.VillageProfileRepository.findOne();
             if (!result)
                 throw new errors_1.NotfoundError("Profile Desa tidak tersedia");
             return responses_1.default.villageProfileResponse.toVillageProfileResponse(result);
@@ -46,7 +46,7 @@ class VillageProfileService {
             const validateFields = validation_1.validation.validate(village_profile_validation_1.VillageProfileValidation.UPDATE, req);
             if (Object.keys(req).length <= 0)
                 throw new errors_1.BadrequestError("Maaf tidak ada data yang bisa di update");
-            const checkVillageProfile = yield repositories_1.default.VillageProfileRepository.findById(id);
+            const checkVillageProfile = yield repositories_1.VillageProfileRepository.findById(id);
             if (!checkVillageProfile)
                 throw new errors_1.NotfoundError("Profile Desa tidak di temukan");
             const condition = Object.keys(validateFields).reduce((acc, key) => {
@@ -60,7 +60,7 @@ class VillageProfileService {
                 where: { id },
                 data: cleanDataForPrisma
             };
-            const result = yield repositories_1.default.VillageProfileRepository.update(prismaUpdateArgs);
+            const result = yield repositories_1.VillageProfileRepository.update(prismaUpdateArgs);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat mengubah Profile Desa, please try again later");
             return responses_1.default.villageProfileResponse.toVillageProfileResponse(result);

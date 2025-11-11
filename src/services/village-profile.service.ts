@@ -1,21 +1,19 @@
 import { Prisma } from "@prisma/client";
 import { CreateVillageProfileRequest, UpdateVillageProfileRequest, VillageProfileResponse } from "../models/village-profile";
-import repositories from "../repositories";
+import { VillageProfileRepository } from "../repositories";
 import { BadrequestError, InternalServerError, NotfoundError } from "../utils/errors";
 import responses from "../utils/responses";
 import { validation } from "../utils/validations/validation";
 import { VillageProfileValidation } from "../utils/validations/village-profile.validation";
-import { logger } from "../logging";
 
 export class VillageProfileService {
 	static async create(req: CreateVillageProfileRequest): Promise<VillageProfileResponse> {
 		const validateFields = validation.validate(VillageProfileValidation.CREATE, req)
 
-		const checkVillageProfile = await repositories.VillageProfileRepository.checkCount()
-
+		const checkVillageProfile = await VillageProfileRepository.checkCount()
 		if (checkVillageProfile) throw new BadrequestError("Maaf Profile Desa sudah ada, tidak dapat menambahkan kembali Profile Desa baru")
 
-		const result = await repositories.VillageProfileRepository.create({
+		const result = await VillageProfileRepository.create({
 			data: validateFields
 		})
 
@@ -25,8 +23,7 @@ export class VillageProfileService {
 	}
 
 	static async get(): Promise<VillageProfileResponse> {
-		const result = await repositories.VillageProfileRepository.findOne()
-
+		const result = await VillageProfileRepository.findOne()
 		if (!result) throw new NotfoundError("Profile Desa tidak tersedia")
 
 		return responses.villageProfileResponse.toVillageProfileResponse(result)
@@ -34,11 +31,9 @@ export class VillageProfileService {
 
 	static async update(id: string, req: UpdateVillageProfileRequest): Promise<VillageProfileResponse> {
 		const validateFields = validation.validate(VillageProfileValidation.UPDATE, req)
-
 		if (Object.keys(req).length <= 0) throw new BadrequestError("Maaf tidak ada data yang bisa di update")
 
-		const checkVillageProfile = await repositories.VillageProfileRepository.findById(id)
-
+		const checkVillageProfile = await VillageProfileRepository.findById(id)
 		if (!checkVillageProfile) throw new NotfoundError("Profile Desa tidak di temukan")
 
 		const condition = Object.keys(validateFields).reduce((acc, key) => {
@@ -56,8 +51,7 @@ export class VillageProfileService {
 			data: cleanDataForPrisma
 		}
 
-		const result = await repositories.VillageProfileRepository.update(prismaUpdateArgs)
-
+		const result = await VillageProfileRepository.update(prismaUpdateArgs)
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengubah Profile Desa, please try again later")
 
 		return responses.villageProfileResponse.toVillageProfileResponse(result)

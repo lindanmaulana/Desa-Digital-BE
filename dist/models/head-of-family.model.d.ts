@@ -1,4 +1,6 @@
 import { Gender, Marital, Prisma } from "@prisma/client";
+import { PaginationResponse } from "./pagination.model";
+import { UserResponse } from "./user.model";
 export interface HeadOfFamilyResponse {
     user_id: string;
     identity_number?: string;
@@ -25,5 +27,14 @@ export interface CreateHeadOfFamilyRequest {
     phone_number?: string;
     occupation?: string;
     marital_status: Marital;
+}
+export interface GetAllHeadOfFamilyRequest {
+    keyword?: string;
+    page?: string;
+    limit?: string;
+}
+export interface GetAllHeadOfFamilyResponse {
+    data: UserResponse[];
+    pagination: PaginationResponse;
 }
 //# sourceMappingURL=head-of-family.model.d.ts.map

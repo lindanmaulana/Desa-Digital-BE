@@ -1,19 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_service_1 = require("./auth.service");
+exports.VillageProfileService = exports.EmailService = exports.SocialAssistanceCrudService = exports.StaffService = exports.UserService = exports.ForgotPasswordAuthService = exports.VerifyAccountAuthService = exports.AuthService = void 0;
 const email_service_1 = require("./email.service");
-const user_profile_service_1 = require("./user-profile.service");
-const social_assistance_service_1 = require("./social-assistance.service");
-const staff_service_1 = require("./staff.service");
-const user_service_1 = require("./user.service");
+Object.defineProperty(exports, "EmailService", { enumerable: true, get: function () { return email_service_1.EmailService; } });
 const village_profile_service_1 = require("./village-profile.service");
-exports.default = {
-    AuthService: auth_service_1.AuthService,
-    UserService: user_service_1.UserService,
-    StaffService: staff_service_1.StaffService,
-    SocialAssistanceService: social_assistance_service_1.SocialAssistanceService,
-    UserProfileService: user_profile_service_1.UserProfileService,
-    EmailService: email_service_1.EmailService,
-    VillageProfileService: village_profile_service_1.VillageProfileService
-};
+Object.defineProperty(exports, "VillageProfileService", { enumerable: true, get: function () { return village_profile_service_1.VillageProfileService; } });
+const user_service_1 = require("./user.service");
+Object.defineProperty(exports, "UserService", { enumerable: true, get: function () { return user_service_1.UserService; } });
+const staff_service_1 = require("./staff.service");
+Object.defineProperty(exports, "StaffService", { enumerable: true, get: function () { return staff_service_1.StaffService; } });
+const auth_1 = require("./auth");
+Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return auth_1.AuthService; } });
+const auth_2 = require("./auth");
+Object.defineProperty(exports, "VerifyAccountAuthService", { enumerable: true, get: function () { return auth_2.VerifyAccountAuthService; } });
+const auth_3 = require("./auth");
+Object.defineProperty(exports, "ForgotPasswordAuthService", { enumerable: true, get: function () { return auth_3.ForgotPasswordAuthService; } });
+const social_assistance_crud_service_1 = require("./social-assistance/social-assistance-crud.service");
+Object.defineProperty(exports, "SocialAssistanceCrudService", { enumerable: true, get: function () { return social_assistance_crud_service_1.SocialAssistanceCrudService; } });
 //# sourceMappingURL=index.js.map

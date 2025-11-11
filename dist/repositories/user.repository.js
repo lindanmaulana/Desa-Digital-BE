@@ -24,7 +24,7 @@ class UserRepository {
                 where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
                 skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
                 take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
-                include: Object.assign({}, args.include)
+                include: Object.assign({}, args.include),
             });
         });
     }
@@ -37,8 +37,8 @@ class UserRepository {
                 include: {
                     staff: true,
                     head_of_family: true,
-                    image: true
-                }
+                    image: true,
+                },
             });
         });
     }
@@ -108,8 +108,8 @@ class UserRepository {
                 data: {
                     otp,
                     otp_purpose,
-                    otp_last_sen_at: new Date()
-                }
+                    otp_last_sen_at: new Date(),
+                },
             });
         });
     }
@@ -119,8 +119,8 @@ class UserRepository {
                 where: { id },
                 data: {
                     verify_token: jti,
-                    verify_token_last_sen_at: new Date()
-                }
+                    verify_token_last_sen_at: new Date(),
+                },
             });
         });
     }
@@ -130,8 +130,8 @@ class UserRepository {
                 where: { id },
                 data: {
                     reset_token: jti,
-                    reset_token_last_sen_at: new Date()
-                }
+                    reset_token_last_sen_at: new Date(),
+                },
             });
         });
     }
@@ -156,8 +156,8 @@ class UserRepository {
                 data: {
                     otp: null,
                     otp_purpose: null,
-                    otp_last_sen_at: null
-                }
+                    otp_last_sen_at: null,
+                },
             });
         });
     }
@@ -167,8 +167,8 @@ class UserRepository {
                 where: { id },
                 data: {
                     reset_token: null,
-                    reset_token_last_sen_at: null
-                }
+                    reset_token_last_sen_at: null,
+                },
             });
         });
     }

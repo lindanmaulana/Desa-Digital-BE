@@ -28,182 +28,167 @@ const transporter = nodemailer_1.default.createTransport({
         pass: config_1.MAIL_PASSWORD,
     },
 });
-class EmailService {
-    static SendOtpMails(email, title, message, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp_code: data.otp,
-                    title: title,
-                    description: message,
-                    app_name: "Desa Digital",
-                    app_website: "https://desadigital.com",
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/example.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Kode Verifikasi Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error(err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
-            }
-        });
-    }
-    static ResendOtpVerifyAccountMail(email, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp: data.otp,
-                    app_name: "Desa Digital",
-                    expiry_minutes: "15 menit",
-                    app_website: "https://desadigital.com",
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/resend-otp-verify-account-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Kode Verifikasi Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error(err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
-            }
-        });
-    }
-    static SendTokenVerifyAccountMail(email, token, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp: data.otp,
-                    app_name: "Desa Digital",
-                    verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Verifikasi Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error("Send verify-account mail", err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
-            }
-        });
-    }
-    static ResendTokenVerifyAccountMail(email, token, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp_code: data.otp,
-                    app_name: "Desa Digital",
-                    verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Verifikasi Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error("Send verify-account mail", err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
-            }
-        });
-    }
-    static SendOtpForgotPasswordMail(email, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp: data.otp,
-                    app_name: "Desa Digital",
-                    expiry_minutes: "15 menit",
-                    app_website: "https://desadigital.com",
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/forgot-password-otp-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Kode Reset Password Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error(err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
-            }
-        });
-    }
-    static ReSendOtpForgotPasswordMail(email, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp: data.otp,
-                    app_name: "Desa Digital",
-                    expiry_minutes: "15 menit",
-                    app_website: "https://desadigital.com",
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/resend-forgot-password-otp-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Kode Reset Password Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error("Resend OTP forgot password", err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
-            }
-        });
-    }
-    static SendTokenForgotPasswordMail(email, token, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const view = {
-                    user_name: data.name,
-                    otp: data.otp,
-                    app_name: "Desa Digital",
-                    expiry_minutes: "15 menit",
-                    app_website: "https://desadigital.com",
-                    reset_link: `${config_1.BASEURL_AUTHENTICATION}/forgot-password/reset?token=${token}`,
-                };
-                let template = fs_1.default.readFileSync("src/utils/views/forgot-password-token-mail.html", "utf-8");
-                const htmlOutput = mustache_1.default.render(template, view);
-                yield transporter.sendMail({
-                    from: config_1.MAIL_USERNAME,
-                    to: email,
-                    subject: "Kode Reset Password Akun Anda",
-                    html: htmlOutput,
-                });
-            }
-            catch (err) {
-                logging_1.logger.error("Send TOKEN forgot-password", err);
-                throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
-            }
-        });
-    }
-}
-exports.EmailService = EmailService;
+exports.EmailService = {
+    SendOtpMails: (email, title, message, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp_code: data.otp,
+                title: title,
+                description: message,
+                app_name: "Desa Digital",
+                app_website: "https://desadigital.com",
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/example.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Kode Verifikasi Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error(err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
+        }
+    }),
+    ResendOtpVerifyAccountMail: (email, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp: data.otp,
+                app_name: "Desa Digital",
+                expiry_minutes: "15 menit",
+                app_website: "https://desadigital.com",
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/resend-otp-verify-account-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Kode Verifikasi Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error(err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
+        }
+    }),
+    SendTokenVerifyAccountMail: (email, token, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp: data.otp,
+                app_name: "Desa Digital",
+                verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Verifikasi Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error("Send verify-account mail", err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
+        }
+    }),
+    ResendTokenVerifyAccountMail: (email, token, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp_code: data.otp,
+                app_name: "Desa Digital",
+                verification_link: `${config_1.BASEURL_CLIENT}?token=${token}`,
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/verify-account-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Verifikasi Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error("Send verify-account mail", err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
+        }
+    }),
+    SendOtpForgotPasswordMail: (email, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp: data.otp,
+                app_name: "Desa Digital",
+                expiry_minutes: "15 menit",
+                app_website: "https://desadigital.com",
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/forgot-password-otp-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Kode Reset Password Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error(err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
+        }
+    }),
+    ReSendOtpForgotPasswordMail: (email, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp: data.otp,
+                app_name: "Desa Digital",
+                expiry_minutes: "15 menit",
+                app_website: "https://desadigital.com",
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/resend-forgot-password-otp-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Kode Reset Password Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error("Resend OTP forgot password", err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim OTP, please try again later");
+        }
+    }),
+    SendTokenForgotPasswordMail: (email, token, data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const view = {
+                user_name: data.name,
+                otp: data.otp,
+                app_name: "Desa Digital",
+                expiry_minutes: "15 menit",
+                app_website: "https://desadigital.com",
+                reset_link: `${config_1.BASEURL_AUTHENTICATION}/forgot-password/reset?token=${token}`,
+            };
+            let template = fs_1.default.readFileSync("src/utils/views/forgot-password-token-mail.html", "utf-8");
+            const htmlOutput = mustache_1.default.render(template, view);
+            yield transporter.sendMail({
+                from: config_1.MAIL_USERNAME,
+                to: email,
+                subject: "Kode Reset Password Akun Anda",
+                html: htmlOutput,
+            });
+        }
+        catch (err) {
+            logging_1.logger.error("Send TOKEN forgot-password", err);
+            throw new errors_1.InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
+        }
+    }),
+};
 //# sourceMappingURL=email.service.js.map

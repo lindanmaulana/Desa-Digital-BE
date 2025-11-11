@@ -1,61 +1,91 @@
 import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { logger } from "../../../logging";
-import { GetAllUserRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
-import services from "../../../services";
+import { ChangePasswordUserProfileRequest, GetAllUserRequest, RegisterHeadOfFamilyRequest, RegisterStaffRequest } from "../../../models/user.model";
 import { CustomeRequest } from "../../../types/express.type";
 import { TokenUser } from "../../../types/token.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
+import { UserService } from "../../../services";
 
 export class UserController {
-
 	static async registerStaff(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqBody = req.body as RegisterStaffRequest
+			const reqBody = req.body as RegisterStaffRequest;
 
-			const result = await services.UserService.registerStaffAccount(reqBody)
+			const result = await UserService.registerStaffAccount(reqBody);
 
 			res.status(StatusCodes.CREATED).json({
 				status: "success",
 				code: StatusCodes.CREATED,
 				message: RESPONSE_MESSAGE.success.create,
 				data: result,
-			})
+			});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	}
 
 	static async registerHeadOfFamily(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqBody = req.body as RegisterHeadOfFamilyRequest
-
-			const result = await services.UserService.registerHeadOfFamilyAccount(reqBody)
+			const reqBody = req.body as RegisterHeadOfFamilyRequest;
+			const result = await UserService.registerHeadOfFamilyAccount(reqBody);
 
 			res.status(StatusCodes.CREATED).json({
 				status: "success",
 				code: StatusCodes.CREATED,
 				message: RESPONSE_MESSAGE.success.create,
-				data: result
-			})
+				data: result,
+			});
 		} catch (err) {
-			next(err)
+			next(err);
+		}
+	}
+
+	static async getProfile(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const token = req.user as TokenUser;
+			const result = await UserService.getProfile(token);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: RESPONSE_MESSAGE.success.read,
+				data: result,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	static async changePassword(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const token = req.user as TokenUser;
+			const reqBody = req.body as ChangePasswordUserProfileRequest;
+			const result = await UserService.changePassword(reqBody, token!);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: "Kata sandi berhasil di ubah",
+				data: result,
+			});
+		} catch (err) {
+			next(err);
 		}
 	}
 
 	static async getUsers(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const token = req.user as TokenUser;
-			const reqParams = req.query as GetAllUserRequest
-
-			const result = await services.UserService.getAll(reqParams, token);
+			const reqQuery = req.query as GetAllUserRequest;
+			const result = await UserService.getAll(reqQuery, token);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
 				message: RESPONSE_MESSAGE.success.read,
 				data: result.data,
-				pagination: result.pagination
+				pagination: result.pagination,
 			});
 		} catch (err) {
 			next(err);
@@ -66,7 +96,7 @@ export class UserController {
 		try {
 			const params = req.params as { id: string };
 
-			const result = await services.UserService.getById(params.id);
+			const result = await UserService.getById(params.id);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -84,7 +114,7 @@ export class UserController {
 			const params = req.params as { id: string };
 
 			logger.info(req.params);
-			const result = await services.UserService.delete(params.id);
+			const result = await UserService.delete(params.id);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

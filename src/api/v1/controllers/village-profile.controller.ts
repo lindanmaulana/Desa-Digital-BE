@@ -1,16 +1,16 @@
 import { NextFunction, Response } from "express";
 import { CustomeRequest } from "../../../types/express.type";
 import { CreateVillageProfileRequest, UpdateVillageProfileRequest } from "../../../models/village-profile";
-import services from "../../../services";
 import { StatusCodes } from "http-status-codes";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
+import { VillageProfileService } from "../../../services";
 
 export class VillageProfileController {
 	static async create(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqBody = req.body as CreateVillageProfileRequest;
 
-			const result = await services.VillageProfileService.create(reqBody);
+			const result = await VillageProfileService.create(reqBody);
 
 			res.status(StatusCodes.CREATED).json({
 				status: "success",
@@ -28,7 +28,7 @@ export class VillageProfileController {
 			const reqParams = req.params as { id: string };
 			const reqBody = req.body as UpdateVillageProfileRequest;
 
-			const result = await services.VillageProfileService.update(reqParams.id, reqBody);
+			const result = await VillageProfileService.update(reqParams.id, reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -43,7 +43,7 @@ export class VillageProfileController {
 
 	static async get(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const result = await services.VillageProfileService.get();
+			const result = await VillageProfileService.get();
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

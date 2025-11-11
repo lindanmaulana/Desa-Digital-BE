@@ -4,7 +4,7 @@ import { UserWithRelations } from "../models/user.model";
 
 export class UserRepository {
 	static async findCount(args: Prisma.UserCountArgs) {
-		return prismaClient.user.count(args)
+		return prismaClient.user.count(args);
 	}
 
 	static async findAll(args: Prisma.UserFindManyArgs): Promise<UserWithRelations[]> {
@@ -13,8 +13,8 @@ export class UserRepository {
 			skip: args.skip ?? 0,
 			take: args.take ?? 5,
 			include: {
-				...args.include
-			}
+				...args.include,
+			},
 		});
 	}
 
@@ -26,8 +26,8 @@ export class UserRepository {
 			include: {
 				staff: true,
 				head_of_family: true,
-				image: true
-			}
+				image: true,
+			},
 		});
 	}
 
@@ -64,7 +64,7 @@ export class UserRepository {
 	}
 
 	static async updateProfile(args: Prisma.UserUpdateArgs) {
-		return prismaClient.user.update(args)
+		return prismaClient.user.update(args);
 	}
 
 	static async updateIsFirstLogin(id: string) {
@@ -86,33 +86,33 @@ export class UserRepository {
 
 	static async updateOtp(id: string, otp: string, otp_purpose: UserOtpPurpose) {
 		return prismaClient.user.update({
-			where: {id},
+			where: { id },
 			data: {
 				otp,
 				otp_purpose,
-				otp_last_sen_at: new Date()
-			}
-		})
+				otp_last_sen_at: new Date(),
+			},
+		});
 	}
 
 	static async updateVerifyToken(id: string, jti: string) {
 		return prismaClient.user.update({
-			where: {id},
+			where: { id },
 			data: {
 				verify_token: jti,
-				verify_token_last_sen_at: new Date()
-			}
-		})
+				verify_token_last_sen_at: new Date(),
+			},
+		});
 	}
 
 	static async updateResetToken(id: string, jti: string) {
 		return prismaClient.user.update({
-			where: {id},
+			where: { id },
 			data: {
 				reset_token: jti,
-				reset_token_last_sen_at: new Date()
-			}
-		})
+				reset_token_last_sen_at: new Date(),
+			},
+		});
 	}
 
 	static async deleteAll() {
@@ -129,23 +129,23 @@ export class UserRepository {
 
 	static async deleteOtp(id: string) {
 		return prismaClient.user.update({
-			where: {id},
+			where: { id },
 			data: {
 				otp: null,
 				otp_purpose: null,
-				otp_last_sen_at: null
-			}
-		})
+				otp_last_sen_at: null,
+			},
+		});
 	}
 
 	static async deleteResetToken(id: string) {
 		return prismaClient.user.update({
-			where: {id},
+			where: { id },
 			data: {
 				reset_token: null,
-				reset_token_last_sen_at: null
-			}
-		})
+				reset_token_last_sen_at: null,
+			},
+		});
 	}
 
 	static async isEmailTaken(email: string) {

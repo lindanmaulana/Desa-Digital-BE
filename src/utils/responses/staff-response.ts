@@ -33,5 +33,4 @@ const toStaffResponses = (staff: Staff[]): StaffResponse[] => {
 	}));
 };
 
-
-export default {toStaffResponse, toStaffResponses}
+export default { toStaffResponse, toStaffResponses };

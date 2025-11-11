@@ -8,15 +8,13 @@ import {
 	VerifyAccountRequest,
 	VerifyOtpForgotPasswordRequest,
 } from "../../../models/auth.model";
-import services from "../../../services";
+import { AuthService, ForgotPasswordAuthService, VerifyAccountAuthService } from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
-import { TokenResetPassword } from "../../../types/token.type";
 
 export class AuthController {
-
 	static async signin(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const result = await services.AuthService.signin(req.body);
+			const result = await AuthService.signin(req.body);
 
 			res.cookie("jwt", result.token, {
 				httpOnly: true,
@@ -50,7 +48,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as VerifyAccountRequest;
 
-			const result = await services.AuthService.verifyAccount(reqBody);
+			const result = await VerifyAccountAuthService.verifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -67,7 +65,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as ResendVerifyAccountTokenRequest;
 
-			const result = await services.AuthService.resendTokenVerifyAccount(reqBody);
+			const result = await VerifyAccountAuthService.resendTokenVerifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -84,7 +82,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as ResendOtpRequest;
 
-			const result = await services.AuthService.resendOtpVerifyAccount(reqBody);
+			const result = await VerifyAccountAuthService.resendOtpVerifyAccount(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -101,7 +99,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as ForgotPasswordRequest;
 
-			const result = await services.AuthService.forgotPassword(reqBody);
+			const result = await ForgotPasswordAuthService.forgotPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -118,7 +116,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as ForgotPasswordRequest;
 
-			const result = await services.AuthService.resendOtpForgotPassword(reqBody);
+			const result = await ForgotPasswordAuthService.resendOtpForgotPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -135,7 +133,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as VerifyOtpForgotPasswordRequest;
 
-			const result = await services.AuthService.verifyOtpForgotPassword(reqBody);
+			const result = await ForgotPasswordAuthService.verifyOtpForgotPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
@@ -152,7 +150,7 @@ export class AuthController {
 		try {
 			const reqBody = req.body as ResetPasswordRequest;
 
-			const result = await services.AuthService.resetPassword(reqBody);
+			const result = await ForgotPasswordAuthService.resetPassword(reqBody);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
