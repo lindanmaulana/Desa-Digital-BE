@@ -13,6 +13,10 @@ export class SocialAssistanceRepository {
 	static async findAll(args: Prisma.SocialAssistanceFindManyArgs) {
 		return prismaClient.socialAssistance.findMany({
 			where: args.where ?? {},
+			include: {
+				image: true,
+				social_assistance_recipient: true
+			},
 			skip: args.skip ?? 0,
 			take: args.take ?? 5,
 		})

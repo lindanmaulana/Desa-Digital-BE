@@ -3,7 +3,7 @@ import { CustomeRequest } from "../../../types/express.type";
 import { GetAllHeadOfFamilyRequest } from "../../../models/head-of-family.model";
 import { StatusCodes } from "http-status-codes";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
-import { HeadOfFamilyService } from "../../../services/head-of-family.service";
+import { HeadOfFamilyService } from "../../../services/head-of-family/head-of-family.service";
 
 export const HeadOfFamilyUserController = {
 	getHeadOfFamilies: async (req: CustomeRequest, res: Response, next: NextFunction) => {

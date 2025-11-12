@@ -1,11 +1,11 @@
-import { StaffResponse, UpdateStaffRequest } from "../models/staff.model";
-import { StaffRepository, UserRepository } from "../repositories";
-import { TokenUser } from "../types/token.type";
-import { InternalServerError, NotfoundError } from "../utils/errors";
-import { removeUndefined } from "../utils/helpers/remove-undefined";
-import responses from "../utils/responses";
-import { StaffValidation } from "../utils/validations/staff.validation";
-import { validation } from "../utils/validations/validation";
+import { StaffResponse, UpdateStaffRequest } from "../../models/staff.model";
+import { StaffRepository, UserRepository } from "../../repositories";
+import { TokenUser } from "../../types/token.type";
+import { InternalServerError, NotfoundError } from "../../utils/errors";
+import { removeUndefined } from "../../utils/helpers/remove-undefined";
+import { staffResponse } from "../../utils/responses";
+import { StaffValidation } from "../../utils/validations/staff.validation";
+import { validation } from "../../utils/validations/validation";
 
 export class StaffService {
 	static async update(user: TokenUser, req: UpdateStaffRequest): Promise<StaffResponse> {
@@ -34,6 +34,6 @@ export class StaffService {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengupdate data, please try again later");
 
-		return responses.staffResponse.toStaffResponse(result);
+		return staffResponse.toStaffResponse(result);
 	}
 }

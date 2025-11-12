@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeadOfFamilyUserController = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const response_message_type_1 = require("../../../utils/response-message.type");
-const head_of_family_service_1 = require("../../../services/head-of-family.service");
+const head_of_family_service_1 = require("../../../services/head-of-family/head-of-family.service");
 exports.HeadOfFamilyUserController = {
     getHeadOfFamilies: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {

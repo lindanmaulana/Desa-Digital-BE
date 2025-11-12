@@ -265,7 +265,7 @@ model SocialAssistance {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  sosial_assistance_recipient SocialAssistanceRecipient[]
+  social_assistance_recipient SocialAssistanceRecipient[]
   image Images?
 
   @@map("social_assistance")

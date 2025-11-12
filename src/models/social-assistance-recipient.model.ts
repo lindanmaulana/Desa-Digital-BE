@@ -8,7 +8,7 @@ export interface SocialAssistanceRecipientResponse {
 	amount: Decimal;
 	reason: string;
 	bank: Bank;
-	acount_number: number;
+	account_number: string;
 	status: Status;
 
 	created_at: Date;

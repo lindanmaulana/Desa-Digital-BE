@@ -16,6 +16,20 @@ const toUserResponse = (user: User): UserResponse => {
 	};
 };
 
+const toUserResponses = (users: User[]): UserResponse[] => {
+	return users.map((user) => ({
+		id: user.id,
+		name: user.name,
+		email: user.email,
+		role: toUserRole(user.role),
+		is_active: user.is_active,
+		is_first_login: user.is_first_login,
+
+		created_at: user.created_at,
+		updated_at: user.updated_at,
+	}));
+};
+
 const toUserResponseWithRelation = (user: UserWithRelations): UserResponseWithRelation => {
 	return {
 		id: user.id,
@@ -51,20 +65,6 @@ const toUserResponseWithRelation = (user: UserWithRelations): UserResponseWithRe
 		created_at: user.created_at,
 		updated_at: user.updated_at,
 	};
-};
-
-const toUserResponses = (users: User[]): UserResponse[] => {
-	return users.map((user) => ({
-		id: user.id,
-		name: user.name,
-		email: user.email,
-		role: toUserRole(user.role),
-		is_active: user.is_active,
-		is_first_login: user.is_first_login,
-
-		created_at: user.created_at,
-		updated_at: user.updated_at,
-	}));
 };
 
 const toUserResponsesWithRelation = (users: UserWithRelations[]): UserResponseWithRelation[] => {

@@ -24,10 +24,10 @@ const helpers_1 = __importDefault(require("../utils/helpers"));
 const generate_uuid_1 = require("../utils/helpers/generate-uuid");
 const create_token_verify_account_1 = require("../utils/helpers/jwt/create-token-verify-account");
 const remove_undefined_1 = require("../utils/helpers/remove-undefined");
-const responses_1 = __importDefault(require("../utils/responses"));
 const user_validation_1 = require("../utils/validations/user.validation");
 const validation_1 = require("../utils/validations/validation");
 const email_service_1 = require("./email.service");
+const responses_1 = require("../utils/responses");
 exports.UserService = {
     registerStaffAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
@@ -82,7 +82,7 @@ exports.UserService = {
             type: "VERIFY_ACCOUNT",
         });
         yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
-        return responses_1.default.userResponse.toUserResponse(result.newUser);
+        return responses_1.userResponse.toUserResponse(result.newUser);
     }),
     registerHeadOfFamilyAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERHEADOFFAMILY, req);
@@ -137,7 +137,7 @@ exports.UserService = {
             type: "VERIFY_ACCOUNT",
         });
         yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
-        return responses_1.default.userResponse.toUserResponse(result.newUser);
+        return responses_1.userResponse.toUserResponse(result.newUser);
     }),
     getAll: (req, user) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.GETALL, req);
@@ -205,7 +205,7 @@ exports.UserService = {
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
         return {
-            data: responses_1.default.userResponse.toUserResponsesWithRelation(result),
+            data: responses_1.userResponse.toUserResponsesWithRelation(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -222,7 +222,7 @@ exports.UserService = {
             throw new errors_1.NotfoundError(`Pengguna tidak ditemukan`);
         if (result.role === "ADMIN")
             throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
-        return responses_1.default.userResponse.toUserResponseWithRelation(result);
+        return responses_1.userResponse.toUserResponseWithRelation(result);
     }),
     delete: (id) => __awaiter(void 0, void 0, void 0, function* () {
         const checkUser = yield user_repository_1.UserRepository.findById(id);
@@ -231,13 +231,13 @@ exports.UserService = {
         if (checkUser.role === "ADMIN")
             throw new errors_1.NotfoundError("Pengguna tidak dapat di hapus");
         const result = yield user_repository_1.UserRepository.deleteById(checkUser.id);
-        return responses_1.default.userResponse.toUserResponse(result);
+        return responses_1.userResponse.toUserResponse(result);
     }),
     getProfile: (user) => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield user_repository_1.UserRepository.findById(user.user_id);
         if (!result)
             throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
-        return responses_1.default.userResponse.toUserResponseWithRelation(result);
+        return responses_1.userResponse.toUserResponseWithRelation(result);
     }),
     updateProfile: (user, req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.UPDATEPROFILE, req);
@@ -265,7 +265,7 @@ exports.UserService = {
             };
             yield repositories_1.HeadOfFamilyRepository.update(headOfFamilyConditions);
         }
-        return responses_1.default.userResponse.toUserResponseWithRelation(checkUser);
+        return responses_1.userResponse.toUserResponseWithRelation(checkUser);
     }),
     changePassword: (req, user) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.CHANGEPASSWORD, req);
@@ -282,7 +282,7 @@ exports.UserService = {
             yield user_repository_1.UserRepository.updateIsFirstLogin(checkUser.id);
         if (!result)
             throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-        return responses_1.default.userResponse.toUserResponse(result);
+        return responses_1.userResponse.toUserResponse(result);
     }),
 };
 //# sourceMappingURL=user.service.js.map

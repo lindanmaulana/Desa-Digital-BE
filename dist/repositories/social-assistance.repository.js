@@ -27,6 +27,10 @@ class SocialAssistanceRepository {
             var _a, _b, _c;
             return db_1.prismaClient.socialAssistance.findMany({
                 where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
+                include: {
+                    image: true,
+                    social_assistance_recipient: true
+                },
                 skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
                 take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
             });

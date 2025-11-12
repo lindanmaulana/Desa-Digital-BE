@@ -8,18 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceCrudService = void 0;
 const social_assistance_validation_1 = require("../../utils/validations/social-assistance.validation");
 const errors_1 = require("../../utils/errors");
 const social_assistance_repository_1 = require("../../repositories/social-assistance.repository");
-const social_assistance_response_1 = __importDefault(require("../../utils/responses/social-assistance-response"));
 const validation_1 = require("../../utils/validations/validation");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const response_message_type_1 = require("../../utils/response-message.type");
+const responses_1 = require("../../utils/responses");
 exports.SocialAssistanceCrudService = {
     create: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.CREATE, req);
@@ -38,7 +35,7 @@ exports.SocialAssistanceCrudService = {
         });
         if (!result)
             throw new errors_1.InternalServerError("Pembuatan bantuan sosial gagal, please try again later");
-        return social_assistance_response_1.default.toSocialAssistanceResponse(result);
+        return responses_1.socialAssistanceResponse.toSocialAssistanceResponse(result);
     }),
     getAll: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.GETALL, req);
@@ -57,12 +54,10 @@ exports.SocialAssistanceCrudService = {
                     }
                 ] });
         }
-        if (validateFields.category) {
+        if (validateFields.category)
             whereCondition.category = validateFields.category;
-        }
-        if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) {
+        if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null))
             whereCondition.is_active = validateFields.is_active;
-        }
         let conditionCount = { where: whereCondition };
         const count = yield social_assistance_repository_1.SocialAssistanceRepository.findCount(conditionCount);
         const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = (0, get_pagination_1.getPagination)({ count, pageRequest: validateFields.page, limitRequest: validateFields.limit });
@@ -75,7 +70,7 @@ exports.SocialAssistanceCrudService = {
         if (!result)
             throw new errors_1.InternalServerError(`${response_message_type_1.RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`);
         return {
-            data: social_assistance_response_1.default.toSocialAssistanceResponses(result),
+            data: responses_1.socialAssistanceResponse.toSocialAssistanceResponsesWithRelation(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -106,7 +101,7 @@ exports.SocialAssistanceCrudService = {
         const result = yield social_assistance_repository_1.SocialAssistanceRepository.update(prismaUpdateArgs);
         if (!result)
             throw new errors_1.InternalServerError("Terjadi kesalahan saat update data, please try again later");
-        return social_assistance_response_1.default.toSocialAssistanceResponse(result);
+        return responses_1.socialAssistanceResponse.toSocialAssistanceResponse(result);
     }),
 };
 //# sourceMappingURL=social-assistance-crud.service.js.map

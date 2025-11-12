@@ -1,1 +1,1 @@
-{"version":3,"file":"social-assistance-recipient-crud.service.d.ts","sourceRoot":"","sources":["../../../src/services/social-assistance-recipient/social-assistance-recipient-crud.service.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,6BAA6B;;CAIzC,CAAA"}
+{"version":3,"file":"social-assistance-recipient-crud.service.d.ts","sourceRoot":"","sources":["../../../src/services/social-assistance-recipient/social-assistance-recipient-crud.service.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,sCAAsC,EAAE,MAAM,gDAAgD,CAAC;AAKxG,eAAO,MAAM,oCAAoC;kBAC5B,sCAAsC;;CAQ1D,CAAA"}

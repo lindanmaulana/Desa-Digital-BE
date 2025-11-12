@@ -19,7 +19,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.UserService.registerStaffAccount(reqBody);
+                const result = yield services_1.UserCrudService.registerStaffAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.CREATED).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.CREATED,
@@ -36,46 +36,11 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqBody = req.body;
-                const result = yield services_1.UserService.registerHeadOfFamilyAccount(reqBody);
+                const result = yield services_1.UserCrudService.registerHeadOfFamilyAccount(reqBody);
                 res.status(http_status_codes_1.StatusCodes.CREATED).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.CREATED,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.create,
-                    data: result,
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
-    static getProfile(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const token = req.user;
-                const result = yield services_1.UserService.getProfile(token);
-                res.status(http_status_codes_1.StatusCodes.OK).json({
-                    status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
-                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
-                    data: result,
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
-    static changePassword(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const token = req.user;
-                const reqBody = req.body;
-                const result = yield services_1.UserService.changePassword(reqBody, token);
-                res.status(http_status_codes_1.StatusCodes.OK).json({
-                    status: "success",
-                    code: http_status_codes_1.StatusCodes.OK,
-                    message: "Kata sandi berhasil di ubah",
                     data: result,
                 });
             }
@@ -89,7 +54,7 @@ class UserController {
             try {
                 const token = req.user;
                 const reqQuery = req.query;
-                const result = yield services_1.UserService.getAll(reqQuery, token);
+                const result = yield services_1.UserCrudService.getAll(reqQuery, token);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -107,7 +72,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const params = req.params;
-                const result = yield services_1.UserService.getById(params.id);
+                const result = yield services_1.UserCrudService.getById(params.id);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
@@ -125,11 +90,46 @@ class UserController {
             try {
                 const params = req.params;
                 logging_1.logger.info(req.params);
-                const result = yield services_1.UserService.delete(params.id);
+                const result = yield services_1.UserCrudService.delete(params.id);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.delete,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static getProfile(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.user;
+                const result = yield services_1.UserProfileService.getProfile(token);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static changePassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.user;
+                const reqBody = req.body;
+                const result = yield services_1.UserProfileService.changePassword(reqBody, token);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: "Kata sandi berhasil di ubah",
                     data: result,
                 });
             }

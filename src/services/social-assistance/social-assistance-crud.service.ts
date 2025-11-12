@@ -3,10 +3,10 @@ import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSoc
 import { SocialAssistanceValidation } from "../../utils/validations/social-assistance.validation";
 import { BadrequestError, InternalServerError } from "../../utils/errors";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
-import socialAssistanceResponse from "../../utils/responses/social-assistance-response";
 import { validation } from "../../utils/validations/validation";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { RESPONSE_MESSAGE } from "../../utils/response-message.type";
+import { socialAssistanceResponse } from "../../utils/responses";
 
 export const SocialAssistanceCrudService = {
 	create: async (req: CreateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {
@@ -52,13 +52,8 @@ export const SocialAssistanceCrudService = {
 			}
 		}
 
-		if (validateFields.category) {
-			whereCondition.category = validateFields.category
-		}
-
-		if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) {
-			whereCondition.is_active = validateFields.is_active
-		}
+		if (validateFields.category) whereCondition.category = validateFields.category
+		if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) whereCondition.is_active = validateFields.is_active
 
 		let conditionCount: Prisma.SocialAssistanceCountArgs = {where: whereCondition}
 		const count = await SocialAssistanceRepository.findCount(conditionCount)
@@ -72,11 +67,10 @@ export const SocialAssistanceCrudService = {
 		}
 
 		const result = await SocialAssistanceRepository.findAll(conditionFindAll)
-
 		if (!result) throw new InternalServerError(`${RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`)
 
 		return {
-			data: socialAssistanceResponse.toSocialAssistanceResponses(result),
+			data: socialAssistanceResponse.toSocialAssistanceResponsesWithRelation(result),
 			pagination: {
 				total_page: totalPage,
 				limit,

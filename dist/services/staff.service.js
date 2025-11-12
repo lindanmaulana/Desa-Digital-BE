@@ -8,15 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffService = void 0;
 const repositories_1 = require("../repositories");
 const errors_1 = require("../utils/errors");
 const remove_undefined_1 = require("../utils/helpers/remove-undefined");
-const responses_1 = __importDefault(require("../utils/responses"));
+const responses_1 = require("../utils/responses");
 const staff_validation_1 = require("../utils/validations/staff.validation");
 const validation_1 = require("../utils/validations/validation");
 class StaffService {
@@ -41,7 +38,7 @@ class StaffService {
             });
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat mengupdate data, please try again later");
-            return responses_1.default.staffResponse.toStaffResponse(result);
+            return responses_1.staffResponse.toStaffResponse(result);
         });
     }
 }

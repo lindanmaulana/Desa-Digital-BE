@@ -24,7 +24,34 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }>;
-    static findAll(args: Prisma.SocialAssistanceFindManyArgs): Promise<{
+    static findAll(args: Prisma.SocialAssistanceFindManyArgs): Promise<({
+        image: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            user_id: string | null;
+            filename: string;
+            path: string;
+            profile_id: string | null;
+            social_assistance_id: string | null;
+            social_assistance_recipient_id: string | null;
+            event_id: string | null;
+            development_id: string | null;
+            entity_type: import("@prisma/client").$Enums.Entity;
+        } | null;
+        social_assistance_recipient: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            head_of_family_id: string;
+            social_assistance_id: string;
+            amount: Prisma.Decimal;
+            reason: string;
+            bank: import("@prisma/client").$Enums.Bank;
+            account_number: string;
+            status: import("@prisma/client").$Enums.Status;
+        }[];
+    } & {
         name: string;
         id: string;
         is_active: boolean;
@@ -35,7 +62,7 @@ export declare class SocialAssistanceRepository {
         amount: Prisma.Decimal;
         provider: string;
         description: string | null;
-    }[]>;
+    })[]>;
     static findCount(args: Prisma.SocialAssistanceCountArgs): Promise<number>;
     static isNameTaken(name: string): Promise<boolean>;
 }

@@ -18,7 +18,7 @@ import { createTokenResetPassword } from "../../utils/helpers/jwt/create-token-r
 import userResponse from "../../utils/responses/user.,response";
 import { AuthValidation } from "../../utils/validations/auth.validation";
 import { validation } from "../../utils/validations/validation";
-import { EmailService } from "../email.service";
+import { EmailService } from "../utilities/email.service";
 
 export const ForgotPasswordAuthService = {
 	forgotPassword: async (req: ForgotPasswordRequest): Promise<ForgotPasswordResponse> => {

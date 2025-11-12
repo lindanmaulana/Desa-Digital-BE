@@ -1,8 +1,9 @@
 import { SocialAssistance } from "@prisma/client";
-import { SocialAssistanceResponse } from "../../models/social-assistance.model";
-declare const _default: {
+import { SocialAssistanceResponse, SocialAssistanceResponseWithRelation, SocialAssistanceWithRelations } from "../../models/social-assistance.model";
+export declare const socialAssistanceResponse: {
     toSocialAssistanceResponse: (socialAssistance: SocialAssistance) => SocialAssistanceResponse;
     toSocialAssistanceResponses: (socialAssistances: SocialAssistance[]) => SocialAssistanceResponse[];
+    toSocialAssistanceResponseWithRelation: (socialAssistance: SocialAssistanceWithRelations) => SocialAssistanceResponseWithRelation;
+    toSocialAssistanceResponsesWithRelation: (socialAssistances: SocialAssistanceWithRelations[]) => SocialAssistanceResponseWithRelation[];
 };
-export default _default;
 //# sourceMappingURL=social-assistance-response.d.ts.map

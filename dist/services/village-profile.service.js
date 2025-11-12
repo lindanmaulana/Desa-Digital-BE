@@ -8,16 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VillageProfileService = void 0;
 const repositories_1 = require("../repositories");
 const errors_1 = require("../utils/errors");
-const responses_1 = __importDefault(require("../utils/responses"));
 const validation_1 = require("../utils/validations/validation");
 const village_profile_validation_1 = require("../utils/validations/village-profile.validation");
+const responses_1 = require("../utils/responses");
 class VillageProfileService {
     static create(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +27,7 @@ class VillageProfileService {
             });
             if (!result)
                 throw new errors_1.InternalServerError("Maaf terjadi kesalahan saat menambahkan Profile Desa, please try again later");
-            return responses_1.default.villageProfileResponse.toVillageProfileResponse(result);
+            return responses_1.villageProfileResponse.toVillageProfileResponse(result);
         });
     }
     static get() {
@@ -38,7 +35,7 @@ class VillageProfileService {
             const result = yield repositories_1.VillageProfileRepository.findOne();
             if (!result)
                 throw new errors_1.NotfoundError("Profile Desa tidak tersedia");
-            return responses_1.default.villageProfileResponse.toVillageProfileResponse(result);
+            return responses_1.villageProfileResponse.toVillageProfileResponse(result);
         });
     }
     static update(id, req) {
@@ -63,7 +60,7 @@ class VillageProfileService {
             const result = yield repositories_1.VillageProfileRepository.update(prismaUpdateArgs);
             if (!result)
                 throw new errors_1.InternalServerError("Terjadi kesalahan saat mengubah Profile Desa, please try again later");
-            return responses_1.default.villageProfileResponse.toVillageProfileResponse(result);
+            return responses_1.villageProfileResponse.toVillageProfileResponse(result);
         });
     }
 }

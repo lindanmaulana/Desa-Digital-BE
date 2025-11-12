@@ -9,9 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SocialAssistanceRecipientCrud = void 0;
-exports.SocialAssistanceRecipientCrud = {
+exports.SocialAssistanceRecipientCrudService = void 0;
+const errors_1 = require("../../utils/errors");
+const social_assistance_recipient_validation_1 = require("../../utils/validations/social-assistance-recipient.validation");
+const validation_1 = require("../../utils/validations/validation");
+exports.SocialAssistanceRecipientCrudService = {
+    create: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validation_1.validation.validate(social_assistance_recipient_validation_1.SocialAssistanceRecipientValidation.CREATE, req);
+        if (validateFields.amount && validateFields.amount < 0)
+            throw new errors_1.BadrequestError("Nominal bantuan tidak valid!");
+    }),
     getAll: () => __awaiter(void 0, void 0, void 0, function* () {
-    })
+    }),
 };
 //# sourceMappingURL=social-assistance-recipient-crud.service.js.map

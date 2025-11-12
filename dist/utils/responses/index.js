@@ -3,14 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const social_assistance_response_1 = __importDefault(require("./social-assistance-response"));
+exports.villageProfileResponse = exports.socialAssistanceResponse = exports.staffResponse = exports.userResponse = void 0;
+const social_assistance_response_1 = require("./social-assistance-response");
+Object.defineProperty(exports, "socialAssistanceResponse", { enumerable: true, get: function () { return social_assistance_response_1.socialAssistanceResponse; } });
 const staff_response_1 = __importDefault(require("./staff-response"));
+exports.staffResponse = staff_response_1.default;
 const user__response_1 = __importDefault(require("./user.,response"));
+exports.userResponse = user__response_1.default;
 const village_profile_response_1 = __importDefault(require("./village-profile.response"));
-exports.default = {
-    userResponse: user__response_1.default,
-    staffResponse: staff_response_1.default,
-    socialAssistanceResponse: social_assistance_response_1.default,
-    villageProfileResponse: village_profile_response_1.default
-};
+exports.villageProfileResponse = village_profile_response_1.default;
 //# sourceMappingURL=index.js.map

@@ -2,9 +2,9 @@ import { User } from "@prisma/client";
 import fs from "fs";
 import mustache from "mustache";
 import nodemailer from "nodemailer";
-import { BASEURL_AUTHENTICATION, BASEURL_CLIENT, MAIL_PASSWORD, MAIL_USERNAME } from "../config";
-import { logger } from "../logging";
-import { InternalServerError } from "../utils/errors";
+import { BASEURL_AUTHENTICATION, BASEURL_CLIENT, MAIL_PASSWORD, MAIL_USERNAME } from "../../config";
+import { logger } from "../../logging";
+import { InternalServerError } from "../../utils/errors";
 
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
@@ -201,4 +201,4 @@ export const EmailService = {
 			throw new InternalServerError("Terjadi kesalahan sistem saat mengirim TOKEN, please try again later");
 		}
 	},
-}
+};

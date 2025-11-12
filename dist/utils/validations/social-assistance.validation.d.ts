@@ -5,10 +5,10 @@ export declare class SocialAssistanceValidation {
         thumbnail: z.ZodNullable<z.ZodString>;
         name: z.ZodString;
         category: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            STAPLE: "STAPLE";
             CASH: "CASH";
-            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
             HEALTH: "HEALTH";
+            STAPLE: "STAPLE";
+            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
         }>>;
         amount: z.ZodCoercedNumber<unknown>;
         provider: z.ZodString;
@@ -18,10 +18,10 @@ export declare class SocialAssistanceValidation {
     static readonly GETALL: z.ZodObject<{
         keyword: z.ZodOptional<z.ZodString>;
         category: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            STAPLE: "STAPLE";
             CASH: "CASH";
-            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
             HEALTH: "HEALTH";
+            STAPLE: "STAPLE";
+            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
         }>>>;
         is_active: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodBoolean>>;
         page: z.ZodOptional<z.ZodString>;
@@ -30,10 +30,10 @@ export declare class SocialAssistanceValidation {
     static readonly CREATE: z.ZodObject<{
         name: z.ZodString;
         category: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            STAPLE: "STAPLE";
             CASH: "CASH";
-            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
             HEALTH: "HEALTH";
+            STAPLE: "STAPLE";
+            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
         }>>;
         amount: z.ZodCoercedNumber<unknown>;
         provider: z.ZodString;
@@ -45,10 +45,10 @@ export declare class SocialAssistanceValidation {
         thumbnail: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         name: z.ZodOptional<z.ZodString>;
         category: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            STAPLE: "STAPLE";
             CASH: "CASH";
-            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
             HEALTH: "HEALTH";
+            STAPLE: "STAPLE";
+            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
         }>>>;
         amount: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
         provider: z.ZodOptional<z.ZodString>;

@@ -1,6 +1,14 @@
-import { CategorySocialAssistance } from "@prisma/client";
+import { CategorySocialAssistance, Prisma } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { PaginationResponse } from "./pagination.model";
+import { SocialAssistanceRecipientResponse } from "./social-assistance-recipient.model";
+import { ImageResponse } from "./image.model";
+export type SocialAssistanceWithRelations = Prisma.SocialAssistanceGetPayload<{
+    include: {
+        image: true;
+        social_assistance_recipient: true;
+    };
+}>;
 export interface SocialAssistanceResponse {
     id: string;
     thumbnail?: string | null;
@@ -12,6 +20,10 @@ export interface SocialAssistanceResponse {
     is_active: boolean;
     created_at: Date;
     updated_at: Date;
+}
+export interface SocialAssistanceResponseWithRelation extends SocialAssistanceResponse {
+    social_assistance_recipient?: SocialAssistanceRecipientResponse[] | null;
+    image?: ImageResponse | null;
 }
 export interface CreateSocialAssistanceRequest {
     thumbnail?: string;

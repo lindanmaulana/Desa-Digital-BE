@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
-import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse } from "../models/head-of-family.model";
-import { validation } from "../utils/validations/validation";
-import { UserRepository } from "../repositories";
-import { getPagination } from "../utils/helpers/get-pagination";
-import { InternalServerError } from "../utils/errors";
-import userResponse from "../utils/responses/user.,response";
-import { HeadOfFamilyValidation } from "../utils/validations/head-of-family.validation";
+import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse } from "../../models/head-of-family.model";
+import { validation } from "../../utils/validations/validation";
+import { UserRepository } from "../../repositories";
+import { getPagination } from "../../utils/helpers/get-pagination";
+import { InternalServerError } from "../../utils/errors";
+import userResponse from "../../utils/responses/user.,response";
+import { HeadOfFamilyValidation } from "../../utils/validations/head-of-family.validation";
 
 export const HeadOfFamilyService = {
 	// static async update(user: Token, req: updateHead)

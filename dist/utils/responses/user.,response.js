@@ -13,6 +13,18 @@ const toUserResponse = (user) => {
         updated_at: user.updated_at,
     };
 };
+const toUserResponses = (users) => {
+    return users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: (0, to_user_role_1.toUserRole)(user.role),
+        is_active: user.is_active,
+        is_first_login: user.is_first_login,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+    }));
+};
 const toUserResponseWithRelation = (user) => {
     var _a, _b, _c, _d, _e, _f;
     return {
@@ -46,18 +58,6 @@ const toUserResponseWithRelation = (user) => {
         created_at: user.created_at,
         updated_at: user.updated_at,
     };
-};
-const toUserResponses = (users) => {
-    return users.map((user) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: (0, to_user_role_1.toUserRole)(user.role),
-        is_active: user.is_active,
-        is_first_login: user.is_first_login,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-    }));
 };
 const toUserResponsesWithRelation = (users) => {
     return users.map((user) => {

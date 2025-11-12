@@ -1,0 +1,234 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserCrudService = void 0;
+const client_1 = require("@prisma/client");
+const db_1 = require("../../db");
+const user_repository_1 = require("../../repositories/user.repository");
+const index_1 = __importDefault(require("../../utils/const/index"));
+const errors_1 = require("../../utils/errors");
+const helpers_1 = __importDefault(require("../../utils/helpers"));
+const generate_uuid_1 = require("../../utils/helpers/generate-uuid");
+const create_token_verify_account_1 = require("../../utils/helpers/jwt/create-token-verify-account");
+const responses_1 = require("../../utils/responses");
+const user_validation_1 = require("../../utils/validations/user.validation");
+const validation_1 = require("../../utils/validations/validation");
+const email_service_1 = require("../utilities/email.service");
+exports.UserCrudService = {
+    registerStaffAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
+        const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
+        if (checkEmailTaken)
+            throw new errors_1.BadrequestError("Email telah digunakan");
+        const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
+        const otp = helpers_1.default.generateOtp();
+        const jti = (0, generate_uuid_1.generateUUID)();
+        const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+            const newUser = yield tx.user.create({
+                data: {
+                    email: validateFields.email,
+                    name: validateFields.name,
+                    password: hashPassword,
+                    role: "STAFF",
+                    otp: otp,
+                    otp_purpose: "ACTIVATION",
+                    otp_last_sen_at: new Date(),
+                    verify_token: jti,
+                    verify_token_last_sen_at: new Date(),
+                },
+            });
+            const newStaff = yield tx.staff.create({
+                data: {
+                    user_id: newUser.id,
+                    identity_number: validateFields.identity_number,
+                    gender: validateFields.gender,
+                    date_of_birth: validateFields.date_of_birth,
+                    phone_number: validateFields.phone_number,
+                    occupation: validateFields.occupation,
+                    marital_status: validateFields.marital_status,
+                },
+            });
+            const newImage = yield tx.images.create({
+                data: {
+                    user_id: newUser.id,
+                    filename: "profile-user-default.png",
+                    path: index_1.default.images.USERPATH,
+                    entity_type: "USER",
+                },
+            });
+            return { newUser, newStaff, newImage };
+        }));
+        if (!result)
+            throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
+        const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({
+            user_id: result.newUser.id,
+            jti,
+            email: result.newUser.email,
+            role: result.newUser.role,
+            type: "VERIFY_ACCOUNT",
+        });
+        yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+        return responses_1.userResponse.toUserResponse(result.newUser);
+    }),
+    registerHeadOfFamilyAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERHEADOFFAMILY, req);
+        const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
+        if (checkEmailTaken)
+            throw new errors_1.BadrequestError("Email telah digunakan");
+        const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
+        const otp = helpers_1.default.generateOtp();
+        const jti = (0, generate_uuid_1.generateUUID)();
+        const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+            const newUser = yield tx.user.create({
+                data: {
+                    email: validateFields.email,
+                    name: validateFields.name,
+                    password: hashPassword,
+                    role: "HEAD_OF_FAMILY",
+                    otp: otp,
+                    otp_purpose: "ACTIVATION",
+                    otp_last_sen_at: new Date(),
+                    verify_token: jti,
+                    verify_token_last_sen_at: new Date(),
+                },
+            });
+            const newHeadOfFamily = yield tx.headOfFamily.create({
+                data: {
+                    user_id: newUser.id,
+                    identity_number: validateFields.identity_number,
+                    gender: validateFields.gender,
+                    date_of_birth: validateFields.date_of_birth,
+                    phone_number: validateFields.phone_number,
+                    occupation: validateFields.occupation,
+                    marital_status: validateFields.marital_status,
+                },
+            });
+            const newImage = yield tx.images.create({
+                data: {
+                    user_id: newUser.id,
+                    filename: "profile-user-default.png",
+                    path: index_1.default.images.USERPATH,
+                    entity_type: "USER",
+                },
+            });
+            return { newUser, newHeadOfFamily, newImage };
+        }));
+        if (!result)
+            throw new errors_1.InternalServerError("Pendaftaran gagal, please try again later");
+        const verify_token = (0, create_token_verify_account_1.createTokenVerifyAccount)({
+            user_id: result.newUser.id,
+            jti,
+            email: result.newUser.email,
+            role: result.newUser.role,
+            type: "VERIFY_ACCOUNT",
+        });
+        yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
+        return responses_1.userResponse.toUserResponse(result.newUser);
+    }),
+    getAll: (req, user) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.GETALL, req);
+        const hiddenRoles = [client_1.UserRole.ADMIN];
+        const fullAccess = user.role === client_1.UserRole.ADMIN;
+        let whereCondition = {};
+        if (!fullAccess) {
+            whereCondition = Object.assign(Object.assign({}, whereCondition), { role: {
+                    notIn: hiddenRoles,
+                } });
+        }
+        if (validateFields.keyword) {
+            whereCondition = Object.assign(Object.assign({}, whereCondition), { OR: [
+                    {
+                        name: {
+                            contains: validateFields.keyword,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        staff: {
+                            identity_number: {
+                                contains: validateFields.keyword,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                    {
+                        head_of_family: {
+                            identity_number: {
+                                contains: validateFields.keyword,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                ] });
+        }
+        if (validateFields.is_active) {
+            whereCondition = Object.assign(Object.assign({}, whereCondition), { is_active: validateFields.is_active });
+        }
+        if (validateFields.role) {
+            whereCondition = Object.assign(Object.assign({}, whereCondition), { role: validateFields.role });
+        }
+        let conditionsCount = { where: whereCondition };
+        const count = yield user_repository_1.UserRepository.findCount(conditionsCount);
+        const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = helpers_1.default.getPagination({
+            count,
+            pageRequest: validateFields.page,
+            limitRequest: validateFields.limit,
+        });
+        let conditionsFindAll = {
+            where: whereCondition,
+            skip: limit * (page - 1),
+            take: limit,
+            include: {
+                staff: true,
+                head_of_family: true,
+                image: true,
+            },
+            orderBy: {
+                created_at: "desc",
+            },
+        };
+        const result = yield user_repository_1.UserRepository.findAll(conditionsFindAll);
+        if (!result)
+            throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
+        return {
+            data: responses_1.userResponse.toUserResponsesWithRelation(result),
+            pagination: {
+                total_page: totalPage,
+                limit,
+                current_page: currentPage,
+                links,
+                next_page: nextPage,
+                prev_page: prevPage,
+            },
+        };
+    }),
+    getById: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const result = yield user_repository_1.UserRepository.findById(id);
+        if (!result)
+            throw new errors_1.NotfoundError(`Pengguna tidak ditemukan`);
+        if (result.role === "ADMIN")
+            throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
+        return responses_1.userResponse.toUserResponseWithRelation(result);
+    }),
+    delete: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const checkUser = yield user_repository_1.UserRepository.findById(id);
+        if (!checkUser)
+            throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
+        if (checkUser.role === "ADMIN")
+            throw new errors_1.NotfoundError("Pengguna tidak dapat di hapus");
+        const result = yield user_repository_1.UserRepository.deleteById(checkUser.id);
+        return responses_1.userResponse.toUserResponse(result);
+    }),
+};
+//# sourceMappingURL=user-crud.service.js.map

@@ -4,7 +4,7 @@ import {
 	ResendOtpResponse,
 	ResendVerifyAccountTokenRequest,
 	ResendVerifyAccountTokenResponse,
-	VerifyAccountRequest
+	VerifyAccountRequest,
 } from "../../models/auth.model";
 import { UserResponse } from "../../models/user.model";
 import { UserRepository } from "../../repositories";
@@ -19,7 +19,7 @@ import { createTokenVerifyAccount } from "../../utils/helpers/jwt/create-token-v
 import userResponse from "../../utils/responses/user.,response";
 import { AuthValidation } from "../../utils/validations/auth.validation";
 import { validation } from "../../utils/validations/validation";
-import { EmailService } from "../email.service";
+import { EmailService } from "../utilities/email.service";
 
 export const VerifyAccountAuthService = {
 	verifyAccount: async (req: VerifyAccountRequest): Promise<UserResponse> => {
