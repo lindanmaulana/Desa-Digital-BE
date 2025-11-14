@@ -41,7 +41,7 @@ export class SocialAssistanceController {
 				data: result,
 			});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	}
 
@@ -60,6 +60,22 @@ export class SocialAssistanceController {
 			});
 		} catch (err) {
 			next(err);
+		}
+	}
+
+	static async getSocialAssistanceById(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const { id } = req.params as { id: string };
+			const result = await SocialAssistanceCrudService.getOne(id);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: RESPONSE_MESSAGE.success.read,
+				data: result,
+			});
+		} catch (err) {
+			next(err)
 		}
 	}
 }

@@ -15,10 +15,37 @@ export class SocialAssistanceRepository {
 			where: args.where ?? {},
 			include: {
 				image: true,
-				social_assistance_recipient: true
+				social_assistance_recipient: true,
+				_count: {
+					select: {
+						social_assistance_recipient: true
+					}
+				}
 			},
 			skip: args.skip ?? 0,
 			take: args.take ?? 5,
+		})
+	}
+
+	static async findOne(id: string) {
+		return prismaClient.socialAssistance.findFirst({
+			where: {
+				id: id
+			},
+
+			include: {
+				image: true,
+				social_assistance_recipient: {
+					take: 3,
+					skip: 0
+				},
+
+				_count: {
+					select: {
+						social_assistance_recipient: true
+					}
+				}
+			},
 		})
 	}
 

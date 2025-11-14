@@ -1,12 +1,12 @@
 import { Prisma } from "@prisma/client";
 import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../../models/social-assistance.model";
-import { SocialAssistanceValidation } from "../../utils/validations/social-assistance.validation";
-import { BadrequestError, InternalServerError } from "../../utils/errors";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
-import { validation } from "../../utils/validations/validation";
+import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { RESPONSE_MESSAGE } from "../../utils/response-message.type";
 import { socialAssistanceResponse } from "../../utils/responses";
+import { SocialAssistanceValidation } from "../../utils/validations/social-assistance.validation";
+import { validation } from "../../utils/validations/validation";
 
 export const SocialAssistanceCrudService = {
 	create: async (req: CreateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {
@@ -80,6 +80,13 @@ export const SocialAssistanceCrudService = {
 				prev_page: prevPage,
 			}
 		}
+	},
+
+	getOne: async (id: string): Promise<SocialAssistanceResponse> => {
+		const result = await SocialAssistanceRepository.findOne(id)
+		if (!result) throw new NotfoundError("Bantuan Sosial tidak tersedia!")
+
+		return socialAssistanceResponse.toSocialAssistanceResponseWithRelation(result)
 	},
 
 	update: async (id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {

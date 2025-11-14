@@ -22,7 +22,6 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
 **Catatan:** Dalam respons API sebenarnya, properti sensitif seperti `otp_code` dan `password` **TIDAK** boleh disertakan.
 
 ## 1. POST create
-
 Endpoint : /api/v1/admin/social-assitance
 
 Request Header :

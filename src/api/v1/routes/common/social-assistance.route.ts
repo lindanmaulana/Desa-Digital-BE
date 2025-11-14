@@ -6,5 +6,6 @@ import { SocialAssistanceController } from "../../controllers";
 const socialAssistanceRouteCommon = Router()
 
 	socialAssistanceRouteCommon.get("/", authenticatedUser, publicRateLimit, SocialAssistanceController.getSocialAssistances)
+	socialAssistanceRouteCommon.get("/:id", authenticatedUser, publicRateLimit, SocialAssistanceController.getSocialAssistanceById)
 
 export default socialAssistanceRouteCommon

@@ -7,6 +7,11 @@ export type SocialAssistanceWithRelations = Prisma.SocialAssistanceGetPayload<{
     include: {
         image: true;
         social_assistance_recipient: true;
+        _count: {
+            select: {
+                social_assistance_recipient: true;
+            };
+        };
     };
 }>;
 export interface SocialAssistanceResponse {
@@ -22,7 +27,8 @@ export interface SocialAssistanceResponse {
     updated_at: Date;
 }
 export interface SocialAssistanceResponseWithRelation extends SocialAssistanceResponse {
-    social_assistance_recipient?: SocialAssistanceRecipientResponse[] | null;
+    social_assistance_recipient?: SocialAssistanceRecipientResponse[] | null | number;
+    social_assistance_recipient_count?: string | number;
     image?: ImageResponse | null;
 }
 export interface CreateSocialAssistanceRequest {
@@ -42,7 +48,7 @@ export interface GetAllSocialAssistanceRequest {
     limit?: string;
 }
 export interface GetAllSocialAssistanceUserResponse {
-    data: SocialAssistanceResponse[];
+    data: SocialAssistanceResponseWithRelation[];
     pagination: PaginationResponse;
 }
 export interface UpdateSocialAssistanceRequest {

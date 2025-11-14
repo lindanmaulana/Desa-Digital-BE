@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceCrudService = void 0;
-const social_assistance_validation_1 = require("../../utils/validations/social-assistance.validation");
-const errors_1 = require("../../utils/errors");
 const social_assistance_repository_1 = require("../../repositories/social-assistance.repository");
-const validation_1 = require("../../utils/validations/validation");
+const errors_1 = require("../../utils/errors");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const response_message_type_1 = require("../../utils/response-message.type");
 const responses_1 = require("../../utils/responses");
+const social_assistance_validation_1 = require("../../utils/validations/social-assistance.validation");
+const validation_1 = require("../../utils/validations/validation");
 exports.SocialAssistanceCrudService = {
     create: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.CREATE, req);
@@ -80,6 +80,12 @@ exports.SocialAssistanceCrudService = {
                 prev_page: prevPage,
             }
         };
+    }),
+    getOne: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const result = yield social_assistance_repository_1.SocialAssistanceRepository.findOne(id);
+        if (!result)
+            throw new errors_1.NotfoundError("Bantuan Sosial tidak tersedia!");
+        return responses_1.socialAssistanceResponse.toSocialAssistanceResponseWithRelation(result);
     }),
     update: (id, req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.UPDATE, req);

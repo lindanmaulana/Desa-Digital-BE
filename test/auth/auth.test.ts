@@ -2,8 +2,12 @@ import supertest from "supertest";
 import { logger } from "../../src/logging";
 import { app } from "../../src/web";
 import { UserTest } from "../users/user.utils";
+import { User } from "@prisma/client";
 
 describe("POST /api/v1/auth/signin", () => {
+	let newAccount: User
+	let activeAccount: User
+
 	beforeAll(async () => {
 		await UserTest.setupHashedPassword();
 	});
@@ -11,8 +15,8 @@ describe("POST /api/v1/auth/signin", () => {
 	beforeEach(async () => {
 		await UserTest.deleteUserTest();
 
-		await UserTest.createUserTest();
-		await UserTest.createUserTestActive();
+		newAccount = await UserTest.createUserTest()
+		activeAccount = await UserTest.createUserTestActive()
 	});
 
 	afterEach(async () => {
@@ -45,7 +49,7 @@ describe("POST /api/v1/auth/signin", () => {
 
 	it("Should reject signin if account inactive", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signin").send({
-			email: "testuserexample@gmail.com",
+			email: newAccount.email,
 			password: "testpassword123",
 		});
 
@@ -60,7 +64,9 @@ describe("POST /api/v1/auth/signin", () => {
 
 	it("Should be able signin", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signin").send({
-			email: "testuseractive@gmail.com",
+			// email: "testuseractive@gmail.com",
+			// password: "testpassword123",
+			email: activeAccount.email,
 			password: "testpassword123",
 		});
 

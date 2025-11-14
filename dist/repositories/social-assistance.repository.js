@@ -29,10 +29,36 @@ class SocialAssistanceRepository {
                 where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
                 include: {
                     image: true,
-                    social_assistance_recipient: true
+                    social_assistance_recipient: true,
+                    _count: {
+                        select: {
+                            social_assistance_recipient: true
+                        }
+                    }
                 },
                 skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
                 take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
+            });
+        });
+    }
+    static findOne(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.socialAssistance.findFirst({
+                where: {
+                    id: id
+                },
+                include: {
+                    image: true,
+                    social_assistance_recipient: {
+                        take: 3,
+                        skip: 0
+                    },
+                    _count: {
+                        select: {
+                            social_assistance_recipient: true
+                        }
+                    }
+                },
             });
         });
     }

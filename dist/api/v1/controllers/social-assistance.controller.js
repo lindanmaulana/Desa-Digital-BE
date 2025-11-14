@@ -67,6 +67,23 @@ class SocialAssistanceController {
             }
         });
     }
+    static getSocialAssistanceById(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const result = yield services_1.SocialAssistanceCrudService.getOne(id);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
 }
 exports.SocialAssistanceController = SocialAssistanceController;
 //# sourceMappingURL=social-assistance.controller.js.map

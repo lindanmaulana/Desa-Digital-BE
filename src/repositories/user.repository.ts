@@ -80,6 +80,8 @@ export class UserRepository {
 			data: {
 				is_active: true,
 				otp: null,
+				verify_token: null,
+				verify_token_last_sen_at: null
 			},
 		});
 	}
