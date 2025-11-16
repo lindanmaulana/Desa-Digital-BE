@@ -24,10 +24,9 @@ export const UserCrudService = {
 		const validateFields = validation.validate(UserValidation.REGISTERSTAFF, req);
 
 		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
-
 		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
 
-		const hashPassword = await helpers.hashPassword(validateFields.password);
+		const hashPassword = await helpers.hashPassword(validateFields.name);
 		const otp = helpers.generateOtp();
 		const jti = generateUUID();
 
@@ -89,10 +88,9 @@ export const UserCrudService = {
 		const validateFields = validation.validate(UserValidation.REGISTERHEADOFFAMILY, req);
 
 		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
-
 		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
 
-		const hashPassword = await helpers.hashPassword(validateFields.password);
+		const hashPassword = await helpers.hashPassword(validateFields.name);
 		const otp = helpers.generateOtp();
 		const jti = generateUUID();
 

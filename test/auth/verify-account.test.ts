@@ -113,7 +113,7 @@ describe("POST /api/v1/auth/verify-account/verify", () => {
 
 		expect(response.body.data).not.toHaveProperty("password");
 	});
-});
+});  
 
 describe("POST /api/v1/auth/verify-account/resend-otp", () => {
 	let otpAccount: User;

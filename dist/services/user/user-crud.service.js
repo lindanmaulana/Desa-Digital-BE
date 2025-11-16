@@ -31,7 +31,7 @@ exports.UserCrudService = {
         const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
         if (checkEmailTaken)
             throw new errors_1.BadrequestError("Email telah digunakan");
-        const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
+        const hashPassword = yield helpers_1.default.hashPassword(validateFields.name);
         const otp = helpers_1.default.generateOtp();
         const jti = (0, generate_uuid_1.generateUUID)();
         const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -86,7 +86,7 @@ exports.UserCrudService = {
         const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
         if (checkEmailTaken)
             throw new errors_1.BadrequestError("Email telah digunakan");
-        const hashPassword = yield helpers_1.default.hashPassword(validateFields.password);
+        const hashPassword = yield helpers_1.default.hashPassword(validateFields.name);
         const otp = helpers_1.default.generateOtp();
         const jti = (0, generate_uuid_1.generateUUID)();
         const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {

@@ -24,10 +24,14 @@ export const HeadOfFamilyService = {
 						mode: "insensitive",
 					},
 				},
-
 				{
 					head_of_family: {
-						identity_number: validateFields.keyword,
+						is: {
+							identity_number: {
+								contains: validateFields.keyword,
+								mode: "insensitive"
+							},
+						}
 					},
 				},
 			];

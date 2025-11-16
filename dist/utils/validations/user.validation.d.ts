@@ -17,7 +17,6 @@ export declare class UserValidation {
     static readonly REGISTERSTAFF: z.ZodObject<{
         name: z.ZodString;
         email: z.ZodEmail;
-        password: z.ZodString;
         identity_number: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         gender: z.ZodDefault<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
             MALE: "MALE";
@@ -34,7 +33,6 @@ export declare class UserValidation {
     static readonly REGISTERHEADOFFAMILY: z.ZodObject<{
         name: z.ZodString;
         email: z.ZodEmail;
-        password: z.ZodString;
         identity_number: z.ZodDefault<z.ZodNullable<z.ZodString>>;
         gender: z.ZodDefault<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
             MALE: "MALE";

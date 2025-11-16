@@ -3,7 +3,6 @@ export declare class AuthValidation {
     static readonly SIGNUP: z.ZodObject<{
         name: z.ZodString;
         email: z.ZodEmail;
-        password: z.ZodString;
     }, z.core.$strip>;
     static readonly SIGNIN: z.ZodObject<{
         email: z.ZodEmail;

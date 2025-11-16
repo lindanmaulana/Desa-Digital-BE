@@ -13,14 +13,14 @@ class UserValidation {
 exports.UserValidation = UserValidation;
 _a = UserValidation;
 UserValidation.PROFILE = zod_1.default.object({
-    identity_number: zod_1.default.string().nullable().default(null),
+    identity_number: zod_1.default.string().length(16, "NIK harus memiliki 16 ").nullable().default(null),
     gender: zod_1.default
         .string()
         .transform((val) => val.toUpperCase())
         .pipe(zod_1.default.enum(validation_1.VALID_GENDER))
         .default("MALE"),
     date_of_birth: zod_1.default.coerce.date().nullable().default(null),
-    phone_number: zod_1.default.string().nullable().default(null),
+    phone_number: zod_1.default.string().min(10, "Nomor handphone minimal 10 digit").max(13, "Nomor handphone maksimal 13 digit").nullable().default(null),
     occupation: zod_1.default.string().nullable().default(null),
     marital_status: zod_1.default
         .string()

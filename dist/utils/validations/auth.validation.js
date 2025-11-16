@@ -11,7 +11,6 @@ exports.AuthValidation = AuthValidation;
 AuthValidation.SIGNUP = zod_1.default.object({
     name: zod_1.default.string().nonempty({ error: "Nama tidak boleh kosong!" }),
     email: zod_1.default.email({ error: "Email tidak valid!" }).nonempty({ error: "Email tidak boleh kosong!" }),
-    password: zod_1.default.string().min(8, { error: "Password minimal 8 karakter" }),
 });
 AuthValidation.SIGNIN = zod_1.default.object({
     email: zod_1.default.email({ error: "Email tidak valid!" }).nonempty({ error: "Email tidak boleh kosong!" }),

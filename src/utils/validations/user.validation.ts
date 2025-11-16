@@ -4,14 +4,14 @@ import { VALID_GENDER, VALID_MARITAL, VALID_RELATION, VALID_ROLE } from "./valid
 
 export class UserValidation {
 	static readonly PROFILE = z.object({
-		identity_number: z.string().nullable().default(null),
+		identity_number: z.string().length(16, "NIK harus memiliki 16 ").nullable().default(null),
 		gender: z
 			.string()
 			.transform((val) => val.toUpperCase())
 			.pipe(z.enum(VALID_GENDER))
 			.default("MALE"),
 		date_of_birth: z.coerce.date().nullable().default(null),
-		phone_number: z.string().nullable().default(null),
+		phone_number: z.string().min(10, "Nomor handphone minimal 10 digit").max(13, "Nomor handphone maksimal 13 digit").nullable().default(null),
 		occupation: z.string().nullable().default(null),
 		marital_status: z
 			.string()
