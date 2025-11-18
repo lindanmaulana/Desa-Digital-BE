@@ -22,4 +22,20 @@ export const HeadOfFamilyUserController = {
 			next(err);
 		}
 	},
+
+	getHeadOfFamilyById: async (req: CustomeRequest, res: Response, next: NextFunction) => {
+		try {
+			const params = req.params as { id: string };
+			const result = await HeadOfFamilyService.getOne(params);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: RESPONSE_MESSAGE.success.read,
+				data: result
+			});
+		} catch (err) {
+			next(err)
+		}
+	},
 };

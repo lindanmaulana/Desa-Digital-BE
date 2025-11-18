@@ -1,4 +1,5 @@
 import z from "zod";
+import { VALID_SORT } from "./validation";
 
 export const HeadOfFamilyValidation = {
 	CREATE: z.object({
@@ -14,6 +15,11 @@ export const HeadOfFamilyValidation = {
 	GETALL: z.object({
 		keyword: z.string().optional(),
 		page: z.string().optional(),
-		limit: z.string().optional()
+		limit: z.string().optional(),
+		sort: z.string().transform((val) => val.toLowerCase()).pipe(z.enum(VALID_SORT)).optional()
+	}),
+
+	GETONE: z.object({
+		id: z.string().nonempty({error: "Id Pengguna tidak boleh kosong!"})
 	})
 };

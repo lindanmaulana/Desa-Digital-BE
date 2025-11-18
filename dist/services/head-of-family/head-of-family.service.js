@@ -8,45 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeadOfFamilyService = void 0;
-const validation_1 = require("../../utils/validations/validation");
 const repositories_1 = require("../../repositories");
-const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const errors_1 = require("../../utils/errors");
-const user__response_1 = __importDefault(require("../../utils/responses/user.,response"));
+const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const head_of_family_validation_1 = require("../../utils/validations/head-of-family.validation");
+const validation_1 = require("../../utils/validations/validation");
+const head_of_family_response_1 = require("../../utils/responses/head-of-family-response");
 exports.HeadOfFamilyService = {
     // static async update(user: Token, req: updateHead)
     getAll: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(head_of_family_validation_1.HeadOfFamilyValidation.GETALL, req);
         let whereCondition = {};
-        whereCondition.role = "HEAD_OF_FAMILY";
+        let orderByCondition = {};
+        if (validateFields.sort) {
+            orderByCondition = {
+                user: {
+                    name: validateFields.sort,
+                },
+            };
+        }
+        else {
+            orderByCondition.created_at = "asc";
+        }
         if (validateFields.keyword) {
             whereCondition.OR = [
                 {
-                    name: {
+                    identity_number: {
                         contains: validateFields.keyword,
                         mode: "insensitive",
                     },
                 },
                 {
-                    head_of_family: {
+                    user: {
                         is: {
-                            identity_number: {
+                            name: {
                                 contains: validateFields.keyword,
-                                mode: "insensitive"
+                                mode: "insensitive",
                             },
-                        }
+                        },
                     },
                 },
             ];
         }
         let conditionCount = { where: whereCondition };
-        const count = yield repositories_1.UserRepository.findCount(conditionCount);
+        const count = yield repositories_1.HeadOfFamilyRepository.findCount(conditionCount);
         const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = (0, get_pagination_1.getPagination)({
             count,
             pageRequest: validateFields.page,
@@ -56,19 +63,13 @@ exports.HeadOfFamilyService = {
             where: whereCondition,
             skip: limit * (page - 1),
             take: limit,
-            include: {
-                head_of_family: true,
-                image: true,
-            },
-            orderBy: {
-                created_at: "desc",
-            },
+            orderBy: orderByCondition,
         };
-        const result = yield repositories_1.UserRepository.findAll(conditionFindAll);
+        const result = yield repositories_1.HeadOfFamilyRepository.findAll(conditionFindAll);
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later");
         return {
-            data: user__response_1.default.toUserResponsesWithRelation(result),
+            data: head_of_family_response_1.toHeadOfFamilyResponse.responses(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -79,5 +80,15 @@ exports.HeadOfFamilyService = {
             },
         };
     }),
+    getOne: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validation_1.validation.validate(head_of_family_validation_1.HeadOfFamilyValidation.GETONE, req);
+        const checkUser = yield repositories_1.UserRepository.findById(validateFields.id);
+        if (!checkUser)
+            throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
+        const result = yield repositories_1.HeadOfFamilyRepository.findById(checkUser.id);
+        if (!result)
+            throw new errors_1.InternalServerError("Terjadi kesalahan saat mengambil data pengguna!");
+        return head_of_family_response_1.toHeadOfFamilyResponse.response(result);
+    })
 };
 //# sourceMappingURL=head-of-family.service.js.map

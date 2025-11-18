@@ -46,8 +46,8 @@ export declare class SocialAssistanceRepository {
             id: string;
             created_at: Date;
             updated_at: Date;
-            head_of_family_id: string;
             social_assistance_id: string;
+            head_of_family_id: string;
             amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
@@ -88,8 +88,8 @@ export declare class SocialAssistanceRepository {
             id: string;
             created_at: Date;
             updated_at: Date;
-            head_of_family_id: string;
             social_assistance_id: string;
+            head_of_family_id: string;
             amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;

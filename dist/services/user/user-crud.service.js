@@ -21,10 +21,10 @@ const errors_1 = require("../../utils/errors");
 const helpers_1 = __importDefault(require("../../utils/helpers"));
 const generate_uuid_1 = require("../../utils/helpers/generate-uuid");
 const create_token_verify_account_1 = require("../../utils/helpers/jwt/create-token-verify-account");
-const responses_1 = require("../../utils/responses");
 const user_validation_1 = require("../../utils/validations/user.validation");
 const validation_1 = require("../../utils/validations/validation");
 const email_service_1 = require("../utilities/email.service");
+const responses_1 = require("../../utils/responses");
 exports.UserCrudService = {
     registerStaffAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
@@ -79,7 +79,7 @@ exports.UserCrudService = {
             type: "VERIFY_ACCOUNT",
         });
         yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
-        return responses_1.userResponse.toUserResponse(result.newUser);
+        return responses_1.toUserResponse.response(result.newUser);
     }),
     registerHeadOfFamilyAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERHEADOFFAMILY, req);
@@ -134,7 +134,7 @@ exports.UserCrudService = {
             type: "VERIFY_ACCOUNT",
         });
         yield email_service_1.EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
-        return responses_1.userResponse.toUserResponse(result.newUser);
+        return responses_1.toUserResponse.response(result.newUser);
     }),
     getAll: (req, user) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.GETALL, req);
@@ -202,7 +202,7 @@ exports.UserCrudService = {
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later!");
         return {
-            data: responses_1.userResponse.toUserResponsesWithRelation(result),
+            data: responses_1.toUserResponse.withRelationResponses(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -219,7 +219,7 @@ exports.UserCrudService = {
             throw new errors_1.NotfoundError(`Pengguna tidak ditemukan`);
         if (result.role === "ADMIN")
             throw new errors_1.BadrequestError("Pengguna tidak ditemukan");
-        return responses_1.userResponse.toUserResponseWithRelation(result);
+        return responses_1.toUserResponse.withRelationResponse(result);
     }),
     delete: (id) => __awaiter(void 0, void 0, void 0, function* () {
         const checkUser = yield user_repository_1.UserRepository.findById(id);
@@ -228,7 +228,7 @@ exports.UserCrudService = {
         if (checkUser.role === "ADMIN")
             throw new errors_1.NotfoundError("Pengguna tidak dapat di hapus");
         const result = yield user_repository_1.UserRepository.deleteById(checkUser.id);
-        return responses_1.userResponse.toUserResponse(result);
+        return responses_1.toUserResponse.response(result);
     }),
 };
 //# sourceMappingURL=user-crud.service.js.map

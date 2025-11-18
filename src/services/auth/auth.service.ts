@@ -4,7 +4,7 @@ import { NeedActivation } from "../../utils/errors";
 import { UnauthorizedError } from "../../utils/errors/unauthorized";
 import { comparePassword } from "../../utils/helpers/compare-password";
 import { createTokenUser } from "../../utils/helpers/jwt/create-token-user";
-import userResponse from "../../utils/responses/user.,response";
+import { toUserResponse } from "../../utils/responses";
 import { AuthValidation } from "../../utils/validations/auth.validation";
 import { validation } from "../../utils/validations/validation";
 
@@ -23,7 +23,7 @@ export const AuthService = {
 		const token = createTokenUser(checkUser);
 
 		return {
-			...userResponse.toUserResponse(checkUser),
+			...toUserResponse.response(checkUser),
 			token,
 		};
 	},

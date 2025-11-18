@@ -13,6 +13,13 @@ export declare const HeadOfFamilyValidation: {
         keyword: z.ZodOptional<z.ZodString>;
         page: z.ZodOptional<z.ZodString>;
         limit: z.ZodOptional<z.ZodString>;
+        sort: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
+            asc: "asc";
+            desc: "desc";
+        }>>>;
+    }, z.core.$strip>;
+    GETONE: z.ZodObject<{
+        id: z.ZodString;
     }, z.core.$strip>;
 };
 //# sourceMappingURL=head-of-family.validation.d.ts.map

@@ -1,10 +1,9 @@
 import { User } from "@prisma/client";
-import { UserResponse, UserResponseWithRelation, UserWithRelations } from "../../models/user.model";
-declare const _default: {
-    toUserResponse: (user: User) => UserResponse;
-    toUserResponses: (users: User[]) => UserResponse[];
-    toUserResponseWithRelation: (user: UserWithRelations) => UserResponseWithRelation;
-    toUserResponsesWithRelation: (users: UserWithRelations[]) => UserResponseWithRelation[];
+import { UserResponse, UserWithRelationResponse, UserWithRelations } from "../../models/user.model";
+export declare const toUserResponse: {
+    response: (user: User) => UserResponse;
+    responses: (users: User[]) => UserResponse[];
+    withRelationResponse: (user: UserWithRelations) => UserWithRelationResponse;
+    withRelationResponses: (users: UserWithRelations[]) => UserWithRelationResponse[];
 };
-export default _default;
 //# sourceMappingURL=user.,response.d.ts.map

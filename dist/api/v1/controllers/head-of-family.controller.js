@@ -30,5 +30,20 @@ exports.HeadOfFamilyUserController = {
             next(err);
         }
     }),
+    getHeadOfFamilyById: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const params = req.params;
+            const result = yield head_of_family_service_1.HeadOfFamilyService.getOne(params);
+            res.status(http_status_codes_1.StatusCodes.OK).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.OK,
+                message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                data: result
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    }),
 };
 //# sourceMappingURL=head-of-family.controller.js.map

@@ -19,15 +19,15 @@ const errors_1 = require("../../utils/errors");
 const unauthorized_1 = require("../../utils/errors/unauthorized");
 const helpers_1 = __importDefault(require("../../utils/helpers"));
 const remove_undefined_1 = require("../../utils/helpers/remove-undefined");
-const responses_1 = require("../../utils/responses");
 const user_validation_1 = require("../../utils/validations/user.validation");
 const validation_1 = require("../../utils/validations/validation");
+const responses_1 = require("../../utils/responses");
 exports.UserProfileService = {
     getProfile: (user) => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield user_repository_1.UserRepository.findById(user.user_id);
         if (!result)
             throw new errors_1.NotfoundError("Pengguna tidak ditemukan");
-        return responses_1.userResponse.toUserResponseWithRelation(result);
+        return responses_1.toUserResponse.withRelationResponse(result);
     }),
     updateProfile: (user, req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.UPDATEPROFILE, req);
@@ -55,7 +55,7 @@ exports.UserProfileService = {
             };
             yield repositories_1.HeadOfFamilyRepository.update(headOfFamilyConditions);
         }
-        return responses_1.userResponse.toUserResponseWithRelation(checkUser);
+        return responses_1.toUserResponse.withRelationResponse(checkUser);
     }),
     changePassword: (req, user) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.CHANGEPASSWORD, req);
@@ -72,7 +72,7 @@ exports.UserProfileService = {
             yield user_repository_1.UserRepository.updateIsFirstLogin(checkUser.id);
         if (!result)
             throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
-        return responses_1.userResponse.toUserResponse(result);
+        return responses_1.toUserResponse.response(result);
     }),
 };
 //# sourceMappingURL=user-profile.service.js.map

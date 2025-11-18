@@ -1,11 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse } from "../../models/head-of-family.model";
-import { validation } from "../../utils/validations/validation";
-import { UserRepository } from "../../repositories";
+import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse, GetOneHeadOfFamilyRequest, GetOneHeadOfFamilyResponse } from "../../models/head-of-family.model";
+import { HeadOfFamilyRepository, UserRepository } from "../../repositories";
+import { InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
-import { InternalServerError } from "../../utils/errors";
-import userResponse from "../../utils/responses/user.,response";
+import { toUserResponse } from "../../utils/responses";
 import { HeadOfFamilyValidation } from "../../utils/validations/head-of-family.validation";
+import { validation } from "../../utils/validations/validation";
+import { toHeadOfFamilyResponse } from "../../utils/responses/head-of-family-response";
 
 export const HeadOfFamilyService = {
 	// static async update(user: Token, req: updateHead)
@@ -13,57 +14,61 @@ export const HeadOfFamilyService = {
 	getAll: async (req: GetAllHeadOfFamilyRequest): Promise<GetAllHeadOfFamilyResponse> => {
 		const validateFields = validation.validate(HeadOfFamilyValidation.GETALL, req);
 
-		let whereCondition: Prisma.UserWhereInput = {};
-		whereCondition.role = "HEAD_OF_FAMILY";
+		let whereCondition: Prisma.HeadOfFamilyWhereInput = { };
+		let orderByCondition: Prisma.HeadOfFamilyOrderByWithRelationInput = {};
+
+		if (validateFields.sort) {
+			orderByCondition = {
+				user: {
+					name: validateFields.sort,
+				},
+			};
+		} else {
+			orderByCondition.created_at = "asc";
+		}
 
 		if (validateFields.keyword) {
 			whereCondition.OR = [
 				{
-					name: {
+					identity_number: {
 						contains: validateFields.keyword,
 						mode: "insensitive",
 					},
 				},
 				{
-					head_of_family: {
+					user: {
 						is: {
-							identity_number: {
+							name: {
 								contains: validateFields.keyword,
-								mode: "insensitive"
+								mode: "insensitive",
 							},
-						}
+						},
 					},
 				},
 			];
 		}
 
-		let conditionCount: Prisma.UserCountArgs = { where: whereCondition };
-		const count = await UserRepository.findCount(conditionCount);
+		let conditionCount: Prisma.HeadOfFamilyCountArgs = { where: whereCondition };
+		const count = await HeadOfFamilyRepository.findCount(conditionCount);
+
 		const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = getPagination({
 			count,
 			pageRequest: validateFields.page,
 			limitRequest: validateFields.limit,
 		});
 
-		let conditionFindAll: Prisma.UserFindManyArgs = {
+		let conditionFindAll: Prisma.HeadOfFamilyFindManyArgs = {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
-			include: {
-				head_of_family: true,
-				image: true,
-			},
-
-			orderBy: {
-				created_at: "desc",
-			},
+			orderBy: orderByCondition,
 		};
 
-		const result = await UserRepository.findAll(conditionFindAll);
+		const result = await HeadOfFamilyRepository.findAll(conditionFindAll);
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later");
 
 		return {
-			data: userResponse.toUserResponsesWithRelation(result),
+			data: toHeadOfFamilyResponse.responses(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -74,4 +79,16 @@ export const HeadOfFamilyService = {
 			},
 		};
 	},
+
+	getOne: async (req: GetOneHeadOfFamilyRequest): Promise<GetOneHeadOfFamilyResponse> => {
+		const validateFields = validation.validate(HeadOfFamilyValidation.GETONE, req)
+
+		const checkUser = await UserRepository.findById(validateFields.id)
+		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan!")
+
+		const result = await HeadOfFamilyRepository.findById(checkUser.id)
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengambil data pengguna!")
+
+		return toHeadOfFamilyResponse.response(result)
+	}
 };

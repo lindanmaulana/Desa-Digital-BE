@@ -8,9 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForgotPasswordAuthService = void 0;
 const _1 = require(".");
@@ -22,7 +19,7 @@ const generate_otp_1 = require("../../utils/helpers/generate-otp");
 const generate_uuid_1 = require("../../utils/helpers/generate-uuid");
 const create_jwt_1 = require("../../utils/helpers/jwt/create-jwt");
 const create_token_reset_password_1 = require("../../utils/helpers/jwt/create-token-reset-password");
-const user__response_1 = __importDefault(require("../../utils/responses/user.,response"));
+const responses_1 = require("../../utils/responses");
 const auth_validation_1 = require("../../utils/validations/auth.validation");
 const validation_1 = require("../../utils/validations/validation");
 const email_service_1 = require("../utilities/email.service");
@@ -111,7 +108,7 @@ exports.ForgotPasswordAuthService = {
             logging_1.logger.error("Gagal menghapus reset_token, dan reset_token_last_sen_at");
             throw new errors_1.InternalServerError("Terjadi kesalahan system, please try again later");
         }
-        return user__response_1.default.toUserResponse(result);
+        return responses_1.toUserResponse.response(result);
     }),
 };
 //# sourceMappingURL=forgot-password.service.js.map

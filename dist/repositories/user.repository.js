@@ -25,6 +25,7 @@ class UserRepository {
                 skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
                 take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
                 include: Object.assign({}, args.include),
+                orderBy: Object.assign({}, args.orderBy),
             });
         });
     }
@@ -33,6 +34,16 @@ class UserRepository {
             return db_1.prismaClient.user.findUnique({
                 where: {
                     id,
+                },
+                omit: {
+                    password: true,
+                    otp: true,
+                    otp_last_sen_at: true,
+                    otp_purpose: true,
+                    reset_token: true,
+                    reset_token_last_sen_at: true,
+                    verify_token: true,
+                    verify_token_last_sen_at: true,
                 },
                 include: {
                     staff: true,
@@ -98,7 +109,7 @@ class UserRepository {
                     is_active: true,
                     otp: null,
                     verify_token: null,
-                    verify_token_last_sen_at: null
+                    verify_token_last_sen_at: null,
                 },
             });
         });

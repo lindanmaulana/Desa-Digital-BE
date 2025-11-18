@@ -6,9 +6,9 @@ export declare const SocialAssistanceRecipientValidation: {
         amount: z.ZodCoercedNumber<unknown>;
         reason: z.ZodString;
         bank: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            BCA: "BCA";
-            BNI: "BNI";
             BRI: "BRI";
+            BNI: "BNI";
+            BCA: "BCA";
             MANDIRI: "MANDIRI";
         }>>;
         account_number: z.ZodString;

@@ -14,10 +14,10 @@ import { BadrequestError, InternalServerError, NotfoundError } from "../../utils
 import helpers from "../../utils/helpers";
 import { generateUUID } from "../../utils/helpers/generate-uuid";
 import { createTokenVerifyAccount } from "../../utils/helpers/jwt/create-token-verify-account";
-import { userResponse } from "../../utils/responses";
 import { UserValidation } from "../../utils/validations/user.validation";
 import { validation } from "../../utils/validations/validation";
 import { EmailService } from "../utilities/email.service";
+import { toUserResponse } from "../../utils/responses";
 
 export const UserCrudService = {
 	registerStaffAccount: async (req: RegisterStaffRequest): Promise<UserResponse> => {
@@ -81,7 +81,7 @@ export const UserCrudService = {
 
 		await EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
-		return userResponse.toUserResponse(result.newUser);
+		return toUserResponse.response(result.newUser);
 	},
 
 	registerHeadOfFamilyAccount: async (req: RegisterHeadOfFamilyRequest) => {
@@ -144,7 +144,7 @@ export const UserCrudService = {
 		});
 		await EmailService.SendTokenVerifyAccountMail(result.newUser.email, verify_token, result.newUser);
 
-		return userResponse.toUserResponse(result.newUser);
+		return toUserResponse.response(result.newUser);
 	},
 
 	getAll: async (req: GetAllUserRequest, user: TokenUser): Promise<GetAllUserResponse> => {
@@ -237,7 +237,7 @@ export const UserCrudService = {
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later!");
 
 		return {
-			data: userResponse.toUserResponsesWithRelation(result),
+			data: toUserResponse.withRelationResponses(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -256,7 +256,7 @@ export const UserCrudService = {
 
 		if (result.role === "ADMIN") throw new BadrequestError("Pengguna tidak ditemukan");
 
-		return userResponse.toUserResponseWithRelation(result);
+		return toUserResponse.withRelationResponse(result);
 	},
 
 	delete: async (id: string): Promise<UserResponse> => {
@@ -268,6 +268,6 @@ export const UserCrudService = {
 
 		const result = await UserRepository.deleteById(checkUser.id);
 
-		return userResponse.toUserResponse(result);
+		return toUserResponse.response(result);
 	},
 };

@@ -16,7 +16,7 @@ import { generateOtp } from "../../utils/helpers/generate-otp";
 import { generateUUID } from "../../utils/helpers/generate-uuid";
 import { isTokenValid } from "../../utils/helpers/jwt/create-jwt";
 import { createTokenVerifyAccount } from "../../utils/helpers/jwt/create-token-verify-account";
-import userResponse from "../../utils/responses/user.,response";
+import { toUserResponse } from "../../utils/responses";
 import { AuthValidation } from "../../utils/validations/auth.validation";
 import { validation } from "../../utils/validations/validation";
 import { EmailService } from "../utilities/email.service";
@@ -37,7 +37,7 @@ export const VerifyAccountAuthService = {
 		const result = await UserRepository.updateIsActive(checkUser.id);
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		return userResponse.toUserResponse(result);
+		return toUserResponse.response(result);
 	},
 
 	resendOtpVerifyAccount: async (req: ResendOtpRequest): Promise<ResendOtpResponse> => {

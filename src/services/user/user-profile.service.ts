@@ -3,7 +3,7 @@ import {
 	ChangePasswordUserProfileRequest,
 	UpdateUserProfileRequest,
 	UserResponse,
-	UserResponseWithRelation,
+	UserWithRelationResponse,
 } from "../../models/user.model";
 import { HeadOfFamilyRepository, StaffRepository } from "../../repositories";
 import { UserRepository } from "../../repositories/user.repository";
@@ -12,17 +12,17 @@ import { BadrequestError, InternalServerError, NotfoundError } from "../../utils
 import { UnauthorizedError } from "../../utils/errors/unauthorized";
 import helpers from "../../utils/helpers";
 import { removeUndefined } from "../../utils/helpers/remove-undefined";
-import { userResponse } from "../../utils/responses";
 import { UserValidation } from "../../utils/validations/user.validation";
 import { validation } from "../../utils/validations/validation";
+import { toUserResponse } from "../../utils/responses";
 
 export const UserProfileService = {
-	getProfile: async (user: TokenUser): Promise<UserResponseWithRelation> => {
+	getProfile: async (user: TokenUser): Promise<UserWithRelationResponse> => {
 		const result = await UserRepository.findById(user.user_id);
 
 		if (!result) throw new NotfoundError("Pengguna tidak ditemukan");
 
-		return userResponse.toUserResponseWithRelation(result);
+		return toUserResponse.withRelationResponse(result);
 	},
 
 	updateProfile: async (user: TokenUser, req: UpdateUserProfileRequest): Promise<UserResponse> => {
@@ -60,7 +60,7 @@ export const UserProfileService = {
 			await HeadOfFamilyRepository.update(headOfFamilyConditions);
 		}
 
-		return userResponse.toUserResponseWithRelation(checkUser);
+		return toUserResponse.withRelationResponse(checkUser);
 	},
 
 	changePassword: async (req: ChangePasswordUserProfileRequest, user: TokenUser): Promise<UserResponse> => {
@@ -82,6 +82,6 @@ export const UserProfileService = {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan, please try again later");
 
-		return userResponse.toUserResponse(result);
+		return toUserResponse.response(result);
 	},
 };

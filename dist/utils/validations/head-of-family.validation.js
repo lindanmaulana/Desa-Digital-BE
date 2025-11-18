@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeadOfFamilyValidation = void 0;
 const zod_1 = __importDefault(require("zod"));
+const validation_1 = require("./validation");
 exports.HeadOfFamilyValidation = {
     CREATE: zod_1.default.object({
         user_id: zod_1.default.string().nonempty({ error: "Id Pengguna tidak boleh kosong" }),
@@ -18,7 +19,11 @@ exports.HeadOfFamilyValidation = {
     GETALL: zod_1.default.object({
         keyword: zod_1.default.string().optional(),
         page: zod_1.default.string().optional(),
-        limit: zod_1.default.string().optional()
+        limit: zod_1.default.string().optional(),
+        sort: zod_1.default.string().transform((val) => val.toLowerCase()).pipe(zod_1.default.enum(validation_1.VALID_SORT)).optional()
+    }),
+    GETONE: zod_1.default.object({
+        id: zod_1.default.string().nonempty({ error: "Id Pengguna tidak boleh kosong!" })
     })
 };
 //# sourceMappingURL=head-of-family.validation.js.map

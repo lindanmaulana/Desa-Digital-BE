@@ -5,21 +5,11 @@ import { StaffResponse } from "./staff.model";
 import { HeadOfFamilyResponse } from "./head-of-family.model";
 import { ImageResponse } from "./image.model";
 
-export type UserWithRelations = Prisma.UserGetPayload<{
-	include: {
-		staff: true;
-		head_of_family: true;
-		image: true;
-	};
-}>;
-
 export interface UserResponse {
 	id: string;
 	name: string;
 	email: string;
 	role: UserRole;
-	otp_code?: string | null;
-	otp_last_sen_at?: Date;
 	is_active: boolean;
 	is_first_login: boolean;
 
@@ -27,7 +17,26 @@ export interface UserResponse {
 	updated_at: Date;
 }
 
-export interface UserResponseWithRelation extends UserResponse {
+export type UserWithRelations = Prisma.UserGetPayload<{
+	include: {
+		staff: true;
+		head_of_family: true;
+		image: true;
+	};
+
+	omit: {
+		password: true;
+		otp: true;
+		otp_last_sen_at: true;
+		otp_purpose: true;
+		reset_token: true;
+		reset_token_last_sen_at: true;
+		verify_token: true;
+		verify_token_last_sen_at: true;
+	};
+}>;
+
+export interface UserWithRelationResponse extends UserResponse {
 	staff?: StaffResponse | null;
 	head_of_family?: HeadOfFamilyResponse | null;
 	image?: ImageResponse | null;

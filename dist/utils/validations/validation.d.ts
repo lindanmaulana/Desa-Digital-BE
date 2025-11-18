@@ -5,6 +5,7 @@ export declare const VALID_RELATION: readonly ["HUSBAND", "WIFE", "CHILD"];
 export declare const VALID_ROLE: readonly ["ADMIN", "HEAD_OF_FAMILY", "RESIDENT", "STAFF"];
 export declare const VALID_CATEGORY_SOCIAL_ASSISTANCE: readonly ["CASH", "HEALTH", "STAPLE", "SUBSIDIZED_FUEL"];
 export declare const VALID_BANK: readonly ["BCA", "BNI", "BRI", "MANDIRI"];
+export declare const VALID_SORT: readonly ["asc", "desc"];
 export declare class validation {
     static validate<T extends z.ZodType<any, any, any>>(schema: T, data: unknown): z.infer<T>;
 }
