@@ -7,7 +7,6 @@ import { UserController } from "../../controllers";
 const userRouteAdmin = Router()
 
 	userRouteAdmin.post("/staff/register", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, UserController.registerStaff)
-	userRouteAdmin.post("/head-of-family/register", authenticatedUser, authorizedRoles(UserRole.ADMIN, UserRole.STAFF), adminRateLimit, UserController.registerHeadOfFamily)
 	userRouteAdmin.delete("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, UserController.deleteUser);
 
 export default userRouteAdmin

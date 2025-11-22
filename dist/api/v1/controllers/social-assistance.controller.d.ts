@@ -5,5 +5,6 @@ export declare class SocialAssistanceController {
     static update(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static getSocialAssistances(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
     static getSocialAssistanceById(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
+    static delete(req: CustomeRequest, res: Response, next: NextFunction): Promise<void>;
 }
 //# sourceMappingURL=social-assistance.controller.d.ts.map

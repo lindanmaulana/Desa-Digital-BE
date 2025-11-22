@@ -11,24 +11,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffRepository = void 0;
 const db_1 = require("../db");
-class StaffRepository {
-    static create(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.staff.create(args);
+exports.StaffRepository = {
+    findAll: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b, _c;
+        return db_1.prismaClient.staff.findMany({
+            where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
+            skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
+            take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
+            orderBy: Object.assign({}, args.orderBy),
+            include: {
+                user: {
+                    omit: {
+                        password: true,
+                        otp: true,
+                        otp_last_sen_at: true,
+                        otp_purpose: true,
+                        reset_token: true,
+                        reset_token_last_sen_at: true,
+                        verify_token: true,
+                        verify_token_last_sen_at: true,
+                    },
+                    include: {
+                        image: {
+                            select: {
+                                id: true,
+                                filename: true,
+                                path: true,
+                                entity_type: true,
+                                user_id: true,
+                                created_at: true,
+                                updated_at: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
-    }
-    static update(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.staff.update(args);
+    }),
+    findByUserId: (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.findFirst({
+            where: { user_id: userId }
         });
-    }
-    static findByUserId(userId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.staff.findFirst({
-                where: { user_id: userId }
-            });
-        });
-    }
-}
-exports.StaffRepository = StaffRepository;
+    }),
+    findCount: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.count(args);
+    }),
+    create: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.create(args);
+    }),
+    update: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.update(args);
+    }),
+};
 //# sourceMappingURL=staff.repository.js.map

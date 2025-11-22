@@ -1,12 +1,14 @@
 import { Router } from "express";
-import socialAssistanceRouteCommon from "./social-assistance.route";
+import headOfFamilyRouteCommon from "./head-of-family.route";
 import userRouteCommon from "./user.route";
-import VillageProfileRouteCommon from "./village-profile.route";
+import villageProfileRouteCommon from "./village-profile.route";
+import socialAssistanceRouteCommon from "./social-assistance.route";
 
 const commonRoute = Router()
 
 	commonRoute.use("/users", userRouteCommon)
-	commonRoute.use("/social-assistance", socialAssistanceRouteCommon)
-	commonRoute.use("/village/profile", VillageProfileRouteCommon)
+	commonRoute.use("/village/profiles", villageProfileRouteCommon)
+	commonRoute.use("/head-of-families", headOfFamilyRouteCommon)
+	commonRoute.use("/social-assistances", socialAssistanceRouteCommon)
 
 export default commonRoute

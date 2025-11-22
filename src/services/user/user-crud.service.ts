@@ -263,11 +263,9 @@ export const UserCrudService = {
 		const checkUser = await UserRepository.findById(id);
 
 		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan");
-
 		if (checkUser.role === "ADMIN") throw new NotfoundError("Pengguna tidak dapat di hapus");
 
 		const result = await UserRepository.deleteById(checkUser.id);
-
 		return toUserResponse.response(result);
 	},
 };

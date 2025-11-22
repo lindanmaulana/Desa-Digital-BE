@@ -7,6 +7,6 @@ import { VillageProfileController } from "../../controllers";
 const villageProfileRouteAdmin = Router()
 
 	villageProfileRouteAdmin.post("/", authenticatedUser, authorizedRoles(UserRole.STAFF), adminRateLimit, VillageProfileController.create)
-	villageProfileRouteAdmin.patch("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, VillageProfileController.update)
+	villageProfileRouteAdmin.patch("/:id", authenticatedUser, authorizedRoles(UserRole.STAFF), adminRateLimit, VillageProfileController.update)
 
 export default villageProfileRouteAdmin

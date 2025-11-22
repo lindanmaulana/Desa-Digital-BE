@@ -1,6 +1,9 @@
-import { HeadOfFamilyWithRelations, HeadOfFamilyWithRelationsResponse } from "../../models/head-of-family.model";
+import { HeadOfFamily } from "@prisma/client";
+import { HeadOfFamilyResponse, HeadOfFamilyWithRelations, HeadOfFamilyWithRelationsResponse } from "../../models/head-of-family.model";
 export declare const toHeadOfFamilyResponse: {
-    response: (headOfFamily: HeadOfFamilyWithRelations) => HeadOfFamilyWithRelationsResponse;
-    responses: (headOfFamilies: HeadOfFamilyWithRelations[]) => HeadOfFamilyWithRelationsResponse[];
+    response: (headOfFamily: HeadOfFamily) => HeadOfFamilyResponse;
+    responses: (headOfFamilies: HeadOfFamily[]) => HeadOfFamilyResponse[];
+    withRelationResponse: (headOfFamily: HeadOfFamilyWithRelations) => HeadOfFamilyWithRelationsResponse;
+    withRelationesponses: (headOfFamilies: HeadOfFamilyWithRelations[]) => HeadOfFamilyWithRelationsResponse[];
 };
 //# sourceMappingURL=head-of-family-response.d.ts.map

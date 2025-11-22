@@ -1,36 +1,73 @@
-import { Staff } from "@prisma/client";
-import { StaffResponse } from "../../models/staff.model";
+import { HeadOfFamily } from "@prisma/client";
+import { HeadOfFamilyResponse } from "../../models/head-of-family.model";
+import { StaffWithRelations, StaffWithRelationsResponse } from "../../models/staff.model";
 
-const toStaffResponse = (staff: Staff): StaffResponse => {
-	return {
-		id: staff.id,
-		user_id: staff.user_id,
-		identity_number: staff.identity_number ?? "",
-		gender: staff.gender ?? "",
-		date_of_birth: staff.date_of_birth?.toString() ?? "",
-		phone_number: staff.phone_number ?? "",
-		occupation: staff.occupation ?? "",
-		marital_status: staff.marital_status,
+export const toStaffResponse = {
+	response: (headOfFamily: HeadOfFamily): HeadOfFamilyResponse => {
+		return {
+			id: headOfFamily.id,
+			user_id: headOfFamily.user_id,
+			identity_number: headOfFamily.identity_number,
+			gender: headOfFamily.gender,
+			date_of_birth: headOfFamily.date_of_birth,
+			phone_number: headOfFamily.phone_number,
+			occupation: headOfFamily.occupation,
+			marital_status: headOfFamily.marital_status,
 
-		created_at: staff.created_at,
-		updated_at: staff.updated_at,
-	};
+			created_at: headOfFamily.created_at,
+			updated_at: headOfFamily.updated_at,
+		};
+	},
+
+	responses: (headOfFamilies: HeadOfFamily[]): HeadOfFamilyResponse[] => {
+		return headOfFamilies.map((headOfFamily) => ({
+			id: headOfFamily.id,
+			user_id: headOfFamily.user_id,
+			identity_number: headOfFamily.identity_number,
+			gender: headOfFamily.gender,
+			date_of_birth: headOfFamily.date_of_birth,
+			phone_number: headOfFamily.phone_number,
+			occupation: headOfFamily.occupation,
+			marital_status: headOfFamily.marital_status,
+
+			created_at: headOfFamily.created_at,
+			updated_at: headOfFamily.updated_at,
+		}));
+	},
+
+	withRelationResponse: (headOfFamily: StaffWithRelations): StaffWithRelationsResponse => {
+		return {
+			id: headOfFamily.id,
+			user_id: headOfFamily.user_id,
+			identity_number: headOfFamily.identity_number,
+			gender: headOfFamily.gender,
+			date_of_birth: headOfFamily.date_of_birth && headOfFamily.date_of_birth,
+			phone_number: headOfFamily.phone_number,
+			occupation: headOfFamily.occupation,
+			marital_status: headOfFamily.marital_status,
+
+			user: headOfFamily.user,
+
+			created_at: headOfFamily.created_at,
+			updated_at: headOfFamily.updated_at,
+		};
+	},
+
+	withRelationesponses: (headOfFamilies: StaffWithRelations[]): StaffWithRelationsResponse[] => {
+		return headOfFamilies.map((headOfFamily) => ({
+			id: headOfFamily.id,
+			user_id: headOfFamily.user_id,
+			identity_number: headOfFamily.identity_number,
+			gender: headOfFamily.gender,
+			date_of_birth: headOfFamily.date_of_birth && headOfFamily.date_of_birth,
+			phone_number: headOfFamily.phone_number,
+			occupation: headOfFamily.occupation,
+			marital_status: headOfFamily.marital_status,
+
+			user: headOfFamily.user,
+
+			created_at: headOfFamily.created_at,
+			updated_at: headOfFamily.updated_at,
+		}));
+	},
 };
-
-const toStaffResponses = (staff: Staff[]): StaffResponse[] => {
-	return staff.map((staf) => ({
-		id: staf.id,
-		user_id: staf.user_id,
-		identity_number: staf.identity_number ?? "",
-		gender: staf.gender ?? "",
-		date_of_birth: staf.date_of_birth?.toString() ?? "",
-		phone_number: staf.phone_number ?? "",
-		occupation: staf.occupation ?? "",
-		marital_status: staf.marital_status,
-
-		created_at: staf.created_at,
-		updated_at: staf.updated_at,
-	}));
-};
-
-export default { toStaffResponse, toStaffResponses };

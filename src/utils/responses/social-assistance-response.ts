@@ -1,12 +1,13 @@
 import { SocialAssistance } from "@prisma/client";
 import {
 	SocialAssistanceResponse,
-	SocialAssistanceResponseWithRelation,
-	SocialAssistanceWithRelations,
+	SocialAssistanceWithRelation,
+	SocialAssistanceWithRelationFull,
+	SocialAssistanceWithRelationResponse,
 } from "../../models/social-assistance.model";
 
-export const socialAssistanceResponse = {
-	toSocialAssistanceResponse: (socialAssistance: SocialAssistance): SocialAssistanceResponse => {
+export const toSocialAssistanceResponse = {
+	response: (socialAssistance: SocialAssistance): SocialAssistanceResponse => {
 		return {
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -21,7 +22,7 @@ export const socialAssistanceResponse = {
 		};
 	},
 
-	toSocialAssistanceResponses: (socialAssistances: SocialAssistance[]): SocialAssistanceResponse[] => {
+	responses: (socialAssistances: SocialAssistance[]): SocialAssistanceResponse[] => {
 		return socialAssistances.map((socialAssistance) => ({
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -36,7 +37,7 @@ export const socialAssistanceResponse = {
 		}));
 	},
 
-	toSocialAssistanceResponseWithRelation: (socialAssistance: SocialAssistanceWithRelations): SocialAssistanceResponseWithRelation => {
+	withRelationResponse: (socialAssistance: SocialAssistanceWithRelation): SocialAssistanceWithRelationResponse => {
 		return {
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -46,8 +47,8 @@ export const socialAssistanceResponse = {
 			provider: socialAssistance.provider,
 			description: socialAssistance.description,
 			is_active: socialAssistance.is_active,
-			image: socialAssistance.image && socialAssistance.image,
-			social_assistance_recipient: socialAssistance.social_assistance_recipient,
+
+			image: socialAssistance.image,
 			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
 
 			created_at: socialAssistance.created_at,
@@ -55,7 +56,7 @@ export const socialAssistanceResponse = {
 		};
 	},
 
-	toSocialAssistanceResponsesWithRelation: (socialAssistances: SocialAssistanceWithRelations[]): SocialAssistanceResponseWithRelation[] => {
+	withRelationResponses: (socialAssistances: SocialAssistanceWithRelation[]): SocialAssistanceWithRelationResponse[] => {
 		return socialAssistances.map((socialAssistance) => ({
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -66,8 +67,48 @@ export const socialAssistanceResponse = {
 			description: socialAssistance.description,
 			is_active: socialAssistance.is_active,
 
-			image: socialAssistance.image && socialAssistance.image,
-			social_assistance_recipient: socialAssistance.social_assistance_recipient && socialAssistance._count.social_assistance_recipient,
+			image: socialAssistance.image,
+			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
+
+			created_at: socialAssistance.created_at,
+			updated_at: socialAssistance.updated_at,
+		}));
+	},
+
+	withRelationFullResponse: (socialAssistance: SocialAssistanceWithRelationFull): SocialAssistanceWithRelationResponse => {
+		return {
+			id: socialAssistance.id,
+			thumbnail: socialAssistance.thumbnail,
+			name: socialAssistance.name,
+			category: socialAssistance.category,
+			amount: socialAssistance.amount,
+			provider: socialAssistance.provider,
+			description: socialAssistance.description,
+			is_active: socialAssistance.is_active,
+
+			image: socialAssistance.image,
+			social_assistance_recipient: socialAssistance.social_assistance_recipient,
+			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
+
+			created_at: socialAssistance.created_at,
+			updated_at: socialAssistance.updated_at,
+		};
+	},
+
+	withRelationFullResponses: (socialAssistances: SocialAssistanceWithRelationFull[]): SocialAssistanceWithRelationResponse[] => {
+		return socialAssistances.map((socialAssistance) => ({
+			id: socialAssistance.id,
+			thumbnail: socialAssistance.thumbnail,
+			name: socialAssistance.name,
+			category: socialAssistance.category,
+			amount: socialAssistance.amount,
+			provider: socialAssistance.provider,
+			description: socialAssistance.description,
+			is_active: socialAssistance.is_active,
+
+			image: socialAssistance.image,
+			social_assistance_recipient: socialAssistance.social_assistance_recipient,
+			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
 
 			created_at: socialAssistance.created_at,
 			updated_at: socialAssistance.updated_at,

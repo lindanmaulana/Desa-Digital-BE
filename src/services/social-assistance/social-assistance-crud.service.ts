@@ -1,10 +1,10 @@
 import { Prisma } from "@prisma/client";
-import { CreateSocialAssistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceUserResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../../models/social-assistance.model";
+import { CreateSocialAssistanceRequest, DeleteSocialAsistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceResponse, GetOneSocialAssistanceRequest, GetOneSocialAssistanceResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../../models/social-assistance.model";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { RESPONSE_MESSAGE } from "../../utils/response-message.type";
-import { socialAssistanceResponse } from "../../utils/responses";
+import { toSocialAssistanceResponse } from "../../utils/responses";
 import { SocialAssistanceValidation } from "../../utils/validations/social-assistance.validation";
 import { validation } from "../../utils/validations/validation";
 
@@ -27,33 +27,38 @@ export const SocialAssistanceCrudService = {
 
 		if (!result) throw new InternalServerError("Pembuatan bantuan sosial gagal, please try again later")
 
-		return socialAssistanceResponse.toSocialAssistanceResponse(result)
+		return toSocialAssistanceResponse.response(result)
 	},
 
-	getAll: async (req: GetAllSocialAssistanceRequest): Promise<GetAllSocialAssistanceUserResponse> => {
+	getAll: async (req: GetAllSocialAssistanceRequest): Promise<GetAllSocialAssistanceResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.GETALL, req)
 		let whereCondition: Prisma.SocialAssistanceWhereInput = {}
+		let orderByCondition: Prisma.SocialAssistanceOrderByWithRelationInput = {}
+
+		if (validateFields.sort) {
+			orderByCondition.name = validateFields.sort
+
+		} else {
+			orderByCondition.created_at = "asc"
+		}
 
 		if (validateFields.keyword) {
 			whereCondition = {
 				...whereCondition,
 				OR: [
-					{
-						name: {
-							contains: validateFields.keyword,
-							mode: "insensitive"
-						},
-						provider: {
-							contains: validateFields.keyword,
-							mode: "insensitive"
+						{
+							name: {
+								contains: validateFields.keyword,
+								mode: "insensitive"
+							},
+							provider: {
+								contains: validateFields.keyword,
+								mode: "insensitive"
+							}
 						}
-					}
 				]
 			}
 		}
-
-		if (validateFields.category) whereCondition.category = validateFields.category
-		if (validateFields.is_active && (validateFields.is_active !== undefined || validateFields.is_active !== null)) whereCondition.is_active = validateFields.is_active
 
 		let conditionCount: Prisma.SocialAssistanceCountArgs = {where: whereCondition}
 		const count = await SocialAssistanceRepository.findCount(conditionCount)
@@ -64,13 +69,14 @@ export const SocialAssistanceCrudService = {
 			where: whereCondition,
 			skip: limit * (page - 1),
 			take: limit,
+			orderBy: orderByCondition
 		}
 
 		const result = await SocialAssistanceRepository.findAll(conditionFindAll)
 		if (!result) throw new InternalServerError(`${RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`)
 
 		return {
-			data: socialAssistanceResponse.toSocialAssistanceResponsesWithRelation(result),
+			data: toSocialAssistanceResponse.withRelationResponses(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -82,18 +88,19 @@ export const SocialAssistanceCrudService = {
 		}
 	},
 
-	getOne: async (id: string): Promise<SocialAssistanceResponse> => {
-		const result = await SocialAssistanceRepository.findOne(id)
+	getOne: async (req: GetOneSocialAssistanceRequest): Promise<GetOneSocialAssistanceResponse> => {
+		const validateFields = validation.validate(SocialAssistanceValidation.GETONE, req)
+
+		const result = await SocialAssistanceRepository.findOne(validateFields.id)
 		if (!result) throw new NotfoundError("Bantuan Sosial tidak tersedia!")
 
-		return socialAssistanceResponse.toSocialAssistanceResponseWithRelation(result)
+		return toSocialAssistanceResponse.withRelationFullResponse(result)
 	},
 
 	update: async (id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.UPDATE, req)
 
 		console.log({cekActive: validateFields.is_active})
-
 		if (Object.keys(req).length <= 0) throw new BadrequestError("Badan permintaan kosong. Masukkan setidaknya satu field untuk diperbarui.")
 
 		const conditions = Object.keys(validateFields).reduce((acc, key) => {
@@ -117,6 +124,18 @@ export const SocialAssistanceCrudService = {
 
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat update data, please try again later")
 
-		return socialAssistanceResponse.toSocialAssistanceResponse(result)
+		return toSocialAssistanceResponse.response(result)
 	},
+
+	delete: async (req: DeleteSocialAsistanceRequest) => {
+		const validateFields = validation.validate(SocialAssistanceValidation.DELETE, req)
+
+		const checkSocialAssistance = await SocialAssistanceRepository.findById(validateFields.id)
+		if (!checkSocialAssistance) throw new NotfoundError("Bantuan Sosial tidak tersedia!")
+
+		const result = await SocialAssistanceRepository.delete(checkSocialAssistance.id)
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat menghapus data Bantuan Sosial ini!, please try again later")
+
+		return toSocialAssistanceResponse.response(result)
+	}
 }

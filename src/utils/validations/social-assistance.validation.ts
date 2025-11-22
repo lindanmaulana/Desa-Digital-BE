@@ -1,5 +1,5 @@
 import z from "zod";
-import { VALID_CATEGORY_SOCIAL_ASSISTANCE } from "./validation";
+import { VALID_CATEGORY_SOCIAL_ASSISTANCE, VALID_SORT } from "./validation";
 
 export class SocialAssistanceValidation {
 	static readonly IS_ACTIVE = z.preprocess((val) => {
@@ -24,10 +24,13 @@ export class SocialAssistanceValidation {
 
 	static readonly GETALL = z.object({
 		keyword: z.string().optional(),
-		category: z.string().transform((v) => v.toUpperCase()).pipe(z.enum(VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
-		is_active: this.IS_ACTIVE.optional(),
+		sort: z.string().transform((val) => val.toLowerCase()).pipe(z.enum(VALID_SORT, {error: "Nilai parameter 'sort' tidak valid. Nilai yang diizinkan hanya 'asc' atau 'desc'."})).optional(),
 		page: z.string().optional(),
-		limit: z.string().optional()
+		limit: z.string().optional(),
+	})
+
+	static readonly GETONE = z.object({
+		id: z.string().nonempty({error: "Id tidak boleh kosong!"})
 	})
 
 	static readonly CREATE = this.INDEX.extend({
@@ -36,4 +39,8 @@ export class SocialAssistanceValidation {
 	})
 
 	static readonly UPDATE = this.INDEX.partial()
+	
+	static readonly DELETE = z.object({
+		id: z.string().nonempty({error: "Id tidak boleh kosong!"})
+	})
 }

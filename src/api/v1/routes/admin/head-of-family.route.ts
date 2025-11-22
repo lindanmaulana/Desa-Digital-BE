@@ -5,7 +5,5 @@ import { UserRole } from "@prisma/client";
 
 const headOfFamilyRouteAdmin = Router();
 
-headOfFamilyRouteAdmin.get("/", authenticatedUser, authorizedRoles("ADMIN"), HeadOfFamilyUserController.getHeadOfFamilies);
-headOfFamilyRouteAdmin.get("/:id/detail", authenticatedUser, authorizedRoles(UserRole.ADMIN), HeadOfFamilyUserController.getHeadOfFamilyById)
 
 export default headOfFamilyRouteAdmin;

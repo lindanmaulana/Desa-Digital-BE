@@ -60,6 +60,13 @@ class HeadOfFamilyRepository {
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.headOfFamily.findUnique({
+                where: { id },
+            });
+        });
+    }
+    static findByIdDetail(id) {
+        return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.headOfFamily.findFirst({
                 where: {
                     id: id,
@@ -90,7 +97,12 @@ class HeadOfFamilyRepository {
                             },
                         },
                     },
-                    sosial_assistance_recipient: true,
+                    sosial_assistance_recipient: {
+                        take: 3,
+                        orderBy: {
+                            created_at: "desc",
+                        },
+                    },
                 },
             });
         });
@@ -103,6 +115,13 @@ class HeadOfFamilyRepository {
     static update(args) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.headOfFamily.update(args);
+        });
+    }
+    static deleteByIdUser(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.user.delete({
+                where: { id },
+            });
         });
     }
 }

@@ -38,7 +38,7 @@ exports.HeadOfFamilyUserController = {
                 status: "success",
                 code: http_status_codes_1.StatusCodes.OK,
                 message: response_message_type_1.RESPONSE_MESSAGE.success.read,
-                data: result
+                data: result,
             });
         }
         catch (err) {

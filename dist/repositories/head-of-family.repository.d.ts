@@ -57,7 +57,19 @@ export declare class HeadOfFamilyRepository {
         occupation: string | null;
         marital_status: import("@prisma/client").$Enums.Marital;
     } | null>;
-    static findById(id: string): Promise<({
+    static findById(id: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    } | null>;
+    static findByIdDetail(id: string): Promise<({
         user: {
             image: {
                 id: string;
@@ -114,6 +126,24 @@ export declare class HeadOfFamilyRepository {
         phone_number: string | null;
         occupation: string | null;
         marital_status: import("@prisma/client").$Enums.Marital;
+    }>;
+    static deleteByIdUser(id: string): Promise<{
+        name: string;
+        id: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp: string | null;
+        otp_purpose: import("@prisma/client").$Enums.UserOtpPurpose | null;
+        otp_last_sen_at: Date | null;
+        verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
+        reset_token: string | null;
+        reset_token_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
     }>;
 }
 //# sourceMappingURL=head-of-family.repository.d.ts.map

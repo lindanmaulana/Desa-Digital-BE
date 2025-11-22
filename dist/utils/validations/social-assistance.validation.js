@@ -29,14 +29,19 @@ SocialAssistanceValidation.INDEX = zod_1.default.object({
 });
 SocialAssistanceValidation.GETALL = zod_1.default.object({
     keyword: zod_1.default.string().optional(),
-    category: zod_1.default.string().transform((v) => v.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_CATEGORY_SOCIAL_ASSISTANCE)).optional(),
-    is_active: _a.IS_ACTIVE.optional(),
+    sort: zod_1.default.string().transform((val) => val.toLowerCase()).pipe(zod_1.default.enum(validation_1.VALID_SORT, { error: "Nilai parameter 'sort' tidak valid. Nilai yang diizinkan hanya 'asc' atau 'desc'." })).optional(),
     page: zod_1.default.string().optional(),
-    limit: zod_1.default.string().optional()
+    limit: zod_1.default.string().optional(),
+});
+SocialAssistanceValidation.GETONE = zod_1.default.object({
+    id: zod_1.default.string().nonempty({ error: "Id tidak boleh kosong!" })
 });
 SocialAssistanceValidation.CREATE = _a.INDEX.extend({
     thumbnail: zod_1.default.string().nullable().default(null),
     description: zod_1.default.string().nullable().default(null)
 });
 SocialAssistanceValidation.UPDATE = _a.INDEX.partial();
+SocialAssistanceValidation.DELETE = zod_1.default.object({
+    id: zod_1.default.string().nonempty({ error: "Id tidak boleh kosong!" })
+});
 //# sourceMappingURL=social-assistance.validation.js.map

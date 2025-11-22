@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
-import tr from "zod/v4/locales/tr.js";
 
 export class HeadOfFamilyRepository {
 	static async findAll(args: Prisma.HeadOfFamilyFindManyArgs) {
@@ -52,6 +51,12 @@ export class HeadOfFamilyRepository {
 	}
 
 	static async findById(id: string) {
+		return prismaClient.headOfFamily.findUnique({
+			where: { id },
+		});
+	}
+
+	static async findByIdDetail(id: string) {
 		return prismaClient.headOfFamily.findFirst({
 			where: {
 				id: id,
@@ -85,7 +90,12 @@ export class HeadOfFamilyRepository {
 					},
 				},
 
-				sosial_assistance_recipient: true,
+				sosial_assistance_recipient: {
+					take: 3,
+					orderBy: {
+						created_at: "desc",
+					},
+				},
 			},
 		});
 	}
@@ -96,5 +106,11 @@ export class HeadOfFamilyRepository {
 
 	static async update(args: Prisma.HeadOfFamilyUpdateArgs) {
 		return prismaClient.headOfFamily.update(args);
+	}
+
+	static async deleteByIdUser(id: string) {
+		return prismaClient.user.delete({
+			where: { id },
+		});
 	}
 }

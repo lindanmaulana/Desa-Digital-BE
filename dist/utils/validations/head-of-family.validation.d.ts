@@ -21,5 +21,8 @@ export declare const HeadOfFamilyValidation: {
     GETONE: z.ZodObject<{
         id: z.ZodString;
     }, z.core.$strip>;
+    DELETE: z.ZodObject<{
+        id: z.ZodString;
+    }, z.core.$strip>;
 };
 //# sourceMappingURL=head-of-family.validation.d.ts.map

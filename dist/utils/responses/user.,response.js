@@ -63,7 +63,7 @@ exports.toUserResponse = {
     },
     withRelationResponses: (users) => {
         return users.map((user) => {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j;
             return ({
                 id: user.id,
                 name: user.name,
@@ -88,9 +88,9 @@ exports.toUserResponse = {
                     user_id: user.head_of_family.user_id,
                     identity_number: (_f = user.head_of_family.identity_number) !== null && _f !== void 0 ? _f : "",
                     gender: user.head_of_family.gender,
-                    date_of_birth: (_h = (_g = user.head_of_family.date_of_birth) === null || _g === void 0 ? void 0 : _g.toString()) !== null && _h !== void 0 ? _h : "",
-                    phone_number: (_j = user.head_of_family.phone_number) !== null && _j !== void 0 ? _j : "",
-                    occupation: (_k = user.head_of_family.occupation) !== null && _k !== void 0 ? _k : "",
+                    date_of_birth: user.head_of_family.date_of_birth,
+                    phone_number: (_g = user.head_of_family.phone_number) !== null && _g !== void 0 ? _g : "",
+                    occupation: (_h = user.head_of_family.occupation) !== null && _h !== void 0 ? _h : "",
                     marital_status: user.head_of_family.marital_status,
                     created_at: user.head_of_family.created_at,
                     updated_at: user.head_of_family.updated_at,
@@ -99,7 +99,7 @@ exports.toUserResponse = {
                     id: user.image.id,
                     filename: user.image.filename,
                     path: user.image.path,
-                    user_id: (_l = user.image.user_id) !== null && _l !== void 0 ? _l : "",
+                    user_id: (_j = user.image.user_id) !== null && _j !== void 0 ? _j : "",
                     entity_type: user.image.entity_type,
                     created_at: user.image.created_at,
                     updated_at: user.image.updated_at,

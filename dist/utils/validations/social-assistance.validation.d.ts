@@ -17,15 +17,15 @@ export declare class SocialAssistanceValidation {
     }, z.core.$strip>;
     static readonly GETALL: z.ZodObject<{
         keyword: z.ZodOptional<z.ZodString>;
-        category: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
-            CASH: "CASH";
-            HEALTH: "HEALTH";
-            STAPLE: "STAPLE";
-            SUBSIDIZED_FUEL: "SUBSIDIZED_FUEL";
+        sort: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
+            asc: "asc";
+            desc: "desc";
         }>>>;
-        is_active: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodBoolean>>;
         page: z.ZodOptional<z.ZodString>;
         limit: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    static readonly GETONE: z.ZodObject<{
+        id: z.ZodString;
     }, z.core.$strip>;
     static readonly CREATE: z.ZodObject<{
         name: z.ZodString;
@@ -54,6 +54,9 @@ export declare class SocialAssistanceValidation {
         provider: z.ZodOptional<z.ZodString>;
         description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         is_active: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodBoolean>>;
+    }, z.core.$strip>;
+    static readonly DELETE: z.ZodObject<{
+        id: z.ZodString;
     }, z.core.$strip>;
 }
 //# sourceMappingURL=social-assistance.validation.d.ts.map

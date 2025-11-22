@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VillageProfileService = exports.EmailService = exports.SocialAssistanceCrudService = exports.StaffService = exports.UserProfileService = exports.UserCrudService = exports.ForgotPasswordAuthService = exports.VerifyAccountAuthService = exports.AuthService = void 0;
+exports.VillageProfileService = exports.EmailService = exports.SocialAssistanceCrudService = exports.StaffCrudService = exports.UserProfileService = exports.UserCrudService = exports.ForgotPasswordAuthService = exports.VerifyAccountAuthService = exports.AuthService = void 0;
 const email_service_1 = require("./utilities/email.service");
 Object.defineProperty(exports, "EmailService", { enumerable: true, get: function () { return email_service_1.EmailService; } });
 const village_profile_service_1 = require("./village-profile/village-profile.service");
 Object.defineProperty(exports, "VillageProfileService", { enumerable: true, get: function () { return village_profile_service_1.VillageProfileService; } });
-const staff_service_1 = require("./staff/staff.service");
-Object.defineProperty(exports, "StaffService", { enumerable: true, get: function () { return staff_service_1.StaffService; } });
 const auth_1 = require("./auth");
 Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return auth_1.AuthService; } });
 const auth_2 = require("./auth");
@@ -18,4 +16,6 @@ Object.defineProperty(exports, "SocialAssistanceCrudService", { enumerable: true
 const user_1 = require("./user");
 Object.defineProperty(exports, "UserCrudService", { enumerable: true, get: function () { return user_1.UserCrudService; } });
 Object.defineProperty(exports, "UserProfileService", { enumerable: true, get: function () { return user_1.UserProfileService; } });
+const staff_1 = require("./staff");
+Object.defineProperty(exports, "StaffCrudService", { enumerable: true, get: function () { return staff_1.StaffCrudService; } });
 //# sourceMappingURL=index.js.map

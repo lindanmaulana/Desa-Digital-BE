@@ -19,18 +19,20 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
 
 
 ## HeadOfFamilyResponse Object
-| Properti         | Tipe Data | Deskripsi                                  | Catatan  |
-| :--------------- | :-------- | :----------------------------------------- | :------- |
-| `id`             | `string`  | ID unik pengguna.                          | UUID     |
-| `user_id`        | `string`  | id_user id dari tabel user.                |          |
-| `identity_number`| `string`  | Nomor induk kependudukan (NIK).            |          |
-| `gender`         | `enum`    | Peran pengguna (misalnya MALE, FEMALE).    |          |
-| `date_of_birth`  | `date`    | Tanggal lahir.                             |          |
-| `phone_number`   | `string`  | Status apakah pengguna pertama kali login. |          |
-| `occupation`     | `string`  | Pekerjaan kepala keluarga                  |          |
-| `marital_status` | `enum`    | Status kepala keluarga                     |          |
-| `created_at`     | `string`  | Tanggal pembuatan head-of-family.          | ISO 8601 |
-| `updated_at`     | `string`  | Tanggal pembaruan terakhir.                | ISO 8601 |
+| Properti                      | Tipe Data                     | Deskripsi                                  | Catatan  |
+| :-----------------------------| :-----------------------------| :----------------------------------------- | :------- |
+| `id`                          | `string`                      | ID unik pengguna.                          | UUID     |
+| `user_id`                     | `string`                      | id_user id dari tabel user.                |          |
+| `identity_number`             | `string`                      | Nomor induk kependudukan (NIK).            |          |
+| `gender`                      | `enum`                        | Peran pengguna (misalnya MALE, FEMALE).    |          |
+| `date_of_birth`               | `date`                        | Tanggal lahir.                             |          |
+| `phone_number`                | `string`                      | Status apakah pengguna pertama kali login. |          |
+| `occupation`                  | `string`                      | Pekerjaan kepala keluarga                  |          |
+| `marital_status`              | `enum`                        | Status kepala keluarga                     |          |
+| `created_at`                  | `string`                      | Tanggal pembuatan head-of-family.          | ISO 8601 |
+| `updated_at`                  | `string`                      | Tanggal pembaruan terakhir.                | ISO 8601 |
+| `social_assistance_recipient` | `social_assistance_recipient` | Data Relasi SocialAssistanceRecipien       | FK uuid  |
+| `user`                        | `users`                       | Data Relasi User                           | FK uuid  |
 
 
 ## ImageResponse Object
@@ -49,3 +51,60 @@ Objek ini merepresentasikan data pengguna yang dikembalikan setelah otentikasi a
 | `updated_at`                      | `string`  | Tanggal pembaruan terakhir.                             | ISO 8601 |
 
 
+## HeadOfFamilyResponse
+
+
+## 1. GET all
+Endpoint : /api/v1/admin/head-of-family
+
+Request Header :
+- Cookies : jwt -> token
+
+Role :
+- ADMIN
+
+Request Query Params :
+```json
+{
+  "keyword": string,
+	"page": string,
+	"limit": string,
+	"sort": string,
+}
+```
+
+Response Body (success)
+
+```json
+{
+  "data": {
+    /* HeadOfFamilyResponse Object */
+  }
+}
+```
+
+Response Body (failed)
+
+```json
+{
+  "errors": Messagge Error
+}
+```
+
+## 2. GET one
+Endpoint : /api/v1/admin/head-of-family/:id
+
+Request Header :
+- Cookies : jwt -> token
+
+Role :
+- Admin
+
+Request Body (success)
+```json
+{
+  "data": {
+    // HeadOfFamilyResponse Object
+  }
+}
+```

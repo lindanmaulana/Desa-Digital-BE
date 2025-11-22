@@ -57,7 +57,7 @@ class SocialAssistanceController {
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.CREATED,
-                    message: response_message_type_1.RESPONSE_MESSAGE.success.create,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.read,
                     data: result.data,
                     pagination: result.pagination,
                 });
@@ -70,12 +70,29 @@ class SocialAssistanceController {
     static getSocialAssistanceById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.params;
-                const result = yield services_1.SocialAssistanceCrudService.getOne(id);
+                const params = req.params;
+                const result = yield services_1.SocialAssistanceCrudService.getOne(params);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.OK,
                     message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                    data: result,
+                });
+            }
+            catch (err) {
+                next(err);
+            }
+        });
+    }
+    static delete(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const params = req.params;
+                const result = yield services_1.SocialAssistanceCrudService.delete(params);
+                res.status(http_status_codes_1.StatusCodes.OK).json({
+                    status: "success",
+                    code: http_status_codes_1.StatusCodes.OK,
+                    message: response_message_type_1.RESPONSE_MESSAGE.success.delete,
                     data: result,
                 });
             }

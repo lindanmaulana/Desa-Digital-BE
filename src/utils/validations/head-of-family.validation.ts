@@ -16,10 +16,14 @@ export const HeadOfFamilyValidation = {
 		keyword: z.string().optional(),
 		page: z.string().optional(),
 		limit: z.string().optional(),
-		sort: z.string().transform((val) => val.toLowerCase()).pipe(z.enum(VALID_SORT)).optional()
+		sort: z.string().transform((val) => val.toLowerCase()).pipe(z.enum(VALID_SORT, {error: "Nilai parameter 'sort' tidak valid. Nilai yang diizinkan hanya 'asc' atau 'desc'."})).optional()
 	}),
 
 	GETONE: z.object({
 		id: z.string().nonempty({error: "Id Pengguna tidak boleh kosong!"})
-	})
+	}),
+
+	DELETE: z.object({
+		id: z.string().nonempty({error: "Id Pengguna tidak boleh kosong!"})
+	}),
 };

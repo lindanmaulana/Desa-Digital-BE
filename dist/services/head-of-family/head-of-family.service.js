@@ -13,11 +13,10 @@ exports.HeadOfFamilyService = void 0;
 const repositories_1 = require("../../repositories");
 const errors_1 = require("../../utils/errors");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
+const head_of_family_response_1 = require("../../utils/responses/head-of-family-response");
 const head_of_family_validation_1 = require("../../utils/validations/head-of-family.validation");
 const validation_1 = require("../../utils/validations/validation");
-const head_of_family_response_1 = require("../../utils/responses/head-of-family-response");
 exports.HeadOfFamilyService = {
-    // static async update(user: Token, req: updateHead)
     getAll: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(head_of_family_validation_1.HeadOfFamilyValidation.GETALL, req);
         let whereCondition = {};
@@ -69,7 +68,7 @@ exports.HeadOfFamilyService = {
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later");
         return {
-            data: head_of_family_response_1.toHeadOfFamilyResponse.responses(result),
+            data: head_of_family_response_1.toHeadOfFamilyResponse.withRelationesponses(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -82,13 +81,10 @@ exports.HeadOfFamilyService = {
     }),
     getOne: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(head_of_family_validation_1.HeadOfFamilyValidation.GETONE, req);
-        const checkUser = yield repositories_1.UserRepository.findById(validateFields.id);
-        if (!checkUser)
-            throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
-        const result = yield repositories_1.HeadOfFamilyRepository.findById(checkUser.id);
+        const result = yield repositories_1.HeadOfFamilyRepository.findByIdDetail(validateFields.id);
         if (!result)
-            throw new errors_1.InternalServerError("Terjadi kesalahan saat mengambil data pengguna!");
-        return head_of_family_response_1.toHeadOfFamilyResponse.response(result);
-    })
+            throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
+        return head_of_family_response_1.toHeadOfFamilyResponse.withRelationResponse(result);
+    }),
 };
 //# sourceMappingURL=head-of-family.service.js.map

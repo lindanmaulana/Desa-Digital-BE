@@ -1,8 +1,10 @@
-import { Staff } from "@prisma/client";
-import { StaffResponse } from "../../models/staff.model";
-declare const _default: {
-    toStaffResponse: (staff: Staff) => StaffResponse;
-    toStaffResponses: (staff: Staff[]) => StaffResponse[];
+import { HeadOfFamily } from "@prisma/client";
+import { HeadOfFamilyResponse } from "../../models/head-of-family.model";
+import { StaffWithRelations, StaffWithRelationsResponse } from "../../models/staff.model";
+export declare const toStaffResponse: {
+    response: (headOfFamily: HeadOfFamily) => HeadOfFamilyResponse;
+    responses: (headOfFamilies: HeadOfFamily[]) => HeadOfFamilyResponse[];
+    withRelationResponse: (headOfFamily: StaffWithRelations) => StaffWithRelationsResponse;
+    withRelationesponses: (headOfFamilies: StaffWithRelations[]) => StaffWithRelationsResponse[];
 };
-export default _default;
 //# sourceMappingURL=staff-response.d.ts.map

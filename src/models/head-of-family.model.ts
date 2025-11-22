@@ -1,16 +1,16 @@
-import { Gender, Marital, Prisma, SocialAssistanceRecipient } from "@prisma/client";
+import { Gender, Marital, Prisma } from "@prisma/client";
 import { PaginationResponse } from "./pagination.model";
-import { UserResponse } from "./user.model";
 import { SocialAssistanceRecipientResponse } from "./social-assistance-recipient.model";
+import { UserResponse } from "./user.model";
 
 export interface HeadOfFamilyResponse {
 	id: string
 	user_id: string;
-	identity_number?: string;
+	identity_number: string | null;
 	gender: Gender;
-	date_of_birth?: string;
-	phone_number?: string;
-	occupation?: string;
+	date_of_birth: Date | null;
+	phone_number: string | null;
+	occupation: string | null;
 	marital_status: Marital;
 	created_at: Date;
 	updated_at: Date;
@@ -68,3 +68,9 @@ export interface GetOneHeadOfFamilyRequest {
 }
 
 export type GetOneHeadOfFamilyResponse = HeadOfFamilyWithRelationsResponse
+
+export interface DeleteHeadOfFamilyRequest {
+	id: string
+}
+
+export type DeleteHeadOfFamilyResponse = HeadOfFamilyResponse

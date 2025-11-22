@@ -32,10 +32,10 @@ export const HeadOfFamilyUserController = {
 				status: "success",
 				code: StatusCodes.OK,
 				message: RESPONSE_MESSAGE.success.read,
-				data: result
+				data: result,
 			});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	},
 };

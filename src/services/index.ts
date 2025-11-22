@@ -1,11 +1,11 @@
 import { EmailService } from "./utilities/email.service";
 import { VillageProfileService } from "./village-profile/village-profile.service";
-import { StaffService } from "./staff/staff.service";
 import { AuthService } from "./auth";
 import { VerifyAccountAuthService } from "./auth";
 import { ForgotPasswordAuthService } from "./auth";
 import { SocialAssistanceCrudService } from "./social-assistance";
-import { UserCrudService, UserProfileService } from "./user"
+import { UserCrudService, UserProfileService } from "./user";
+import { StaffCrudService } from "./staff";
 
 export {
 	AuthService,
@@ -13,7 +13,7 @@ export {
 	ForgotPasswordAuthService,
 	UserCrudService,
 	UserProfileService,
-	StaffService,
+	StaffCrudService,
 	SocialAssistanceCrudService,
 	EmailService,
 	VillageProfileService,

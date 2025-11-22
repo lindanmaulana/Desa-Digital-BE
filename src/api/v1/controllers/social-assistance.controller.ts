@@ -54,7 +54,7 @@ export class SocialAssistanceController {
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.CREATED,
-				message: RESPONSE_MESSAGE.success.create,
+				message: RESPONSE_MESSAGE.success.read,
 				data: result.data,
 				pagination: result.pagination,
 			});
@@ -65,13 +65,29 @@ export class SocialAssistanceController {
 
 	static async getSocialAssistanceById(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const { id } = req.params as { id: string };
-			const result = await SocialAssistanceCrudService.getOne(id);
+			const params = req.params as { id: string };
+			const result = await SocialAssistanceCrudService.getOne(params);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",
 				code: StatusCodes.OK,
 				message: RESPONSE_MESSAGE.success.read,
+				data: result,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	static async delete(req: CustomeRequest, res: Response, next: NextFunction) {
+		try {
+			const params = req.params as { id: string };
+			const result = await SocialAssistanceCrudService.delete(params);
+
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.OK,
+				message: RESPONSE_MESSAGE.success.delete,
 				data: result,
 			});
 		} catch (err) {

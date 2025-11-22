@@ -1,20 +1,22 @@
 import { Prisma } from "@prisma/client";
-import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse, GetOneHeadOfFamilyRequest, GetOneHeadOfFamilyResponse } from "../../models/head-of-family.model";
-import { HeadOfFamilyRepository, UserRepository } from "../../repositories";
+import {
+	GetAllHeadOfFamilyRequest,
+	GetAllHeadOfFamilyResponse,
+	GetOneHeadOfFamilyRequest,
+	GetOneHeadOfFamilyResponse
+} from "../../models/head-of-family.model";
+import { HeadOfFamilyRepository } from "../../repositories";
 import { InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
-import { toUserResponse } from "../../utils/responses";
+import { toHeadOfFamilyResponse } from "../../utils/responses/head-of-family-response";
 import { HeadOfFamilyValidation } from "../../utils/validations/head-of-family.validation";
 import { validation } from "../../utils/validations/validation";
-import { toHeadOfFamilyResponse } from "../../utils/responses/head-of-family-response";
 
 export const HeadOfFamilyService = {
-	// static async update(user: Token, req: updateHead)
-
 	getAll: async (req: GetAllHeadOfFamilyRequest): Promise<GetAllHeadOfFamilyResponse> => {
 		const validateFields = validation.validate(HeadOfFamilyValidation.GETALL, req);
 
-		let whereCondition: Prisma.HeadOfFamilyWhereInput = { };
+		let whereCondition: Prisma.HeadOfFamilyWhereInput = {};
 		let orderByCondition: Prisma.HeadOfFamilyOrderByWithRelationInput = {};
 
 		if (validateFields.sort) {
@@ -68,7 +70,7 @@ export const HeadOfFamilyService = {
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later");
 
 		return {
-			data: toHeadOfFamilyResponse.responses(result),
+			data: toHeadOfFamilyResponse.withRelationesponses(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -81,14 +83,11 @@ export const HeadOfFamilyService = {
 	},
 
 	getOne: async (req: GetOneHeadOfFamilyRequest): Promise<GetOneHeadOfFamilyResponse> => {
-		const validateFields = validation.validate(HeadOfFamilyValidation.GETONE, req)
+		const validateFields = validation.validate(HeadOfFamilyValidation.GETONE, req);
 
-		const checkUser = await UserRepository.findById(validateFields.id)
-		if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan!")
+		const result = await HeadOfFamilyRepository.findByIdDetail(validateFields.id);
+		if (!result) throw new NotfoundError("Pengguna tidak ditemukan!");
 
-		const result = await HeadOfFamilyRepository.findById(checkUser.id)
-		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengambil data pengguna!")
-
-		return toHeadOfFamilyResponse.response(result)
-	}
+		return toHeadOfFamilyResponse.withRelationResponse(result);
+	},
 };
