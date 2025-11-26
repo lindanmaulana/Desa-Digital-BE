@@ -11,106 +11,89 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceRepository = void 0;
 const db_1 = require("../db");
-class SocialAssistanceRepository {
-    static create(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.create(args);
+exports.SocialAssistanceRepository = {
+    create: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.create(args);
+    }),
+    update: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.update(args);
+    }),
+    findById: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.findUnique({
+            where: { id },
         });
-    }
-    static update(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.update(args);
-        });
-    }
-    static findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.findUnique({
-                where: { id }
-            });
-        });
-    }
-    static findAll(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
-            return db_1.prismaClient.socialAssistance.findMany({
-                where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
-                include: {
-                    image: true,
-                    _count: {
-                        select: {
-                            social_assistance_recipient: true,
-                        },
+    }),
+    findAll: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b, _c;
+        return db_1.prismaClient.socialAssistance.findMany({
+            where: (_a = args.where) !== null && _a !== void 0 ? _a : {},
+            include: {
+                image: true,
+                _count: {
+                    select: {
+                        social_assistance_recipient: true,
                     },
                 },
-                skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
-                take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
-                orderBy: Object.assign({}, args.orderBy),
-            });
+            },
+            skip: (_b = args.skip) !== null && _b !== void 0 ? _b : 0,
+            take: (_c = args.take) !== null && _c !== void 0 ? _c : 5,
+            orderBy: Object.assign({}, args.orderBy),
         });
-    }
-    static findOne(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.findFirst({
-                where: {
-                    id: id,
-                },
-                include: {
-                    image: true,
-                    social_assistance_recipient: {
-                        take: 3,
-                        select: {
-                            id: true,
-                            amount: true,
-                            status: true,
-                            head_of_family: {
-                                select: {
-                                    id: true,
-                                    user: {
-                                        select: {
-                                            id: true,
-                                            name: true,
-                                        },
+    }),
+    findOne: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.findFirst({
+            where: {
+                id: id,
+            },
+            include: {
+                image: true,
+                social_assistance_recipient: {
+                    take: 3,
+                    select: {
+                        id: true,
+                        amount: true,
+                        status: true,
+                        head_of_family: {
+                            select: {
+                                id: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
                                     },
                                 },
                             },
-                            created_at: true,
-                            updated_at: true,
                         },
-                    },
-                    _count: {
-                        select: {
-                            social_assistance_recipient: true,
-                        },
+                        created_at: true,
+                        updated_at: true,
                     },
                 },
-            });
-        });
-    }
-    static findCount(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.count(args);
-        });
-    }
-    static isNameTaken(name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const count = yield db_1.prismaClient.socialAssistance.count({
-                where: {
-                    name: {
-                        contains: name,
-                        mode: "insensitive",
+                _count: {
+                    select: {
+                        social_assistance_recipient: true,
                     },
                 },
-            });
-            return count > 0;
+            },
         });
-    }
-    static delete(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.socialAssistance.delete({
-                where: { id }
-            });
+    }),
+    findCount: (args) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.count(args);
+    }),
+    isNameTaken: (name) => __awaiter(void 0, void 0, void 0, function* () {
+        const count = yield db_1.prismaClient.socialAssistance.count({
+            where: {
+                name: {
+                    contains: name,
+                    mode: "insensitive",
+                },
+            },
         });
-    }
-}
-exports.SocialAssistanceRepository = SocialAssistanceRepository;
+        return count > 0;
+    }),
+    delete: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistance.delete({
+            where: { id },
+        });
+    }),
+};
 //# sourceMappingURL=social-assistance.repository.js.map

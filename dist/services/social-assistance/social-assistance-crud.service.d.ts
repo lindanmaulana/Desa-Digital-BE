@@ -1,9 +1,9 @@
-import { CreateSocialAssistanceRequest, DeleteSocialAsistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceResponse, GetOneSocialAssistanceRequest, GetOneSocialAssistanceResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../../models/social-assistance.model";
+import { SocialAssistanceCreateRequest, SocialAssistanceDeleteRequest, SocialAssistanceGetAllRequest, SocialAssistanceGetAllResponse, SocialAssistanceGetOneRequest, SocialAssistanceGetOneResponse, SocialAssistanceResponse, SocialAssistanceUpdateRequest } from "../../models/social-assistance.model";
 export declare const SocialAssistanceCrudService: {
-    create: (req: CreateSocialAssistanceRequest) => Promise<SocialAssistanceResponse>;
-    getAll: (req: GetAllSocialAssistanceRequest) => Promise<GetAllSocialAssistanceResponse>;
-    getOne: (req: GetOneSocialAssistanceRequest) => Promise<GetOneSocialAssistanceResponse>;
-    update: (id: string, req: UpdateSocialAssistanceRequest) => Promise<SocialAssistanceResponse>;
-    delete: (req: DeleteSocialAsistanceRequest) => Promise<SocialAssistanceResponse>;
+    create: (req: SocialAssistanceCreateRequest) => Promise<SocialAssistanceResponse>;
+    getAll: (req: SocialAssistanceGetAllRequest) => Promise<SocialAssistanceGetAllResponse>;
+    getOne: (req: SocialAssistanceGetOneRequest) => Promise<SocialAssistanceGetOneResponse>;
+    update: (id: string, req: SocialAssistanceUpdateRequest) => Promise<SocialAssistanceResponse>;
+    delete: (req: SocialAssistanceDeleteRequest) => Promise<SocialAssistanceResponse>;
 };
 //# sourceMappingURL=social-assistance-crud.service.d.ts.map

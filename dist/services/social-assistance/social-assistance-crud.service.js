@@ -74,7 +74,7 @@ exports.SocialAssistanceCrudService = {
         if (!result)
             throw new errors_1.InternalServerError(`${response_message_type_1.RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`);
         return {
-            data: responses_1.toSocialAssistanceResponse.withRelationResponses(result),
+            data: responses_1.toSocialAssistanceResponse.listResponse(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -90,7 +90,7 @@ exports.SocialAssistanceCrudService = {
         const result = yield social_assistance_repository_1.SocialAssistanceRepository.findOne(validateFields.id);
         if (!result)
             throw new errors_1.NotfoundError("Bantuan Sosial tidak tersedia!");
-        return responses_1.toSocialAssistanceResponse.withRelationFullResponse(result);
+        return responses_1.toSocialAssistanceResponse.detailResponse(result);
     }),
     update: (id, req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(social_assistance_validation_1.SocialAssistanceValidation.UPDATE, req);

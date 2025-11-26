@@ -1,9 +1,10 @@
 import { SocialAssistance } from "@prisma/client";
 import {
+	SocialAssistanceGetAllDTO,
+	SocialAssistanceGetAllPayload,
+	SocialAssistanceGetOnePayload,
+	SocialAssistanceGetOneResponse,
 	SocialAssistanceResponse,
-	SocialAssistanceWithRelation,
-	SocialAssistanceWithRelationFull,
-	SocialAssistanceWithRelationResponse,
 } from "../../models/social-assistance.model";
 
 export const toSocialAssistanceResponse = {
@@ -22,41 +23,7 @@ export const toSocialAssistanceResponse = {
 		};
 	},
 
-	responses: (socialAssistances: SocialAssistance[]): SocialAssistanceResponse[] => {
-		return socialAssistances.map((socialAssistance) => ({
-			id: socialAssistance.id,
-			thumbnail: socialAssistance.thumbnail,
-			name: socialAssistance.name,
-			category: socialAssistance.category,
-			amount: socialAssistance.amount,
-			provider: socialAssistance.provider,
-			description: socialAssistance.description,
-			is_active: socialAssistance.is_active,
-			created_at: socialAssistance.created_at,
-			updated_at: socialAssistance.updated_at,
-		}));
-	},
-
-	withRelationResponse: (socialAssistance: SocialAssistanceWithRelation): SocialAssistanceWithRelationResponse => {
-		return {
-			id: socialAssistance.id,
-			thumbnail: socialAssistance.thumbnail,
-			name: socialAssistance.name,
-			category: socialAssistance.category,
-			amount: socialAssistance.amount,
-			provider: socialAssistance.provider,
-			description: socialAssistance.description,
-			is_active: socialAssistance.is_active,
-
-			image: socialAssistance.image,
-			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
-
-			created_at: socialAssistance.created_at,
-			updated_at: socialAssistance.updated_at,
-		};
-	},
-
-	withRelationResponses: (socialAssistances: SocialAssistanceWithRelation[]): SocialAssistanceWithRelationResponse[] => {
+	listResponse: (socialAssistances: SocialAssistanceGetAllPayload[]): SocialAssistanceGetAllDTO[] => {
 		return socialAssistances.map((socialAssistance) => ({
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -75,7 +42,7 @@ export const toSocialAssistanceResponse = {
 		}));
 	},
 
-	withRelationFullResponse: (socialAssistance: SocialAssistanceWithRelationFull): SocialAssistanceWithRelationResponse => {
+	detailResponse: (socialAssistance: SocialAssistanceGetOnePayload): SocialAssistanceGetOneResponse => {
 		return {
 			id: socialAssistance.id,
 			thumbnail: socialAssistance.thumbnail,
@@ -93,25 +60,5 @@ export const toSocialAssistanceResponse = {
 			created_at: socialAssistance.created_at,
 			updated_at: socialAssistance.updated_at,
 		};
-	},
-
-	withRelationFullResponses: (socialAssistances: SocialAssistanceWithRelationFull[]): SocialAssistanceWithRelationResponse[] => {
-		return socialAssistances.map((socialAssistance) => ({
-			id: socialAssistance.id,
-			thumbnail: socialAssistance.thumbnail,
-			name: socialAssistance.name,
-			category: socialAssistance.category,
-			amount: socialAssistance.amount,
-			provider: socialAssistance.provider,
-			description: socialAssistance.description,
-			is_active: socialAssistance.is_active,
-
-			image: socialAssistance.image,
-			social_assistance_recipient: socialAssistance.social_assistance_recipient,
-			social_assistance_recipient_count: socialAssistance._count.social_assistance_recipient,
-
-			created_at: socialAssistance.created_at,
-			updated_at: socialAssistance.updated_at,
-		}));
 	},
 };

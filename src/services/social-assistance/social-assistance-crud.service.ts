@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { CreateSocialAssistanceRequest, DeleteSocialAsistanceRequest, GetAllSocialAssistanceRequest, GetAllSocialAssistanceResponse, GetOneSocialAssistanceRequest, GetOneSocialAssistanceResponse, SocialAssistanceResponse, UpdateSocialAssistanceRequest } from "../../models/social-assistance.model";
+import { SocialAssistanceCreateRequest, SocialAssistanceDeleteRequest, SocialAssistanceGetAllRequest, SocialAssistanceGetAllResponse, SocialAssistanceGetOneRequest, SocialAssistanceGetOneResponse, SocialAssistanceResponse, SocialAssistanceUpdateRequest } from "../../models/social-assistance.model";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
@@ -9,7 +9,7 @@ import { SocialAssistanceValidation } from "../../utils/validations/social-assis
 import { validation } from "../../utils/validations/validation";
 
 export const SocialAssistanceCrudService = {
-	create: async (req: CreateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {
+	create: async (req: SocialAssistanceCreateRequest): Promise<SocialAssistanceResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.CREATE, req)
 		if (validateFields.amount && validateFields.amount < 0) throw new BadrequestError("Nominal bantuan tidak valid")
 
@@ -30,7 +30,7 @@ export const SocialAssistanceCrudService = {
 		return toSocialAssistanceResponse.response(result)
 	},
 
-	getAll: async (req: GetAllSocialAssistanceRequest): Promise<GetAllSocialAssistanceResponse> => {
+	getAll: async (req: SocialAssistanceGetAllRequest): Promise<SocialAssistanceGetAllResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.GETALL, req)
 		let whereCondition: Prisma.SocialAssistanceWhereInput = {}
 		let orderByCondition: Prisma.SocialAssistanceOrderByWithRelationInput = {}
@@ -76,7 +76,7 @@ export const SocialAssistanceCrudService = {
 		if (!result) throw new InternalServerError(`${RESPONSE_MESSAGE.error.read} Bantuan Sosial, please try again later`)
 
 		return {
-			data: toSocialAssistanceResponse.withRelationResponses(result),
+			data: toSocialAssistanceResponse.listResponse(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -88,16 +88,16 @@ export const SocialAssistanceCrudService = {
 		}
 	},
 
-	getOne: async (req: GetOneSocialAssistanceRequest): Promise<GetOneSocialAssistanceResponse> => {
+	getOne: async (req: SocialAssistanceGetOneRequest): Promise<SocialAssistanceGetOneResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.GETONE, req)
 
 		const result = await SocialAssistanceRepository.findOne(validateFields.id)
 		if (!result) throw new NotfoundError("Bantuan Sosial tidak tersedia!")
 
-		return toSocialAssistanceResponse.withRelationFullResponse(result)
+		return toSocialAssistanceResponse.detailResponse(result)
 	},
 
-	update: async (id: string, req: UpdateSocialAssistanceRequest): Promise<SocialAssistanceResponse> => {
+	update: async (id: string, req: SocialAssistanceUpdateRequest): Promise<SocialAssistanceResponse> => {
 		const validateFields = validation.validate(SocialAssistanceValidation.UPDATE, req)
 
 		console.log({cekActive: validateFields.is_active})
@@ -109,7 +109,7 @@ export const SocialAssistanceCrudService = {
 			if (value !== undefined || value !== null) (acc as any)[key as keyof typeof validateFields] = value
 
 			return acc
-		}, {} as Partial<UpdateSocialAssistanceRequest>)
+		}, {} as Partial<SocialAssistanceUpdateRequest>)
 
 		console.log({conditions})
 
@@ -127,7 +127,7 @@ export const SocialAssistanceCrudService = {
 		return toSocialAssistanceResponse.response(result)
 	},
 
-	delete: async (req: DeleteSocialAsistanceRequest) => {
+	delete: async (req: SocialAssistanceDeleteRequest) => {
 		const validateFields = validation.validate(SocialAssistanceValidation.DELETE, req)
 
 		const checkSocialAssistance = await SocialAssistanceRepository.findById(validateFields.id)

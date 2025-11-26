@@ -17,7 +17,6 @@ export interface SocialAssistanceRecipientResponse {
 	updated_at: Date;
 }
 
-
 // Request
 export interface SocialAssistanceRecipientCreateRequest {
 	social_assistance_id: string;

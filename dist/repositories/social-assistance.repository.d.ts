@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-export declare class SocialAssistanceRepository {
-    static create(args: Prisma.SocialAssistanceCreateArgs): Promise<{
+export declare const SocialAssistanceRepository: {
+    create: (args: Prisma.SocialAssistanceCreateArgs) => Promise<{
         name: string;
         id: string;
         is_active: boolean;
@@ -12,7 +12,7 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }>;
-    static update(args: Prisma.SocialAssistanceUpdateArgs): Promise<{
+    update: (args: Prisma.SocialAssistanceUpdateArgs) => Promise<{
         name: string;
         id: string;
         is_active: boolean;
@@ -24,7 +24,7 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }>;
-    static findById(id: string): Promise<{
+    findById: (id: string) => Promise<{
         name: string;
         id: string;
         is_active: boolean;
@@ -36,7 +36,7 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     } | null>;
-    static findAll(args: Prisma.SocialAssistanceFindManyArgs): Promise<({
+    findAll: (args: Prisma.SocialAssistanceFindManyArgs) => Promise<({
         image: {
             id: string;
             created_at: Date;
@@ -66,7 +66,7 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     })[]>;
-    static findOne(id: string): Promise<({
+    findOne: (id: string) => Promise<({
         social_assistance_recipient: {
             id: string;
             created_at: Date;
@@ -110,9 +110,9 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }) | null>;
-    static findCount(args: Prisma.SocialAssistanceCountArgs): Promise<number>;
-    static isNameTaken(name: string): Promise<boolean>;
-    static delete(id: string): Promise<{
+    findCount: (args: Prisma.SocialAssistanceCountArgs) => Promise<number>;
+    isNameTaken: (name: string) => Promise<boolean>;
+    delete: (id: string) => Promise<{
         name: string;
         id: string;
         is_active: boolean;
@@ -124,5 +124,5 @@ export declare class SocialAssistanceRepository {
         provider: string;
         description: string | null;
     }>;
-}
+};
 //# sourceMappingURL=social-assistance.repository.d.ts.map

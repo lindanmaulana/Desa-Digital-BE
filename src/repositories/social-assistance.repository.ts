@@ -1,22 +1,22 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
 
-export class SocialAssistanceRepository {
-	static async create(args: Prisma.SocialAssistanceCreateArgs) {
+export const SocialAssistanceRepository = {
+	create: async (args: Prisma.SocialAssistanceCreateArgs) => {
 		return prismaClient.socialAssistance.create(args);
-	}
+	},
 
-	static async update(args: Prisma.SocialAssistanceUpdateArgs) {
+	update: async (args: Prisma.SocialAssistanceUpdateArgs) => {
 		return prismaClient.socialAssistance.update(args);
-	}
+	},
 
-	static async findById(id: string) {
+	findById: async (id: string) => {
 		return prismaClient.socialAssistance.findUnique({
-			where: {id}
-		})
-	}
+			where: { id },
+		});
+	},
 
-	static async findAll(args: Prisma.SocialAssistanceFindManyArgs) {
+	findAll: async (args: Prisma.SocialAssistanceFindManyArgs) => {
 		return prismaClient.socialAssistance.findMany({
 			where: args.where ?? {},
 			include: {
@@ -33,9 +33,9 @@ export class SocialAssistanceRepository {
 				...args.orderBy,
 			},
 		});
-	}
+	},
 
-	static async findOne(id: string) {
+	findOne: async (id: string) => {
 		return prismaClient.socialAssistance.findFirst({
 			where: {
 				id: id,
@@ -72,13 +72,13 @@ export class SocialAssistanceRepository {
 				},
 			},
 		});
-	}
+	},
 
-	static async findCount(args: Prisma.SocialAssistanceCountArgs) {
+	findCount: async (args: Prisma.SocialAssistanceCountArgs) => {
 		return prismaClient.socialAssistance.count(args);
-	}
+	},
 
-	static async isNameTaken(name: string) {
+	isNameTaken: async (name: string) => {
 		const count = await prismaClient.socialAssistance.count({
 			where: {
 				name: {
@@ -89,11 +89,11 @@ export class SocialAssistanceRepository {
 		});
 
 		return count > 0;
-	}
+	},
 
-	static async delete(id: string) {
+	delete: async (id: string) => {
 		return prismaClient.socialAssistance.delete({
-			where: {id}
-		})
-	}
-}
+			where: { id },
+		});
+	},
+};

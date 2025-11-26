@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const response_message_type_1 = require("../../../utils/response-message.type");
 const services_1 = require("../../../services");
+const response_message_type_1 = require("../../../utils/response-message.type");
 class SocialAssistanceController {
     static create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {

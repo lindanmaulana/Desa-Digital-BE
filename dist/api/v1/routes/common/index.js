@@ -7,7 +7,7 @@ const express_1 = require("express");
 const head_of_family_route_1 = __importDefault(require("../management/head-of-family.route"));
 const user_route_1 = __importDefault(require("./user.route"));
 const village_profile_route_1 = __importDefault(require("./village-profile.route"));
-const social_assistance_route_1 = __importDefault(require("./social-assistance.route"));
+const social_assistance_route_1 = __importDefault(require("../management/social-assistance.route"));
 const commonRoute = (0, express_1.Router)();
 commonRoute.use("/users", user_route_1.default);
 commonRoute.use("/village/profiles", village_profile_route_1.default);

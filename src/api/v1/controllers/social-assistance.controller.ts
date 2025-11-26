@@ -1,18 +1,14 @@
 import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import {
-	CreateSocialAssistanceRequest,
-	GetAllSocialAssistanceRequest,
-	UpdateSocialAssistanceRequest,
-} from "../../../models/social-assistance.model";
+import { SocialAssistanceCreateRequest, SocialAssistanceGetAllRequest, SocialAssistanceUpdateRequest } from "../../../models/social-assistance.model";
+import { SocialAssistanceCrudService } from "../../../services";
 import { CustomeRequest } from "../../../types/express.type";
 import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
-import { SocialAssistanceCrudService } from "../../../services";
 
 export class SocialAssistanceController {
 	static async create(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqBody = req.body as CreateSocialAssistanceRequest;
+			const reqBody = req.body as SocialAssistanceCreateRequest;
 
 			const result = await SocialAssistanceCrudService.create(reqBody);
 
@@ -30,7 +26,7 @@ export class SocialAssistanceController {
 	static async update(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
 			const reqParams = req.params as { id: string };
-			const reqBody = req.body as UpdateSocialAssistanceRequest;
+			const reqBody = req.body as SocialAssistanceUpdateRequest;
 
 			const result = await SocialAssistanceCrudService.update(reqParams.id, reqBody);
 
@@ -47,7 +43,7 @@ export class SocialAssistanceController {
 
 	static async getSocialAssistances(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqQuery = req.query as GetAllSocialAssistanceRequest;
+			const reqQuery = req.query as SocialAssistanceGetAllRequest;
 			const result = await SocialAssistanceCrudService.getAll(reqQuery);
 
 			res.status(StatusCodes.OK).json({

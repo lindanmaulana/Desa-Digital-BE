@@ -19,29 +19,66 @@ export interface SocialAssistanceResponse {
 }
 
 // Model for DTO
-type SocialAssistanceRecipientDTO = Prisma.SocialAssistanceRecipientGetPayload<{
-	select: {
-		id: true;
-		amount: true;
-		status: true;
-		head_of_family: {
-			select: {
-				id: true;
-				user: {
-					select: {
-						id: true;
-						name: true;
-					};
-				};
-			};
-		};
-		created_at: true;
-		updated_at: true;
-	};
-}>;
 
-// Model for response
-export type SocialAssistanceWithRelation = Prisma.SocialAssistanceGetPayload<{
+
+
+
+
+
+export interface UpdateSocialAssistanceSchema {
+	thumbnail?: string;
+	name: string;
+	category: CategorySocialAssistance;
+	amount: number;
+	provider: string;
+	description?: string;
+	is_active: boolean;
+}
+
+
+
+// Model Main
+
+// Request
+export interface SocialAssistanceUpdateRequest {
+	thumbnail?: string;
+	name: string;
+	category: string;
+	amount: string;
+	provider: string;
+	description?: string;
+	is_active: string;
+}
+
+export interface SocialAssistanceDeleteRequest {
+	id: string
+}
+
+export interface SocialAssistanceCreateRequest {
+	thumbnail?: string;
+	name: string;
+	category: string;
+	amount: string;
+	provider: string;
+	description?: string;
+	is_active: string;
+}
+
+export interface SocialAssistanceGetAllRequest {
+	keyword?: string;
+	category?: CategorySocialAssistance;
+	is_active?: string;
+	sort?: string;
+	page?: string;
+	limit?: string;
+}
+
+export interface SocialAssistanceGetOneRequest {
+	id: string;
+}
+
+// Raw Prisma
+export type SocialAssistanceGetAllPayload = Prisma.SocialAssistanceGetPayload<{
 	include: {
 		image: true;
 		_count: {
@@ -52,7 +89,7 @@ export type SocialAssistanceWithRelation = Prisma.SocialAssistanceGetPayload<{
 	};
 }>;
 
-export type SocialAssistanceWithRelationFull = Prisma.SocialAssistanceGetPayload<{
+export type SocialAssistanceGetOnePayload = Prisma.SocialAssistanceGetPayload<{
 	include: {
 		image: true;
 		social_assistance_recipient: {
@@ -83,67 +120,42 @@ export type SocialAssistanceWithRelationFull = Prisma.SocialAssistanceGetPayload
 	};
 }>;
 
-export interface SocialAssistanceWithRelationResponse extends SocialAssistanceResponse {
+// DTO
+type SocialAssistanceRecipientDTO = Prisma.SocialAssistanceRecipientGetPayload<{
+	select: {
+		id: true;
+		amount: true;
+		status: true;
+		head_of_family: {
+			select: {
+				id: true;
+				user: {
+					select: {
+						id: true;
+						name: true;
+					};
+				};
+			};
+		};
+		created_at: true;
+		updated_at: true;
+	};
+}>;
+
+export interface SocialAssistanceGetAllDTO extends SocialAssistanceResponse {
 	social_assistance_recipient?: SocialAssistanceRecipientDTO[] | [];
 	social_assistance_recipient_count?: string | number;
 	image?: ImageResponse | null;
 }
 
-// Model for Crud Service
-export interface CreateSocialAssistanceRequest {
-	thumbnail?: string;
-	name: string;
-	category: string;
-	amount: string;
-	provider: string;
-	description?: string;
-	is_active: string;
-}
-
-export interface GetAllSocialAssistanceRequest {
-	keyword?: string;
-	category?: CategorySocialAssistance;
-	is_active?: string;
-	sort?: string;
-	page?: string;
-	limit?: string;
-}
-
-export interface GetAllSocialAssistanceResponse {
-	data: SocialAssistanceWithRelationResponse[];
+// Response API
+export interface SocialAssistanceGetAllResponse {
+	data: SocialAssistanceGetAllDTO[];
 	pagination: PaginationResponse;
 }
 
-export interface GetOneSocialAssistanceRequest {
-	id: string;
-}
-
-export interface GetOneSocialAssistanceResponse extends SocialAssistanceResponse {
+export interface SocialAssistanceGetOneResponse extends SocialAssistanceResponse {
 	social_assistance_recipient?: SocialAssistanceRecipientDTO[] | [];
 	social_assistance_recipient_count?: string | number;
 	image?: ImageResponse | null;
 };
-
-export interface UpdateSocialAssistanceRequest {
-	thumbnail?: string;
-	name: string;
-	category: string;
-	amount: string;
-	provider: string;
-	description?: string;
-	is_active: string;
-}
-
-export interface UpdateSocialAssistanceSchema {
-	thumbnail?: string;
-	name: string;
-	category: CategorySocialAssistance;
-	amount: number;
-	provider: string;
-	description?: string;
-	is_active: boolean;
-}
-
-export interface DeleteSocialAsistanceRequest {
-	id: string
-}
