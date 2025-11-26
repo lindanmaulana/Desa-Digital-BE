@@ -1,10 +1,5 @@
 import { Prisma } from "@prisma/client";
-import {
-	GetAllHeadOfFamilyRequest,
-	GetAllHeadOfFamilyResponse,
-	GetOneHeadOfFamilyRequest,
-	GetOneHeadOfFamilyResponse
-} from "../../models/head-of-family.model";
+import { HeadOfFamilyGetAllRequest, HeadOfFamilyGetAllResponse, HeadOfFamilyGetOneRequest, HeadOfFamilyGetOneResponse } from "../../models/head-of-family.model";
 import { HeadOfFamilyRepository } from "../../repositories";
 import { InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
@@ -13,7 +8,7 @@ import { HeadOfFamilyValidation } from "../../utils/validations/head-of-family.v
 import { validation } from "../../utils/validations/validation";
 
 export const HeadOfFamilyService = {
-	getAll: async (req: GetAllHeadOfFamilyRequest): Promise<GetAllHeadOfFamilyResponse> => {
+	getAll: async (req: HeadOfFamilyGetAllRequest): Promise<HeadOfFamilyGetAllResponse> => {
 		const validateFields = validation.validate(HeadOfFamilyValidation.GETALL, req);
 
 		let whereCondition: Prisma.HeadOfFamilyWhereInput = {};
@@ -70,7 +65,7 @@ export const HeadOfFamilyService = {
 		if (!result) throw new InternalServerError("Gagal mengakses data user, please try again later");
 
 		return {
-			data: toHeadOfFamilyResponse.withRelationesponses(result),
+			data: toHeadOfFamilyResponse.listResponse(result),
 			pagination: {
 				total_page: totalPage,
 				limit,
@@ -82,12 +77,12 @@ export const HeadOfFamilyService = {
 		};
 	},
 
-	getOne: async (req: GetOneHeadOfFamilyRequest): Promise<GetOneHeadOfFamilyResponse> => {
+	getOne: async (req: HeadOfFamilyGetOneRequest): Promise<HeadOfFamilyGetOneResponse> => {
 		const validateFields = validation.validate(HeadOfFamilyValidation.GETONE, req);
 
 		const result = await HeadOfFamilyRepository.findByIdDetail(validateFields.id);
 		if (!result) throw new NotfoundError("Pengguna tidak ditemukan!");
 
-		return toHeadOfFamilyResponse.withRelationResponse(result);
+		return toHeadOfFamilyResponse.detailResponse(result);
 	},
 };

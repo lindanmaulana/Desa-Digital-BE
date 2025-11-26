@@ -47,9 +47,8 @@ export class SocialAssistanceController {
 
 	static async getSocialAssistances(req: CustomeRequest, res: Response, next: NextFunction) {
 		try {
-			const reqBody = req.query as GetAllSocialAssistanceRequest;
-
-			const result = await SocialAssistanceCrudService.getAll(reqBody);
+			const reqQuery = req.query as GetAllSocialAssistanceRequest;
+			const result = await SocialAssistanceCrudService.getAll(reqQuery);
 
 			res.status(StatusCodes.OK).json({
 				status: "success",

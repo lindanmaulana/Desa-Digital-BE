@@ -12,6 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeadOfFamilyRepository = void 0;
 const db_1 = require("../db");
 class HeadOfFamilyRepository {
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.headOfFamily.findUnique({
+                where: { id },
+            });
+        });
+    }
+    static findByUserId(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.prismaClient.headOfFamily.findFirst({
+                where: { user_id: userId },
+            });
+        });
+    }
     static findAll(args) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
@@ -46,22 +60,8 @@ class HeadOfFamilyRepository {
                             },
                         },
                     },
-                    sosial_assistance_recipient: true,
+                    social_assistance_recipient: true,
                 },
-            });
-        });
-    }
-    static findByUserId(userId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.headOfFamily.findFirst({
-                where: { user_id: userId },
-            });
-        });
-    }
-    static findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return db_1.prismaClient.headOfFamily.findUnique({
-                where: { id },
             });
         });
     }
@@ -97,10 +97,10 @@ class HeadOfFamilyRepository {
                             },
                         },
                     },
-                    sosial_assistance_recipient: {
+                    social_assistance_recipient: {
                         take: 3,
                         orderBy: {
-                            created_at: "desc",
+                            created_at: "asc",
                         },
                     },
                 },

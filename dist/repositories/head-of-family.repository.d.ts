@@ -1,5 +1,29 @@
 import { Prisma } from "@prisma/client";
 export declare class HeadOfFamilyRepository {
+    static findById(id: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    } | null>;
+    static findByUserId(userId: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    } | null>;
     static findAll(args: Prisma.HeadOfFamilyFindManyArgs): Promise<({
         user: {
             image: {
@@ -21,17 +45,17 @@ export declare class HeadOfFamilyRepository {
             created_at: Date;
             updated_at: Date;
         };
-        sosial_assistance_recipient: {
+        social_assistance_recipient: {
             id: string;
             created_at: Date;
             updated_at: Date;
+            amount: Prisma.Decimal;
+            status: import("@prisma/client").$Enums.Status;
             social_assistance_id: string;
             head_of_family_id: string;
-            amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
-            status: import("@prisma/client").$Enums.Status;
         }[];
     } & {
         id: string;
@@ -45,30 +69,6 @@ export declare class HeadOfFamilyRepository {
         occupation: string | null;
         marital_status: import("@prisma/client").$Enums.Marital;
     })[]>;
-    static findByUserId(userId: string): Promise<{
-        id: string;
-        created_at: Date;
-        updated_at: Date;
-        user_id: string;
-        identity_number: string | null;
-        gender: import("@prisma/client").$Enums.Gender;
-        date_of_birth: Date | null;
-        phone_number: string | null;
-        occupation: string | null;
-        marital_status: import("@prisma/client").$Enums.Marital;
-    } | null>;
-    static findById(id: string): Promise<{
-        id: string;
-        created_at: Date;
-        updated_at: Date;
-        user_id: string;
-        identity_number: string | null;
-        gender: import("@prisma/client").$Enums.Gender;
-        date_of_birth: Date | null;
-        phone_number: string | null;
-        occupation: string | null;
-        marital_status: import("@prisma/client").$Enums.Marital;
-    } | null>;
     static findByIdDetail(id: string): Promise<({
         user: {
             image: {
@@ -90,17 +90,17 @@ export declare class HeadOfFamilyRepository {
             created_at: Date;
             updated_at: Date;
         };
-        sosial_assistance_recipient: {
+        social_assistance_recipient: {
             id: string;
             created_at: Date;
             updated_at: Date;
+            amount: Prisma.Decimal;
+            status: import("@prisma/client").$Enums.Status;
             social_assistance_id: string;
             head_of_family_id: string;
-            amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
-            status: import("@prisma/client").$Enums.Status;
         }[];
     } & {
         id: string;

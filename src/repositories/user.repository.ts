@@ -2,6 +2,17 @@ import { Prisma, UserOtpPurpose } from "@prisma/client";
 import { prismaClient } from "../db";
 import { UserWithRelations } from "../models/user.model";
 
+export const USER_OMIT: Prisma.UserOmit = {
+	password: true,
+	otp: true,
+	otp_last_sen_at: true,
+	otp_purpose: true,
+	reset_token: true,
+	reset_token_last_sen_at: true,
+	verify_token: true,
+	verify_token_last_sen_at: true,
+};
+
 export class UserRepository {
 	static async findCount(args: Prisma.UserCountArgs) {
 		return prismaClient.user.count(args);
@@ -27,16 +38,7 @@ export class UserRepository {
 				id,
 			},
 
-			omit: {
-				password: true,
-				otp: true,
-				otp_last_sen_at: true,
-				otp_purpose: true,
-				reset_token: true,
-				reset_token_last_sen_at: true,
-				verify_token: true,
-				verify_token_last_sen_at: true,
-			},
+			omit: USER_OMIT,
 
 			include: {
 				staff: true,

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import headOfFamilyRouteCommon from "./head-of-family.route";
+import headOfFamilyRouteCommon from "../management/head-of-family.route";
 import userRouteCommon from "./user.route";
 import villageProfileRouteCommon from "./village-profile.route";
 import socialAssistanceRouteCommon from "./social-assistance.route";

@@ -15,6 +15,12 @@ exports.SocialAssistanceRecipientValidation = {
         bank: zod_1.default.string().transform((v) => v.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_BANK)),
         account_number: zod_1.default.string().nonempty({ error: "Nomor akun tidak boleh kosong!" }),
         proof: zod_1.default.string()
-    })
+    }),
+    GETALL: zod_1.default.object({
+        keyword: zod_1.default.string().optional(),
+        page: zod_1.default.string().optional(),
+        limit: zod_1.default.string().optional(),
+        sort: zod_1.default.string().transform((val) => val.toLowerCase()).pipe(zod_1.default.enum(validation_1.VALID_SORT, { error: "Nilai parameter 'sort' tidak valid. Nilai yang diizinkan hanya 'asc' atau 'desc'." })).optional()
+    }),
 };
 //# sourceMappingURL=social-assistance-recipient.validation.js.map

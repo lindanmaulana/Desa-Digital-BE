@@ -36,3 +36,23 @@ export const errorMiddleware = async (error: Error, request: Request, res: Respo
 
 	res.status(statusCodes).json(responseData);
 };
+
+
+// {
+//   "error": {
+//     "code": "VALIDATION_ERROR",
+//     "message": "The request contains invalid data",
+//     "details": [
+//       {
+//         "field": "email",
+//         "message": "Email is required",
+//         "code": "REQUIRED"
+//       },
+//       {
+//         "field": "email",
+//         "message": "Email format is invalid",
+//         "code": "INVALID_FORMAT"
+//       }
+//     ]
+//   }
+// }

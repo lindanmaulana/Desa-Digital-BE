@@ -1,14 +1,14 @@
 import { NextFunction, Response } from "express";
-import { CustomeRequest } from "../../../types/express.type";
-import { GetAllHeadOfFamilyRequest } from "../../../models/head-of-family.model";
 import { StatusCodes } from "http-status-codes";
-import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
+import { HeadOfFamilyGetAllRequest } from "../../../models/head-of-family.model";
 import { HeadOfFamilyService } from "../../../services/head-of-family/head-of-family.service";
+import { CustomeRequest } from "../../../types/express.type";
+import { RESPONSE_MESSAGE } from "../../../utils/response-message.type";
 
 export const HeadOfFamilyUserController = {
 	getHeadOfFamilies: async (req: CustomeRequest, res: Response, next: NextFunction) => {
 		try {
-			const reqQuery = req.query as GetAllHeadOfFamilyRequest;
+			const reqQuery = req.query as HeadOfFamilyGetAllRequest;
 			const result = await HeadOfFamilyService.getAll(reqQuery);
 
 			res.status(StatusCodes.OK).json({
@@ -25,7 +25,7 @@ export const HeadOfFamilyUserController = {
 
 	getHeadOfFamilyById: async (req: CustomeRequest, res: Response, next: NextFunction) => {
 		try {
-			const params = req.params as { id: string };
+			const params = req.params as {id: string};
 			const result = await HeadOfFamilyService.getOne(params);
 
 			res.status(StatusCodes.OK).json({

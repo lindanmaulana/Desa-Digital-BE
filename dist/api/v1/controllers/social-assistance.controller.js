@@ -52,8 +52,8 @@ class SocialAssistanceController {
     static getSocialAssistances(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const reqBody = req.query;
-                const result = yield services_1.SocialAssistanceCrudService.getAll(reqBody);
+                const reqQuery = req.query;
+                const result = yield services_1.SocialAssistanceCrudService.getAll(reqQuery);
                 res.status(http_status_codes_1.StatusCodes.OK).json({
                     status: "success",
                     code: http_status_codes_1.StatusCodes.CREATED,

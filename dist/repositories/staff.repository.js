@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffRepository = void 0;
 const db_1 = require("../db");
+const user_repository_1 = require("./user.repository");
 exports.StaffRepository = {
     findAll: (args) => __awaiter(void 0, void 0, void 0, function* () {
         var _a, _b, _c;
@@ -21,16 +22,39 @@ exports.StaffRepository = {
             orderBy: Object.assign({}, args.orderBy),
             include: {
                 user: {
-                    omit: {
-                        password: true,
-                        otp: true,
-                        otp_last_sen_at: true,
-                        otp_purpose: true,
-                        reset_token: true,
-                        reset_token_last_sen_at: true,
-                        verify_token: true,
-                        verify_token_last_sen_at: true,
+                    omit: user_repository_1.USER_OMIT,
+                    include: {
+                        image: {
+                            select: {
+                                id: true,
+                                filename: true,
+                                path: true,
+                                entity_type: true,
+                                user_id: true,
+                                created_at: true,
+                                updated_at: true,
+                            },
+                        },
                     },
+                },
+            },
+        });
+    }),
+    findById: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.findUnique({
+            where: {
+                id: id
+            }
+        });
+    }),
+    findDetailById: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.staff.findFirst({
+            where: {
+                id: id,
+            },
+            include: {
+                user: {
+                    omit: user_repository_1.USER_OMIT,
                     include: {
                         image: {
                             select: {

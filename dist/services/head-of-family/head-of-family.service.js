@@ -68,7 +68,7 @@ exports.HeadOfFamilyService = {
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data user, please try again later");
         return {
-            data: head_of_family_response_1.toHeadOfFamilyResponse.withRelationesponses(result),
+            data: head_of_family_response_1.toHeadOfFamilyResponse.listResponse(result),
             pagination: {
                 total_page: totalPage,
                 limit,
@@ -84,7 +84,7 @@ exports.HeadOfFamilyService = {
         const result = yield repositories_1.HeadOfFamilyRepository.findByIdDetail(validateFields.id);
         if (!result)
             throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
-        return head_of_family_response_1.toHeadOfFamilyResponse.withRelationResponse(result);
+        return head_of_family_response_1.toHeadOfFamilyResponse.detailResponse(result);
     }),
 };
 //# sourceMappingURL=head-of-family.service.js.map

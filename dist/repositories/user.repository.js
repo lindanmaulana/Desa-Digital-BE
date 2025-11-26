@@ -9,8 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRepository = void 0;
+exports.UserRepository = exports.USER_OMIT = void 0;
 const db_1 = require("../db");
+exports.USER_OMIT = {
+    password: true,
+    otp: true,
+    otp_last_sen_at: true,
+    otp_purpose: true,
+    reset_token: true,
+    reset_token_last_sen_at: true,
+    verify_token: true,
+    verify_token_last_sen_at: true,
+};
 class UserRepository {
     static findCount(args) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,16 +45,7 @@ class UserRepository {
                 where: {
                     id,
                 },
-                omit: {
-                    password: true,
-                    otp: true,
-                    otp_last_sen_at: true,
-                    otp_purpose: true,
-                    reset_token: true,
-                    reset_token_last_sen_at: true,
-                    verify_token: true,
-                    verify_token_last_sen_at: true,
-                },
+                omit: exports.USER_OMIT,
                 include: {
                     staff: true,
                     head_of_family: true,

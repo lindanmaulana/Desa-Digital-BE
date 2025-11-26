@@ -17,7 +17,8 @@ exports.StaffController = {
     getStaff: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reqQuery = req.query;
-            const result = yield staff_crud_service_1.StaffCrudService.getAll(reqQuery);
+            const reqToken = req.cookies;
+            const result = yield staff_crud_service_1.StaffCrudService.getAll(reqQuery, reqToken);
             res.status(http_status_codes_1.StatusCodes.OK).json({
                 status: "success",
                 code: http_status_codes_1.StatusCodes.OK,

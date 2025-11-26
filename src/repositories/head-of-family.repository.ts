@@ -2,6 +2,18 @@ import { Prisma } from "@prisma/client";
 import { prismaClient } from "../db";
 
 export class HeadOfFamilyRepository {
+	static async findById(id: string) {
+		return prismaClient.headOfFamily.findUnique({
+			where: { id },
+		});
+	}
+
+	static async findByUserId(userId: string) {
+		return prismaClient.headOfFamily.findFirst({
+			where: { user_id: userId },
+		});
+	}
+	
 	static async findAll(args: Prisma.HeadOfFamilyFindManyArgs) {
 		return prismaClient.headOfFamily.findMany({
 			where: args.where ?? {},
@@ -39,20 +51,8 @@ export class HeadOfFamilyRepository {
 					},
 				},
 
-				sosial_assistance_recipient: true,
+				social_assistance_recipient: true,
 			},
-		});
-	}
-
-	static async findByUserId(userId: string) {
-		return prismaClient.headOfFamily.findFirst({
-			where: { user_id: userId },
-		});
-	}
-
-	static async findById(id: string) {
-		return prismaClient.headOfFamily.findUnique({
-			where: { id },
 		});
 	}
 
@@ -90,10 +90,10 @@ export class HeadOfFamilyRepository {
 					},
 				},
 
-				sosial_assistance_recipient: {
+				social_assistance_recipient: {
 					take: 3,
 					orderBy: {
-						created_at: "desc",
+						created_at: "asc",
 					},
 				},
 			},

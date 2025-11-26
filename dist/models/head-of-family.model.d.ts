@@ -1,7 +1,6 @@
 import { Gender, Marital, Prisma } from "@prisma/client";
 import { PaginationResponse } from "./pagination.model";
 import { SocialAssistanceRecipientResponse } from "./social-assistance-recipient.model";
-import { UserResponse } from "./user.model";
 export interface HeadOfFamilyResponse {
     id: string;
     user_id: string;
@@ -14,9 +13,29 @@ export interface HeadOfFamilyResponse {
     created_at: Date;
     updated_at: Date;
 }
-export type HeadOfFamilyWithRelations = Prisma.HeadOfFamilyGetPayload<{
+export interface HeadOfFamilyGetAllRequest {
+    keyword?: string;
+    page?: string;
+    limit?: string;
+    sort?: string;
+}
+export interface HeadOfFamilyGetOneRequest {
+    id: string;
+}
+export interface HeadOfFamilyCreateRequest {
+    user_id: string;
+    identity_number?: string;
+    gender: Gender;
+    date_of_birth?: string;
+    phone_number?: string;
+    occupation?: string;
+    marital_status: Marital;
+}
+export interface HeadOfFamilyDeleteRequest {
+    id: string;
+}
+export type HeadOfFamilyGetAllPayload = Prisma.HeadOfFamilyGetPayload<{
     include: {
-        sosial_assistance_recipient: true;
         user: {
             omit: {
                 password: true;
@@ -28,38 +47,87 @@ export type HeadOfFamilyWithRelations = Prisma.HeadOfFamilyGetPayload<{
                 verify_token: true;
                 verify_token_last_sen_at: true;
             };
+            include: {
+                image: {
+                    select: {
+                        id: true;
+                        filename: true;
+                        path: true;
+                        entity_type: true;
+                        user_id: true;
+                        created_at: true;
+                        updated_at: true;
+                    };
+                };
+            };
+        };
+        social_assistance_recipient: {
+            take: 3;
+            orderBy: {
+                created_at: "asc";
+            };
         };
     };
 }>;
-export interface HeadOfFamilyWithRelationsResponse extends HeadOfFamilyResponse {
+export type HeadOfFamilyGetOnePayload = Prisma.HeadOfFamilyGetPayload<{
+    include: {
+        user: {
+            omit: {
+                password: true;
+                otp: true;
+                otp_last_sen_at: true;
+                otp_purpose: true;
+                reset_token: true;
+                reset_token_last_sen_at: true;
+                verify_token: true;
+                verify_token_last_sen_at: true;
+            };
+            include: {
+                image: {
+                    select: {
+                        id: true;
+                        filename: true;
+                        path: true;
+                        entity_type: true;
+                        user_id: true;
+                        created_at: true;
+                        updated_at: true;
+                    };
+                };
+            };
+        };
+        social_assistance_recipient: {
+            take: 3;
+            orderBy: {
+                created_at: "asc";
+            };
+        };
+    };
+}>;
+type UserDTO = Prisma.UserGetPayload<{
+    omit: {
+        password: true;
+        otp: true;
+        otp_last_sen_at: true;
+        otp_purpose: true;
+        reset_token: true;
+        reset_token_last_sen_at: true;
+        verify_token: true;
+        verify_token_last_sen_at: true;
+    };
+}>;
+export interface HeadOfFamilyGetAllDTO extends HeadOfFamilyResponse {
     social_assistance_recipient: SocialAssistanceRecipientResponse[];
-    user: UserResponse;
+    user: UserDTO;
 }
-export interface CreateHeadOfFamilyRequest {
-    user_id: string;
-    identity_number?: string;
-    gender: Gender;
-    date_of_birth?: string;
-    phone_number?: string;
-    occupation?: string;
-    marital_status: Marital;
-}
-export interface GetAllHeadOfFamilyRequest {
-    keyword?: string;
-    page?: string;
-    limit?: string;
-    sort?: string;
-}
-export interface GetAllHeadOfFamilyResponse {
-    data: HeadOfFamilyWithRelationsResponse[];
+export interface HeadOfFamilyGetAllResponse {
+    data: HeadOfFamilyGetAllDTO[];
     pagination: PaginationResponse;
 }
-export interface GetOneHeadOfFamilyRequest {
-    id: string;
+export interface HeadOfFamilyGetOneResponse extends HeadOfFamilyResponse {
+    user: UserDTO;
+    social_assistance_recipient: SocialAssistanceRecipientResponse[];
 }
-export type GetOneHeadOfFamilyResponse = HeadOfFamilyWithRelationsResponse;
-export interface DeleteHeadOfFamilyRequest {
-    id: string;
-}
-export type DeleteHeadOfFamilyResponse = HeadOfFamilyResponse;
+export type HeadOfFamilyDeleteResponse = HeadOfFamilyResponse;
+export {};
 //# sourceMappingURL=head-of-family.model.d.ts.map

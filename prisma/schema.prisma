@@ -151,7 +151,7 @@ model HeadOfFamily {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   family_member FamilyMember[]
-  sosial_assistance_recipient SocialAssistanceRecipient[]
+  social_assistance_recipient SocialAssistanceRecipient[]
   event_participant EventParticipant[]
 
   @@index([user_id])
@@ -285,8 +285,9 @@ model SocialAssistanceRecipient {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  sosial_assistance SocialAssistance @relation(fields: [social_assistance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  social_assistance SocialAssistance @relation(fields: [social_assistance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
   Image Images?
 
   @@map("social_assistance_recipient")

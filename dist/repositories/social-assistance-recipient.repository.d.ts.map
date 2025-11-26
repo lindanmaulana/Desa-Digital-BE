@@ -1,1 +1,1 @@
-{"version":3,"file":"social-assistance-recipient.repository.d.ts","sourceRoot":"","sources":["../../src/repositories/social-assistance-recipient.repository.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,mCAAmC;wCACL,MAAM;CAOhD,CAAA"}
+{"version":3,"file":"social-assistance-recipient.repository.d.ts","sourceRoot":"","sources":["../../src/repositories/social-assistance-recipient.repository.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,gBAAgB,CAAA;AAGvC,eAAO,MAAM,mCAAmC;oBACzB,MAAM,CAAC,qCAAqC;;;;;;;;;;;;;;;;;;;;;;;;;;;;wCAiCxB,MAAM;sBAQxB,MAAM,CAAC,kCAAkC;CAGjE,CAAA"}

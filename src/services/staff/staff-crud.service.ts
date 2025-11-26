@@ -1,48 +1,30 @@
-import { Prisma } from "@prisma/client";
-import { GetAllStaffRequest, GetAllStaffResponse } from "../../models/staff.model";
+import { Prisma, UserRole } from "@prisma/client";
+import { GetAllStaffRequest, GetAllStaffResponse, GetOneStaffRequest, GetOneStaffResponse } from "../../models/staff.model";
 import { StaffRepository } from "../../repositories";
-import { InternalServerError } from "../../utils/errors";
+import { ForbiddenError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { toStaffResponse } from "../../utils/responses/staff-response";
-import { StaffValidation } from "../../utils/validations/staff.validation";
 import { validation } from "../../utils/validations/validation";
+import { TokenUser } from "../../types/token.type";
+import { logger } from "../../logging";
+import { StaffValidation } from "../../utils/validations";
 
 
 export const StaffCrudService = {
-	// async update(user: TokenUser, req: UpdateStaffRequest): Promise<StaffResponse> {
-	// 	const validateFields = validation.validate(StaffValidation.UPDATE, req);
+	getAll: async (req: GetAllStaffRequest, context: TokenUser): Promise<GetAllStaffResponse> => {
+		logger.info(`staff list requested by User ID: ${context.user_id} with role: ${context.role}`, {query: req})
 
-	// 	const checkUser = await UserRepository.findById(user.user_id);
-	// 	if (!checkUser) throw new NotfoundError("Pengguna tidak ditemukan!");
+		if (context.role !== UserRole.ADMIN) {
+			logger.warn(`Forbidden access atempt for staff list by User ID: ${context.user_id}`)
+			throw new ForbiddenError("Anda tidak memiliki akses untuk melihat daftar Staff")
+		}
 
-	// 	const checkStaff = await StaffRepository.findByUserId(checkUser.id);
-	// 	if (!checkStaff) throw new NotfoundError("Pengguna belum terdaftar sebagai Staf");
-
-	// 	// if (validateFields.profile_picture) {
-	// 	// 	const imageExist = helpers.fileHelpers.checkImage(validateFields.profile_picture)
-
-	// 	// 	if (!imageExist) throw new NotfoundError("Image tidak ditemukan")
-
-	// 	// 	if (checkStaff.profile_picture) helpers.fileHelpers.deleteImage(checkStaff.profile_picture)
-	// 	// }
-
-	// 	const data = removeUndefined(validateFields);
-
-	// 	const result = await StaffRepository.update({
-	// 		where: { id: checkStaff.id },
-	// 		data: data,
-	// 	});
-
-	// 	if (!result) throw new InternalServerError("Terjadi kesalahan saat mengupdate data, please try again later");
-
-	// 	return staffResponse.toStaffResponse(result);
-	// },
-
-	getAll: async (req: GetAllStaffRequest): Promise<GetAllStaffResponse> => {
 		const validateFields = validation.validate(StaffValidation.GETALL, req)
 
 		let whereCondition: Prisma.StaffWhereInput = {}
-		let orderByCondition: Prisma.StaffOrderByWithRelationInput = {}
+		let orderByCondition: Prisma.StaffOrderByWithRelationInput = {
+			created_at: "asc"
+		}
 
 		if (validateFields.sort) {
 			orderByCondition = {
@@ -50,8 +32,6 @@ export const StaffCrudService = {
 					name: validateFields.sort
 				}
 			}
-		} else {
-			orderByCondition.created_at = "asc"
 		}
 
 		if (validateFields.keyword) {
@@ -75,11 +55,11 @@ export const StaffCrudService = {
 			]
 		}
 
-		let countCondition: Prisma.StaffCountArgs = {}
+		logger.debug(`Executing COUNT query with WHERE condition: `, whereCondition)
+		let countCondition: Prisma.StaffCountArgs = {where: whereCondition}
 		const countResult = await StaffRepository.findCount(countCondition)
 
 		const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = getPagination({count: countResult, pageRequest: validateFields.page, limitRequest: validateFields.limit})
-
 		let finalFindAllCondition: Prisma.StaffFindManyArgs = {
 			where: whereCondition,
 			skip: limit * ( page - 1 ),
@@ -87,9 +67,15 @@ export const StaffCrudService = {
 			orderBy: orderByCondition
 		}
 
+		logger.debug(`Executing FIND_ALL query: ${finalFindAllCondition}`)
 		const result = await StaffRepository.findAll(finalFindAllCondition)
-		if (!result) throw new InternalServerError("Gagal mengakses data users, please try again later!")
 
+		if (!result) {
+			logger.error(`Failed to access staff data from repository for User ID: ${context.user_id}`)
+			throw new InternalServerError("Gagal mengakses data users, please try again later!")
+		}
+
+		logger.info(`Successfully returned ${result.length} staff record to User ID: ${context.user_id}`)
 		return {
 			data: toStaffResponse.withRelationesponses(result),
 			pagination: {
@@ -101,5 +87,24 @@ export const StaffCrudService = {
 				prev_page: prevPage
 			}
 		}
+	},
+
+	getOne: async (req: GetOneStaffRequest, context: TokenUser): Promise<GetOneStaffResponse> => {
+		logger.info(`detail staff requested by User ID: ${context.user_id} with role: ${context.role}`, {query: req})
+
+		if (context.role !== UserRole.ADMIN) {
+			logger.warn(`Forbidden access atempt for detail staff by User ID: ${context.user_id}`)
+			throw new ForbiddenError("Anda tidak memiliki akses untu melihat detail staff")
+		}
+
+		const validateFields = validation.validate(StaffValidation.GETONE, req)
+
+		const checkStaff = await StaffRepository.findById(validateFields.id)
+		if (!checkStaff) throw new NotfoundError("Pengguna tidak terdaftar sebagai staff")
+
+		const result = await StaffRepository.findDetailById(checkStaff.id)
+		if (!result) throw new InternalServerError("Gagal mengakses data staff, please try again later")
+
+		return toStaffResponse.withRelationResponse(result)
 	}
 };

@@ -1,6 +1,6 @@
-import { GetAllHeadOfFamilyRequest, GetAllHeadOfFamilyResponse, GetOneHeadOfFamilyRequest, GetOneHeadOfFamilyResponse } from "../../models/head-of-family.model";
+import { HeadOfFamilyGetAllRequest, HeadOfFamilyGetAllResponse, HeadOfFamilyGetOneRequest, HeadOfFamilyGetOneResponse } from "../../models/head-of-family.model";
 export declare const HeadOfFamilyService: {
-    getAll: (req: GetAllHeadOfFamilyRequest) => Promise<GetAllHeadOfFamilyResponse>;
-    getOne: (req: GetOneHeadOfFamilyRequest) => Promise<GetOneHeadOfFamilyResponse>;
+    getAll: (req: HeadOfFamilyGetAllRequest) => Promise<HeadOfFamilyGetAllResponse>;
+    getOne: (req: HeadOfFamilyGetOneRequest) => Promise<HeadOfFamilyGetOneResponse>;
 };
 //# sourceMappingURL=head-of-family.service.d.ts.map
