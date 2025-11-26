@@ -1,5 +1,5 @@
 import { SocialAssistanceRecipient } from "@prisma/client";
-import { GetAllSocialAssistanceRecipientWithRelations, GetAllSocialAssistanceRecipientWithRelationsResponse, SocialAssistanceRecipientResponse } from "../../models/social-assistance-recipient.model";
+import { SocialAssistanceRecipientGetAllDto, SocialAssistanceRecipientGetAllPayload, SocialAssistanceRecipientResponse } from "../../models/social-assistance-recipient.model";
 
 export const toSocialAssistanceRecipientResponse = {
 	response: (socialAssistanceRecipient: SocialAssistanceRecipient): SocialAssistanceRecipientResponse => {
@@ -18,7 +18,7 @@ export const toSocialAssistanceRecipientResponse = {
 		}
 	},
 
-	listResponse: (socialAssistanceRecipients: GetAllSocialAssistanceRecipientWithRelations[]): GetAllSocialAssistanceRecipientWithRelationsResponse[] => {
+	listResponse: (socialAssistanceRecipients: SocialAssistanceRecipientGetAllPayload[]): SocialAssistanceRecipientGetAllDto[] => {
 		return socialAssistanceRecipients.map(socialAssistanceRecipient => ({
 			id: socialAssistanceRecipient.id,
 			social_assistance_id: socialAssistanceRecipient.id,

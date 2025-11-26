@@ -37,9 +37,6 @@ export declare class SocialAssistanceRepository {
         description: string | null;
     } | null>;
     static findAll(args: Prisma.SocialAssistanceFindManyArgs): Promise<({
-        _count: {
-            social_assistance_recipient: number;
-        };
         image: {
             id: string;
             created_at: Date;
@@ -54,6 +51,9 @@ export declare class SocialAssistanceRepository {
             development_id: string | null;
             entity_type: import("@prisma/client").$Enums.Entity;
         } | null;
+        _count: {
+            social_assistance_recipient: number;
+        };
     } & {
         name: string;
         id: string;
@@ -71,8 +71,6 @@ export declare class SocialAssistanceRepository {
             id: string;
             created_at: Date;
             updated_at: Date;
-            amount: Prisma.Decimal;
-            status: import("@prisma/client").$Enums.Status;
             head_of_family: {
                 user: {
                     name: string;
@@ -80,10 +78,9 @@ export declare class SocialAssistanceRepository {
                 };
                 id: string;
             };
+            amount: Prisma.Decimal;
+            status: import("@prisma/client").$Enums.Status;
         }[];
-        _count: {
-            social_assistance_recipient: number;
-        };
         image: {
             id: string;
             created_at: Date;
@@ -98,6 +95,9 @@ export declare class SocialAssistanceRepository {
             development_id: string | null;
             entity_type: import("@prisma/client").$Enums.Entity;
         } | null;
+        _count: {
+            social_assistance_recipient: number;
+        };
     } & {
         name: string;
         id: string;

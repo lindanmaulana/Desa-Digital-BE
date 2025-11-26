@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceRecipientController = void 0;
-const social_assistance_recipient_crud_service_1 = require("../../../services/social-assistance-recipient/social-assistance-recipient-crud.service");
 const http_status_codes_1 = require("http-status-codes");
+const social_assistance_recipient_crud_service_1 = require("../../../services/social-assistance-recipient/social-assistance-recipient-crud.service");
 const response_message_type_1 = require("../../../utils/response-message.type");
 exports.SocialAssistanceRecipientController = {
     getSocialAssistanceRecipients: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

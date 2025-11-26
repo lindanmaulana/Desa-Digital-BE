@@ -13,28 +13,7 @@ export interface SocialAssistanceRecipientResponse {
     created_at: Date;
     updated_at: Date;
 }
-type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
-    select: {
-        id: true;
-        user: {
-            select: {
-                id: true;
-                name: true;
-            };
-        };
-        occupation: true;
-    };
-}>;
-type SocialAssistanceDTO = Prisma.SocialAssistanceGetPayload<{
-    select: {
-        id: true;
-        name: true;
-        provider: true;
-        amount: true;
-        is_active: true;
-    };
-}>;
-export interface CreateSocialAssistanceRecipientRequest {
+export interface SocialAssistanceRecipientCreateRequest {
     social_assistance_id: string;
     head_of_family_id: string;
     amount: Decimal;
@@ -42,13 +21,13 @@ export interface CreateSocialAssistanceRecipientRequest {
     bank: Bank;
     acount_number: number;
 }
-export interface GetAllSocialAssistanceRecipientRequest {
+export interface SocialAssistanceRecipientGetAllRequest {
     keyword?: string;
     page?: string;
     limit?: string;
     sort?: string;
 }
-export type GetAllSocialAssistanceRecipientWithRelations = Prisma.SocialAssistanceRecipientGetPayload<{
+export type SocialAssistanceRecipientGetAllPayload = Prisma.SocialAssistanceRecipientGetPayload<{
     include: {
         head_of_family: {
             select: {
@@ -73,12 +52,33 @@ export type GetAllSocialAssistanceRecipientWithRelations = Prisma.SocialAssistan
         };
     };
 }>;
-export interface GetAllSocialAssistanceRecipientWithRelationsResponse extends SocialAssistanceRecipientResponse {
+type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
+    select: {
+        id: true;
+        user: {
+            select: {
+                id: true;
+                name: true;
+            };
+        };
+        occupation: true;
+    };
+}>;
+type SocialAssistanceDTO = Prisma.SocialAssistanceGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        provider: true;
+        amount: true;
+        is_active: true;
+    };
+}>;
+export interface SocialAssistanceRecipientGetAllDto extends SocialAssistanceRecipientResponse {
     head_of_family: HeadOfFamilyDTO;
     social_assistance: SocialAssistanceDTO;
 }
-export interface GetAllSocialAssistanceRecipientResponse {
-    data: GetAllSocialAssistanceRecipientWithRelationsResponse[];
+export interface SocialAssistanceRecipientGetAllResponse {
+    data: SocialAssistanceRecipientGetAllDto[];
     pagination: PaginationResponse;
 }
 export {};

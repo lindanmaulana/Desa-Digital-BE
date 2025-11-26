@@ -1,8 +1,6 @@
 import { Bank, Prisma, Status } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
-import { HeadOfFamilyResponse } from "./head-of-family.model";
 import { PaginationResponse } from "./pagination.model";
-import { SocialAssistanceResponse } from "./social-assistance.model";
 
 // Model main
 export interface SocialAssistanceRecipientResponse {
@@ -19,32 +17,9 @@ export interface SocialAssistanceRecipientResponse {
 	updated_at: Date;
 }
 
-// Model DTO
-type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
-	select: {
-		id: true,
-		user: {
-			select: {
-				id: true,
-				name: true
-			}
-		},
-		occupation: true
-	}
-}>
 
-type SocialAssistanceDTO = Prisma.SocialAssistanceGetPayload<{
-	select: {
-		id: true,
-		name: true,
-		provider: true,
-		amount: true,
-		is_active: true
-	}
-}>
-
-
-export interface CreateSocialAssistanceRecipientRequest {
+// Request
+export interface SocialAssistanceRecipientCreateRequest {
 	social_assistance_id: string;
 	head_of_family_id: string;
 	amount: Decimal;
@@ -53,14 +28,15 @@ export interface CreateSocialAssistanceRecipientRequest {
 	acount_number: number;
 }
 
-export interface GetAllSocialAssistanceRecipientRequest {
+export interface SocialAssistanceRecipientGetAllRequest {
 	keyword?: string;
 	page?: string;
 	limit?: string;
 	sort?: string;
 }
 
-export type GetAllSocialAssistanceRecipientWithRelations = Prisma.SocialAssistanceRecipientGetPayload<{
+// Raw Prisma
+export type SocialAssistanceRecipientGetAllPayload = Prisma.SocialAssistanceRecipientGetPayload<{
 	include: {
 		head_of_family: {
 			select: {
@@ -87,12 +63,39 @@ export type GetAllSocialAssistanceRecipientWithRelations = Prisma.SocialAssistan
 	};
 }>;
 
-export interface GetAllSocialAssistanceRecipientWithRelationsResponse extends SocialAssistanceRecipientResponse {
+// DTO
+type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
+	select: {
+		id: true,
+		user: {
+			select: {
+				id: true,
+				name: true
+			}
+		},
+		occupation: true
+	}
+}>
+
+type SocialAssistanceDTO = Prisma.SocialAssistanceGetPayload<{
+	select: {
+		id: true,
+		name: true,
+		provider: true,
+		amount: true,
+		is_active: true
+	}
+}>
+
+export interface SocialAssistanceRecipientGetAllDto extends SocialAssistanceRecipientResponse {
 	head_of_family: HeadOfFamilyDTO;
 	social_assistance: SocialAssistanceDTO;
 }
 
-export interface GetAllSocialAssistanceRecipientResponse {
-	data: GetAllSocialAssistanceRecipientWithRelationsResponse[];
+// Response API
+export interface SocialAssistanceRecipientGetAllResponse {
+	data: SocialAssistanceRecipientGetAllDto[];
 	pagination: PaginationResponse;
 }
+
+

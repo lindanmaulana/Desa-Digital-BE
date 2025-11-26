@@ -1,10 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { logger } from "../../logging";
-import {
-	CreateSocialAssistanceRecipientRequest,
-	GetAllSocialAssistanceRecipientRequest,
-	GetAllSocialAssistanceRecipientResponse,
-} from "../../models/social-assistance-recipient.model";
+import { SocialAssistanceRecipientCreateRequest, SocialAssistanceRecipientGetAllRequest, SocialAssistanceRecipientGetAllResponse } from "../../models/social-assistance-recipient.model";
 import { SocialAssistanceRecipientRepository } from "../../repositories/social-assistance-recipient.repository";
 import { TokenUser } from "../../types/token.type";
 import { BadrequestError, InternalServerError } from "../../utils/errors";
@@ -14,12 +10,12 @@ import { SocialAssistanceRecipientValidation } from "../../utils/validations";
 import { validation } from "../../utils/validations/validation";
 
 export const SocialAssistanceRecipientCrudService = {
-	create: async (req: CreateSocialAssistanceRecipientRequest) => {
+	create: async (req: SocialAssistanceRecipientCreateRequest) => {
 		const validateFields = validation.validate(SocialAssistanceRecipientValidation.CREATE, req);
 		if (validateFields.amount && validateFields.amount < 0) throw new BadrequestError("Nominal bantuan tidak valid!");
 	},
 
-	getAll: async (req: GetAllSocialAssistanceRecipientRequest, context: TokenUser): Promise<GetAllSocialAssistanceRecipientResponse> => {
+	getAll: async (req: SocialAssistanceRecipientGetAllRequest, context: TokenUser): Promise<SocialAssistanceRecipientGetAllResponse> => {
 		logger.info(`Social assistance recipient list requested by User ID: ${context.user_id} with role: ${context.role}`, { query: req });
 		const validateFields = validation.validate(SocialAssistanceRecipientValidation.GETALL, req);
 

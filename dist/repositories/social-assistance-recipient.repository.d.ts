@@ -20,13 +20,13 @@ export declare const SocialAssistanceRecipientRepository: {
         id: string;
         created_at: Date;
         updated_at: Date;
-        amount: Prisma.Decimal;
-        status: import("@prisma/client").$Enums.Status;
         social_assistance_id: string;
         head_of_family_id: string;
+        amount: Prisma.Decimal;
         reason: string;
         bank: import("@prisma/client").$Enums.Bank;
         account_number: string;
+        status: import("@prisma/client").$Enums.Status;
     })[]>;
     findCountBySocialAssistanceId: (id: string) => Promise<number>;
     findCount: (args: Prisma.SocialAssistanceRecipientCountArgs) => Promise<number>;
