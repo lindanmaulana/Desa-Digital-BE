@@ -13,7 +13,7 @@ export class HeadOfFamilyRepository {
 			where: { user_id: userId },
 		});
 	}
-	
+
 	static async findAll(args: Prisma.HeadOfFamilyFindManyArgs) {
 		return prismaClient.headOfFamily.findMany({
 			where: args.where ?? {},
@@ -56,7 +56,7 @@ export class HeadOfFamilyRepository {
 		});
 	}
 
-	static async findByIdDetail(id: string) {
+	static async findDetailById(id: string) {
 		return prismaClient.headOfFamily.findFirst({
 			where: {
 				id: id,
@@ -108,7 +108,7 @@ export class HeadOfFamilyRepository {
 		return prismaClient.headOfFamily.update(args);
 	}
 
-	static async deleteByIdUser(id: string) {
+	static async deleteUserById(id: string) {
 		return prismaClient.user.delete({
 			where: { id },
 		});

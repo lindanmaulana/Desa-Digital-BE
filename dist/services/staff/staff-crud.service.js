@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffCrudService = void 0;
 const client_1 = require("@prisma/client");
+const logging_1 = require("../../logging");
 const repositories_1 = require("../../repositories");
 const errors_1 = require("../../utils/errors");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const staff_response_1 = require("../../utils/responses/staff-response");
-const validation_1 = require("../../utils/validations/validation");
-const logging_1 = require("../../logging");
 const validations_1 = require("../../utils/validations");
+const validation_1 = require("../../utils/validations/validation");
 exports.StaffCrudService = {
     getAll: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.logger.info(`staff list requested by User ID: ${context.user_id} with role: ${context.role}`, { query: req });
@@ -75,7 +75,7 @@ exports.StaffCrudService = {
         }
         logging_1.logger.info(`Successfully returned ${result.length} staff record to User ID: ${context.user_id}`);
         return {
-            data: staff_response_1.toStaffResponse.withRelationesponses(result),
+            data: staff_response_1.toStaffResponse.listResponse(result),
             pagination: {
                 current_page: currentPage,
                 limit: limit,
@@ -93,13 +93,13 @@ exports.StaffCrudService = {
             throw new errors_1.ForbiddenError("Anda tidak memiliki akses untu melihat detail staff");
         }
         const validateFields = validation_1.validation.validate(validations_1.StaffValidation.GETONE, req);
-        const checkStaff = yield repositories_1.StaffRepository.findById(validateFields.id);
+        const checkStaff = yield repositories_1.StaffRepository.findDetailById(validateFields.id);
         if (!checkStaff)
             throw new errors_1.NotfoundError("Pengguna tidak terdaftar sebagai staff");
         const result = yield repositories_1.StaffRepository.findDetailById(checkStaff.id);
         if (!result)
             throw new errors_1.InternalServerError("Gagal mengakses data staff, please try again later");
-        return staff_response_1.toStaffResponse.withRelationResponse(result);
+        return staff_response_1.toStaffResponse.response(result);
     })
 };
 //# sourceMappingURL=staff-crud.service.js.map

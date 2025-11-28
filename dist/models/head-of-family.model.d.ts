@@ -34,6 +34,18 @@ export interface HeadOfFamilyCreateRequest {
 export interface HeadOfFamilyDeleteRequest {
     id: string;
 }
+type UserPayload = Prisma.UserGetPayload<{
+    omit: {
+        password: true;
+        otp: true;
+        otp_last_sen_at: true;
+        otp_purpose: true;
+        reset_token: true;
+        reset_token_last_sen_at: true;
+        verify_token: true;
+        verify_token_last_sen_at: true;
+    };
+}>;
 export type HeadOfFamilyGetAllPayload = Prisma.HeadOfFamilyGetPayload<{
     include: {
         user: {
@@ -104,28 +116,16 @@ export type HeadOfFamilyGetOnePayload = Prisma.HeadOfFamilyGetPayload<{
         };
     };
 }>;
-type UserDTO = Prisma.UserGetPayload<{
-    omit: {
-        password: true;
-        otp: true;
-        otp_last_sen_at: true;
-        otp_purpose: true;
-        reset_token: true;
-        reset_token_last_sen_at: true;
-        verify_token: true;
-        verify_token_last_sen_at: true;
-    };
-}>;
 export interface HeadOfFamilyGetAllDTO extends HeadOfFamilyResponse {
     social_assistance_recipient: SocialAssistanceRecipientResponse[];
-    user: UserDTO;
+    user: UserPayload;
 }
 export interface HeadOfFamilyGetAllResponse {
     data: HeadOfFamilyGetAllDTO[];
     pagination: PaginationResponse;
 }
 export interface HeadOfFamilyGetOneResponse extends HeadOfFamilyResponse {
-    user: UserDTO;
+    user: UserPayload;
     social_assistance_recipient: SocialAssistanceRecipientResponse[];
 }
 export type HeadOfFamilyDeleteResponse = HeadOfFamilyResponse;

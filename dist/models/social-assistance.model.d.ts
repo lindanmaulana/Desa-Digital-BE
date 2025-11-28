@@ -14,14 +14,14 @@ export interface SocialAssistanceResponse {
     created_at: Date;
     updated_at: Date;
 }
-export interface UpdateSocialAssistanceSchema {
+export interface SocialAssistanceCreateRequest {
     thumbnail?: string;
     name: string;
-    category: CategorySocialAssistance;
-    amount: number;
+    category: string;
+    amount: string;
     provider: string;
     description?: string;
-    is_active: boolean;
+    is_active: string;
 }
 export interface SocialAssistanceUpdateRequest {
     thumbnail?: string;
@@ -34,15 +34,6 @@ export interface SocialAssistanceUpdateRequest {
 }
 export interface SocialAssistanceDeleteRequest {
     id: string;
-}
-export interface SocialAssistanceCreateRequest {
-    thumbnail?: string;
-    name: string;
-    category: string;
-    amount: string;
-    provider: string;
-    description?: string;
-    is_active: string;
 }
 export interface SocialAssistanceGetAllRequest {
     keyword?: string;

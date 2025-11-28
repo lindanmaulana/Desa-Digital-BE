@@ -1,17 +1,17 @@
 import { Prisma, UserRole } from "@prisma/client";
-import { GetAllStaffRequest, GetAllStaffResponse, GetOneStaffRequest, GetOneStaffResponse } from "../../models/staff.model";
+import { logger } from "../../logging";
+import { GetAllStaffRequest, GetOneStaffRequest, StaffGetAllResponse, StaffGetOneResponse } from "../../models/staff.model";
 import { StaffRepository } from "../../repositories";
+import { TokenUser } from "../../types/token.type";
 import { ForbiddenError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { toStaffResponse } from "../../utils/responses/staff-response";
-import { validation } from "../../utils/validations/validation";
-import { TokenUser } from "../../types/token.type";
-import { logger } from "../../logging";
 import { StaffValidation } from "../../utils/validations";
+import { validation } from "../../utils/validations/validation";
 
 
 export const StaffCrudService = {
-	getAll: async (req: GetAllStaffRequest, context: TokenUser): Promise<GetAllStaffResponse> => {
+	getAll: async (req: GetAllStaffRequest, context: TokenUser): Promise<StaffGetAllResponse> => {
 		logger.info(`staff list requested by User ID: ${context.user_id} with role: ${context.role}`, {query: req})
 
 		if (context.role !== UserRole.ADMIN) {
@@ -77,7 +77,7 @@ export const StaffCrudService = {
 
 		logger.info(`Successfully returned ${result.length} staff record to User ID: ${context.user_id}`)
 		return {
-			data: toStaffResponse.withRelationesponses(result),
+			data: toStaffResponse.listResponse(result),
 			pagination: {
 				current_page: currentPage,
 				limit: limit,
@@ -89,7 +89,7 @@ export const StaffCrudService = {
 		}
 	},
 
-	getOne: async (req: GetOneStaffRequest, context: TokenUser): Promise<GetOneStaffResponse> => {
+	getOne: async (req: GetOneStaffRequest, context: TokenUser): Promise<StaffGetOneResponse> => {
 		logger.info(`detail staff requested by User ID: ${context.user_id} with role: ${context.role}`, {query: req})
 
 		if (context.role !== UserRole.ADMIN) {
@@ -99,12 +99,12 @@ export const StaffCrudService = {
 
 		const validateFields = validation.validate(StaffValidation.GETONE, req)
 
-		const checkStaff = await StaffRepository.findById(validateFields.id)
+		const checkStaff = await StaffRepository.findDetailById(validateFields.id)
 		if (!checkStaff) throw new NotfoundError("Pengguna tidak terdaftar sebagai staff")
 
 		const result = await StaffRepository.findDetailById(checkStaff.id)
 		if (!result) throw new InternalServerError("Gagal mengakses data staff, please try again later")
 
-		return toStaffResponse.withRelationResponse(result)
+		return toStaffResponse.response(result)
 	}
 };

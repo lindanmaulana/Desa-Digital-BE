@@ -18,28 +18,28 @@ const db_1 = require("../../db");
 const user_repository_1 = require("../../repositories/user.repository");
 const index_1 = __importDefault(require("../../utils/const/index"));
 const errors_1 = require("../../utils/errors");
-const helpers_1 = __importDefault(require("../../utils/helpers"));
 const generate_uuid_1 = require("../../utils/helpers/generate-uuid");
 const create_token_verify_account_1 = require("../../utils/helpers/jwt/create-token-verify-account");
 const user_validation_1 = require("../../utils/validations/user.validation");
 const validation_1 = require("../../utils/validations/validation");
 const email_service_1 = require("../utilities/email.service");
 const responses_1 = require("../../utils/responses");
+const helpers_1 = require("../../utils/helpers");
 exports.UserCrudService = {
     registerStaffAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
         const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
         if (checkEmailTaken)
             throw new errors_1.BadrequestError("Email telah digunakan");
-        const hashPassword = yield helpers_1.default.hashPassword(validateFields.name);
-        const otp = helpers_1.default.generateOtp();
+        const passwordHashed = yield (0, helpers_1.hashPassword)(validateFields.name);
+        const otp = (0, helpers_1.generateOtp)();
         const jti = (0, generate_uuid_1.generateUUID)();
         const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newUser = yield tx.user.create({
                 data: {
                     email: validateFields.email,
                     name: validateFields.name,
-                    password: hashPassword,
+                    password: passwordHashed,
                     role: "STAFF",
                     otp: otp,
                     otp_purpose: "ACTIVATION",
@@ -86,15 +86,15 @@ exports.UserCrudService = {
         const checkEmailTaken = yield user_repository_1.UserRepository.isEmailTaken(validateFields.email);
         if (checkEmailTaken)
             throw new errors_1.BadrequestError("Email telah digunakan");
-        const hashPassword = yield helpers_1.default.hashPassword(validateFields.name);
-        const otp = helpers_1.default.generateOtp();
+        const passwordHashed = yield (0, helpers_1.hashPassword)(validateFields.name);
+        const otp = (0, helpers_1.generateOtp)();
         const jti = (0, generate_uuid_1.generateUUID)();
         const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newUser = yield tx.user.create({
                 data: {
                     email: validateFields.email,
                     name: validateFields.name,
-                    password: hashPassword,
+                    password: passwordHashed,
                     role: "HEAD_OF_FAMILY",
                     otp: otp,
                     otp_purpose: "ACTIVATION",
@@ -180,7 +180,7 @@ exports.UserCrudService = {
         }
         let conditionsCount = { where: whereCondition };
         const count = yield user_repository_1.UserRepository.findCount(conditionsCount);
-        const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = helpers_1.default.getPagination({
+        const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = (0, helpers_1.getPagination)({
             count,
             pageRequest: validateFields.page,
             limitRequest: validateFields.limit,

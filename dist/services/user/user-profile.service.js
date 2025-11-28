@@ -8,16 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserProfileService = void 0;
 const repositories_1 = require("../../repositories");
 const user_repository_1 = require("../../repositories/user.repository");
 const errors_1 = require("../../utils/errors");
 const unauthorized_1 = require("../../utils/errors/unauthorized");
-const helpers_1 = __importDefault(require("../../utils/helpers"));
+const helpers_1 = require("../../utils/helpers");
 const remove_undefined_1 = require("../../utils/helpers/remove-undefined");
 const user_validation_1 = require("../../utils/validations/user.validation");
 const validation_1 = require("../../utils/validations/validation");
@@ -66,7 +63,7 @@ exports.UserProfileService = {
             throw new errors_1.NotfoundError("Pengguna tidak di temukan");
         if (!checkUser.is_active)
             throw new unauthorized_1.UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
-        const newHasPassword = yield helpers_1.default.hashPassword(validateFields.password);
+        const newHasPassword = yield (0, helpers_1.hashPassword)(validateFields.password);
         const result = yield user_repository_1.UserRepository.updatePassword(checkUser.id, newHasPassword);
         if (checkUser.is_first_login)
             yield user_repository_1.UserRepository.updateIsFirstLogin(checkUser.id);

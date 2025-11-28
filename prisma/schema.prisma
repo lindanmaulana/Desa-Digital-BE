@@ -288,7 +288,7 @@ model SocialAssistanceRecipient {
   social_assistance SocialAssistance @relation(fields: [social_assistance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   head_of_family HeadOfFamily @relation(fields: [head_of_family_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  Image Images?
+  image Images?
 
   @@map("social_assistance_recipient")
 }

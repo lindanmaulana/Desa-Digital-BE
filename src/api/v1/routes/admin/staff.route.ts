@@ -6,6 +6,7 @@ import { StaffController } from "../../controllers/staff.controller";
 
 const staffRouteAdmin = Router()
 
-	staffRouteAdmin.get("/", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, StaffController.getStaff)
+	staffRouteAdmin.get("/", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, StaffController.getStaffs)
+	staffRouteAdmin.get("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN), adminRateLimit, StaffController.getByIdStaff)
 
 export default staffRouteAdmin

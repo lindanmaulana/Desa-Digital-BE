@@ -10,7 +10,7 @@ import { UserRepository } from "../../repositories/user.repository";
 import { TokenUser } from "../../types/token.type";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { UnauthorizedError } from "../../utils/errors/unauthorized";
-import helpers from "../../utils/helpers";
+import {hashPassword} from "../../utils/helpers";
 import { removeUndefined } from "../../utils/helpers/remove-undefined";
 import { UserValidation } from "../../utils/validations/user.validation";
 import { validation } from "../../utils/validations/validation";
@@ -74,7 +74,7 @@ export const UserProfileService = {
 
 		if (!checkUser.is_active) throw new UnauthorizedError("Akun belum aktif, Mohon verifikasi email anda untuk mengaktifkan akun");
 
-		const newHasPassword = await helpers.hashPassword(validateFields.password);
+		const newHasPassword = await hashPassword(validateFields.password);
 
 		const result = await UserRepository.updatePassword(checkUser.id, newHasPassword);
 

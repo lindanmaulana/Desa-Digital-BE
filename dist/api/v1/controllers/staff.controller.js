@@ -14,10 +14,10 @@ const staff_crud_service_1 = require("../../../services/staff/staff-crud.service
 const http_status_codes_1 = require("http-status-codes");
 const response_message_type_1 = require("../../../utils/response-message.type");
 exports.StaffController = {
-    getStaff: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    getStaffs: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reqQuery = req.query;
-            const reqToken = req.cookies;
+            const reqToken = req.user;
             const result = yield staff_crud_service_1.StaffCrudService.getAll(reqQuery, reqToken);
             res.status(http_status_codes_1.StatusCodes.OK).json({
                 status: "success",
@@ -31,5 +31,21 @@ exports.StaffController = {
             next(err);
         }
     }),
+    getByIdStaff: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reqParams = req.params;
+            const reqToken = req.user;
+            const result = yield staff_crud_service_1.StaffCrudService.getOne(reqParams, reqToken);
+            res.status(http_status_codes_1.StatusCodes.OK).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.OK,
+                message: response_message_type_1.RESPONSE_MESSAGE.success.read,
+                data: result,
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    })
 };
 //# sourceMappingURL=staff.controller.js.map

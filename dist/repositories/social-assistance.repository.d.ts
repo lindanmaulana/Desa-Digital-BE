@@ -6,10 +6,10 @@ export declare const SocialAssistanceRepository: {
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     }>;
     update: (args: Prisma.SocialAssistanceUpdateArgs) => Promise<{
@@ -18,10 +18,10 @@ export declare const SocialAssistanceRepository: {
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     }>;
     findById: (id: string) => Promise<{
@@ -30,13 +30,16 @@ export declare const SocialAssistanceRepository: {
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     } | null>;
     findAll: (args: Prisma.SocialAssistanceFindManyArgs) => Promise<({
+        _count: {
+            social_assistance_recipient: number;
+        };
         image: {
             id: string;
             created_at: Date;
@@ -51,19 +54,16 @@ export declare const SocialAssistanceRepository: {
             development_id: string | null;
             entity_type: import("@prisma/client").$Enums.Entity;
         } | null;
-        _count: {
-            social_assistance_recipient: number;
-        };
     } & {
         name: string;
         id: string;
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     })[]>;
     findOne: (id: string) => Promise<({
@@ -81,6 +81,9 @@ export declare const SocialAssistanceRepository: {
             amount: Prisma.Decimal;
             status: import("@prisma/client").$Enums.Status;
         }[];
+        _count: {
+            social_assistance_recipient: number;
+        };
         image: {
             id: string;
             created_at: Date;
@@ -95,19 +98,16 @@ export declare const SocialAssistanceRepository: {
             development_id: string | null;
             entity_type: import("@prisma/client").$Enums.Entity;
         } | null;
-        _count: {
-            social_assistance_recipient: number;
-        };
     } & {
         name: string;
         id: string;
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     }) | null>;
     findCount: (args: Prisma.SocialAssistanceCountArgs) => Promise<number>;
@@ -118,10 +118,10 @@ export declare const SocialAssistanceRepository: {
         is_active: boolean;
         created_at: Date;
         updated_at: Date;
+        provider: string;
         amount: Prisma.Decimal;
         thumbnail: string | null;
         category: import("@prisma/client").$Enums.CategorySocialAssistance;
-        provider: string;
         description: string | null;
     }>;
 };

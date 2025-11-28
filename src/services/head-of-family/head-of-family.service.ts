@@ -80,7 +80,7 @@ export const HeadOfFamilyService = {
 	getOne: async (req: HeadOfFamilyGetOneRequest): Promise<HeadOfFamilyGetOneResponse> => {
 		const validateFields = validation.validate(HeadOfFamilyValidation.GETONE, req);
 
-		const result = await HeadOfFamilyRepository.findByIdDetail(validateFields.id);
+		const result = await HeadOfFamilyRepository.findDetailById(validateFields.id);
 		if (!result) throw new NotfoundError("Pengguna tidak ditemukan!");
 
 		return toHeadOfFamilyResponse.detailResponse(result);

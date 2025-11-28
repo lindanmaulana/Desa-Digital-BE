@@ -7,4 +7,4 @@ import { getPagination } from "./get-pagination";
 import { hashPassword } from "./hash-password";
 import { toUserRole } from "./to-user-role";
 
-export default { createJwt, isTokenValid, createTokenUser, generateOtp, toUserRole, hashPassword, comparePassword, getPagination, fileHelpers };
+export { createJwt, isTokenValid, createTokenUser, generateOtp, toUserRole, hashPassword, comparePassword, getPagination, fileHelpers };

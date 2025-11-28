@@ -22,5 +22,8 @@ exports.SocialAssistanceRecipientValidation = {
         limit: zod_1.default.string().optional(),
         sort: zod_1.default.string().transform((val) => val.toLowerCase()).pipe(zod_1.default.enum(validation_1.VALID_SORT, { error: "Nilai parameter 'sort' tidak valid. Nilai yang diizinkan hanya 'asc' atau 'desc'." })).optional()
     }),
+    GETONE: zod_1.default.object({
+        id: zod_1.default.string().nonempty({ error: "ID tidak boleh kosong" })
+    })
 };
 //# sourceMappingURL=social-assistance-recipient.validation.js.map

@@ -18,28 +18,17 @@ export interface SocialAssistanceResponse {
 	updated_at: Date;
 }
 
-// Model for DTO
-
-
-
-
-
-
-export interface UpdateSocialAssistanceSchema {
+// Request
+export interface SocialAssistanceCreateRequest {
 	thumbnail?: string;
 	name: string;
-	category: CategorySocialAssistance;
-	amount: number;
+	category: string;
+	amount: string;
 	provider: string;
 	description?: string;
-	is_active: boolean;
+	is_active: string;
 }
 
-
-
-// Model Main
-
-// Request
 export interface SocialAssistanceUpdateRequest {
 	thumbnail?: string;
 	name: string;
@@ -52,16 +41,6 @@ export interface SocialAssistanceUpdateRequest {
 
 export interface SocialAssistanceDeleteRequest {
 	id: string
-}
-
-export interface SocialAssistanceCreateRequest {
-	thumbnail?: string;
-	name: string;
-	category: string;
-	amount: string;
-	provider: string;
-	description?: string;
-	is_active: string;
 }
 
 export interface SocialAssistanceGetAllRequest {

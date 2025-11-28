@@ -13,25 +13,6 @@ export interface StaffResponse {
     created_at: Date;
     updated_at: Date;
 }
-export type StaffWithRelations = Prisma.StaffGetPayload<{
-    include: {
-        user: {
-            omit: {
-                password: true;
-                otp: true;
-                otp_last_sen_at: true;
-                otp_purpose: true;
-                reset_token: true;
-                reset_token_last_sen_at: true;
-                verify_token: true;
-                verify_token_last_sen_at: true;
-            };
-        };
-    };
-}>;
-export interface StaffWithRelationsResponse extends StaffResponse {
-    user: UserResponse;
-}
 export interface CreateStaffRequest {
     user_id: string;
     identity_number?: string;
@@ -55,16 +36,36 @@ export interface GetAllStaffRequest {
     limit?: string;
     sort?: string;
 }
-export interface GetAllStaffResponse {
-    data: StaffWithRelationsResponse[];
-    pagination: PaginationResponse;
-}
 export interface GetOneStaffRequest {
     id: string;
 }
-export type GetOneStaffResponse = StaffWithRelationsResponse;
 export interface DeleteStaffRequest {
     id: string;
 }
 export type DeleteStaffResponse = StaffResponse;
+export type StaffGetAllPayload = Prisma.StaffGetPayload<{
+    include: {
+        user: {
+            omit: {
+                password: true;
+                otp: true;
+                otp_last_sen_at: true;
+                otp_purpose: true;
+                reset_token: true;
+                reset_token_last_sen_at: true;
+                verify_token: true;
+                verify_token_last_sen_at: true;
+            };
+        };
+    };
+}>;
+export interface StaffGetAllDto extends StaffResponse {
+    user: UserResponse;
+}
+export interface StaffGetAllResponse {
+    data: StaffGetAllDto[];
+    pagination: PaginationResponse;
+}
+export interface StaffGetOneResponse extends StaffResponse {
+}
 //# sourceMappingURL=staff.model.d.ts.map

@@ -3,7 +3,7 @@ import { CustomeRequest } from "../types/express.type";
 import { TokenResetPassword, TokenUser, TokenVerifyAccount } from "../types/token.type";
 import { ForbiddenError } from "../utils/errors";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
-import helpers from "../utils/helpers";
+import { isTokenValid } from "../utils/helpers";
 
 
 const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextFunction) => {
@@ -11,7 +11,7 @@ const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextF
 		const token = req.cookies.jwt
 		if (!token) throw new UnauthenticatedError("Authenticated invalid")
 
-		const payload = helpers.isTokenValid({token}) as TokenUser
+		const payload = isTokenValid({token}) as TokenUser
 		if (payload.type !== "ACCESS") throw new ForbiddenError("Token is valid but not authorized for access")
 
 		req.user = {
@@ -35,7 +35,7 @@ const authenticatedVerifyAccount = async (req: CustomeRequest, res: Response, ne
 		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
 
-		const payload = helpers.isTokenValid({token}) as TokenVerifyAccount
+		const payload = isTokenValid({token}) as TokenVerifyAccount
 		if (payload.type !== "VERIFY_ACCOUNT") throw new ForbiddenError("Token is valid but not authorized for verify account")
 
 		req.user = {
@@ -57,7 +57,7 @@ const authenticatedResetPassword = async (req: CustomeRequest, res: Response, ne
 		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
 
-		const payload = helpers.isTokenValid({token}) as TokenResetPassword
+		const payload = isTokenValid({token}) as TokenResetPassword
 		if(payload.type !== "RESET_PASSWORD")  throw new ForbiddenError("Token is valid but not authorized for password reset.")
 
 		req.user = {
@@ -73,13 +73,14 @@ const authenticatedResetPassword = async (req: CustomeRequest, res: Response, ne
 	}
 }
 
-
-
 const authorizedRoles = (...roles: string[]) => {
 	return (req: CustomeRequest, res: Response, next: NextFunction) => {
-		if (!req.user?.role) throw new UnauthenticatedError("unauthorized to access this route");
+		const token = req.cookies.jwt
 
-		if (!roles.includes(req.user.role)) {
+		const validToken = isTokenValid({token})
+		if (!validToken.role) throw new UnauthenticatedError("unauthorized to access this route");
+
+		if (!roles.includes(validToken.role)) {
 			throw new UnauthenticatedError("Unauthorized to access this route");
 		}
 

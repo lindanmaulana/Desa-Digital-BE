@@ -24,4 +24,21 @@ export const SocialAssistanceRecipientController = {
 			next(err)
 		}
 	},
+
+	getByIdSocialAssistanceRecipient: async (req: CustomeRequest, res: Response, next: NextFunction) => {
+		try {
+			const reqParams = req.params as {id: string}
+			const reqToken = req.cookies as TokenUser
+
+			const result = await SocialAssistanceRecipientCrudService.getOne(reqParams, reqToken)
+			res.status(StatusCodes.OK).json({
+				status: "success",
+				code: StatusCodes.CREATED,
+				message: RESPONSE_MESSAGE.success.read,
+				data: result,
+			});
+		} catch (err) {
+			next(err)
+		}
+	}
 };

@@ -23,5 +23,8 @@ export declare const SocialAssistanceRecipientValidation: {
             desc: "desc";
         }>>>;
     }, z.core.$strip>;
+    GETONE: z.ZodObject<{
+        id: z.ZodString;
+    }, z.core.$strip>;
 };
 //# sourceMappingURL=social-assistance-recipient.validation.d.ts.map

@@ -8,20 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorizedRoles = exports.authenticatedVerifyAccount = exports.authenticatedUser = exports.authenticatedResetPassword = void 0;
 const errors_1 = require("../utils/errors");
 const unauthenticated_1 = require("../utils/errors/unauthenticated");
-const helpers_1 = __importDefault(require("../utils/helpers"));
+const helpers_1 = require("../utils/helpers");
 const authenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authenticated invalid");
-        const payload = helpers_1.default.isTokenValid({ token });
+        const payload = (0, helpers_1.isTokenValid)({ token });
         if (payload.type !== "ACCESS")
             throw new errors_1.ForbiddenError("Token is valid but not authorized for access");
         req.user = {
@@ -45,7 +42,7 @@ const authenticatedVerifyAccount = (req, res, next) => __awaiter(void 0, void 0,
         const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
-        const payload = helpers_1.default.isTokenValid({ token });
+        const payload = (0, helpers_1.isTokenValid)({ token });
         if (payload.type !== "VERIFY_ACCOUNT")
             throw new errors_1.ForbiddenError("Token is valid but not authorized for verify account");
         req.user = {
@@ -67,7 +64,7 @@ const authenticatedResetPassword = (req, res, next) => __awaiter(void 0, void 0,
         const token = req.cookies.jwt;
         if (!token)
             throw new unauthenticated_1.UnauthenticatedError("Authentication token is missing or malformed.");
-        const payload = helpers_1.default.isTokenValid({ token });
+        const payload = (0, helpers_1.isTokenValid)({ token });
         if (payload.type !== "RESET_PASSWORD")
             throw new errors_1.ForbiddenError("Token is valid but not authorized for password reset.");
         req.user = {
@@ -85,10 +82,11 @@ const authenticatedResetPassword = (req, res, next) => __awaiter(void 0, void 0,
 exports.authenticatedResetPassword = authenticatedResetPassword;
 const authorizedRoles = (...roles) => {
     return (req, res, next) => {
-        var _a;
-        if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.role))
+        const token = req.cookies.jwt;
+        const validToken = (0, helpers_1.isTokenValid)({ token });
+        if (!validToken.role)
             throw new unauthenticated_1.UnauthenticatedError("unauthorized to access this route");
-        if (!roles.includes(req.user.role)) {
+        if (!roles.includes(validToken.role)) {
             throw new unauthenticated_1.UnauthenticatedError("Unauthorized to access this route");
         }
         next();

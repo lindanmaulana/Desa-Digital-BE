@@ -78,5 +78,23 @@ exports.SocialAssistanceRecipientCrudService = {
             },
         };
     }),
+    getOne: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
+        logging_1.logger.info(`Social assistance recipient detail requested by User ID: ${context.user_id}`, { query: req });
+        const validateFields = validation_1.validation.validate(validations_1.SocialAssistanceRecipientValidation.GETONE, req);
+        logging_1.logger.debug(`Executing check Social assistance recipient`);
+        const checkSocialAssistanceRecipient = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.findById(validateFields.id);
+        if (!checkSocialAssistanceRecipient) {
+            logging_1.logger.error(`Failed Data Social assistance recipient detail not found from repository for User ID: ${context.user_id}`);
+            throw new errors_1.NotfoundError("Penerima bantuan sosial tidak ditemukan!");
+        }
+        logging_1.logger.debug(`Executing FIND_DETAIL Social assistance recipient ID: ${checkSocialAssistanceRecipient.id}`);
+        const result = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.findDetailById(checkSocialAssistanceRecipient.id);
+        if (!result) {
+            logging_1.logger.error(`Failed to access Social assistance recipient data from repository for User ID: ${context.user_id}`);
+            throw new errors_1.InternalServerError("Terjadi kesalahan, please try again later");
+        }
+        logging_1.logger.info(`Successfully returned detail social assistance recipient record to User ID: ${context.user_id}`);
+        return social_assistance_recipient_response_1.toSocialAssistanceRecipientResponse.detailResponse(result);
+    }),
 };
 //# sourceMappingURL=social-assistance-recipient-crud.service.js.map

@@ -11,13 +11,13 @@ import { UserRepository } from "../../repositories/user.repository";
 import { TokenUser } from "../../types/token.type";
 import CONSTS from "../../utils/const/index";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
-import helpers from "../../utils/helpers";
 import { generateUUID } from "../../utils/helpers/generate-uuid";
 import { createTokenVerifyAccount } from "../../utils/helpers/jwt/create-token-verify-account";
 import { UserValidation } from "../../utils/validations/user.validation";
 import { validation } from "../../utils/validations/validation";
 import { EmailService } from "../utilities/email.service";
 import { toUserResponse } from "../../utils/responses";
+import { generateOtp, getPagination, hashPassword } from "../../utils/helpers";
 
 export const UserCrudService = {
 	registerStaffAccount: async (req: RegisterStaffRequest): Promise<UserResponse> => {
@@ -26,8 +26,8 @@ export const UserCrudService = {
 		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
 		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
 
-		const hashPassword = await helpers.hashPassword(validateFields.name);
-		const otp = helpers.generateOtp();
+		const passwordHashed = await hashPassword(validateFields.name);
+		const otp = generateOtp();
 		const jti = generateUUID();
 
 		const result = await prismaClient.$transaction(async (tx) => {
@@ -35,7 +35,7 @@ export const UserCrudService = {
 				data: {
 					email: validateFields.email,
 					name: validateFields.name,
-					password: hashPassword,
+					password: passwordHashed,
 					role: "STAFF",
 					otp: otp,
 					otp_purpose: "ACTIVATION",
@@ -90,8 +90,8 @@ export const UserCrudService = {
 		const checkEmailTaken = await UserRepository.isEmailTaken(validateFields.email);
 		if (checkEmailTaken) throw new BadrequestError("Email telah digunakan");
 
-		const hashPassword = await helpers.hashPassword(validateFields.name);
-		const otp = helpers.generateOtp();
+		const passwordHashed = await hashPassword(validateFields.name);
+		const otp = generateOtp();
 		const jti = generateUUID();
 
 		const result = await prismaClient.$transaction(async (tx) => {
@@ -99,7 +99,7 @@ export const UserCrudService = {
 				data: {
 					email: validateFields.email,
 					name: validateFields.name,
-					password: hashPassword,
+					password: passwordHashed,
 					role: "HEAD_OF_FAMILY",
 					otp: otp,
 					otp_purpose: "ACTIVATION",
@@ -212,7 +212,7 @@ export const UserCrudService = {
 
 		const count = await UserRepository.findCount(conditionsCount);
 
-		const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = helpers.getPagination({
+		const { totalPage, links, nextPage, prevPage, page, limit, currentPage } = getPagination({
 			count,
 			pageRequest: validateFields.page,
 			limitRequest: validateFields.limit,

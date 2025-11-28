@@ -65,7 +65,7 @@ class HeadOfFamilyRepository {
             });
         });
     }
-    static findByIdDetail(id) {
+    static findDetailById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.headOfFamily.findFirst({
                 where: {
@@ -117,7 +117,7 @@ class HeadOfFamilyRepository {
             return db_1.prismaClient.headOfFamily.update(args);
         });
     }
-    static deleteByIdUser(id) {
+    static deleteUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return db_1.prismaClient.user.delete({
                 where: { id },

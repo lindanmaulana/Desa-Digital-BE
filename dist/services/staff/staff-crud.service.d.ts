@@ -1,7 +1,7 @@
-import { GetAllStaffRequest, GetAllStaffResponse, GetOneStaffRequest, GetOneStaffResponse } from "../../models/staff.model";
+import { GetAllStaffRequest, GetOneStaffRequest, StaffGetAllResponse, StaffGetOneResponse } from "../../models/staff.model";
 import { TokenUser } from "../../types/token.type";
 export declare const StaffCrudService: {
-    getAll: (req: GetAllStaffRequest, context: TokenUser) => Promise<GetAllStaffResponse>;
-    getOne: (req: GetOneStaffRequest, context: TokenUser) => Promise<GetOneStaffResponse>;
+    getAll: (req: GetAllStaffRequest, context: TokenUser) => Promise<StaffGetAllResponse>;
+    getOne: (req: GetOneStaffRequest, context: TokenUser) => Promise<StaffGetOneResponse>;
 };
 //# sourceMappingURL=staff-crud.service.d.ts.map

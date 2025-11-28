@@ -49,9 +49,9 @@ export declare class HeadOfFamilyRepository {
             id: string;
             created_at: Date;
             updated_at: Date;
+            amount: Prisma.Decimal;
             social_assistance_id: string;
             head_of_family_id: string;
-            amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
@@ -69,7 +69,7 @@ export declare class HeadOfFamilyRepository {
         occupation: string | null;
         marital_status: import("@prisma/client").$Enums.Marital;
     })[]>;
-    static findByIdDetail(id: string): Promise<({
+    static findDetailById(id: string): Promise<({
         user: {
             image: {
                 id: string;
@@ -94,9 +94,9 @@ export declare class HeadOfFamilyRepository {
             id: string;
             created_at: Date;
             updated_at: Date;
+            amount: Prisma.Decimal;
             social_assistance_id: string;
             head_of_family_id: string;
-            amount: Prisma.Decimal;
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
@@ -127,7 +127,7 @@ export declare class HeadOfFamilyRepository {
         occupation: string | null;
         marital_status: import("@prisma/client").$Enums.Marital;
     }>;
-    static deleteByIdUser(id: string): Promise<{
+    static deleteUserById(id: string): Promise<{
         name: string;
         id: string;
         email: string;

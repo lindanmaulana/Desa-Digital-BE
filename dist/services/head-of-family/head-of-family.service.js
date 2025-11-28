@@ -81,7 +81,7 @@ exports.HeadOfFamilyService = {
     }),
     getOne: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(head_of_family_validation_1.HeadOfFamilyValidation.GETONE, req);
-        const result = yield repositories_1.HeadOfFamilyRepository.findByIdDetail(validateFields.id);
+        const result = yield repositories_1.HeadOfFamilyRepository.findDetailById(validateFields.id);
         if (!result)
             throw new errors_1.NotfoundError("Pengguna tidak ditemukan!");
         return head_of_family_response_1.toHeadOfFamilyResponse.detailResponse(result);

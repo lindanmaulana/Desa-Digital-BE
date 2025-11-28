@@ -2,6 +2,7 @@ import { Gender, Marital, Prisma } from "@prisma/client";
 import { PaginationResponse } from "./pagination.model";
 import { UserResponse } from "./user.model";
 
+// Model Main
 export interface StaffResponse {
 	id: string
 	user_id: string;
@@ -16,27 +17,8 @@ export interface StaffResponse {
 	updated_at: Date;
 }
 
-export type StaffWithRelations = Prisma.StaffGetPayload<{
-	include: {
-		user: {
-			omit: {
-				password: true;
-				otp: true;
-				otp_last_sen_at: true;
-				otp_purpose: true;
-				reset_token: true;
-				reset_token_last_sen_at: true;
-				verify_token: true;
-				verify_token_last_sen_at: true;
-			};
-		};
-	};
-}>;
 
-export interface StaffWithRelationsResponse extends StaffResponse {
-	user: UserResponse;
-}
-
+// Request
 export interface CreateStaffRequest {
 	user_id: string;
 	identity_number?: string;
@@ -63,19 +45,50 @@ export interface GetAllStaffRequest {
 	sort?: string;
 }
 
-export interface GetAllStaffResponse {
-	data: StaffWithRelationsResponse[];
-	pagination: PaginationResponse;
-}
+
 
 export interface GetOneStaffRequest {
 	id: string;
 }
 
-export type GetOneStaffResponse = StaffWithRelationsResponse
+
 
 export interface DeleteStaffRequest {
 	id: string
 }
 
 export type DeleteStaffResponse = StaffResponse
+
+
+// Raw Prisma
+export type StaffGetAllPayload = Prisma.StaffGetPayload<{
+	include: {
+		user: {
+			omit: {
+				password: true;
+				otp: true;
+				otp_last_sen_at: true;
+				otp_purpose: true;
+				reset_token: true;
+				reset_token_last_sen_at: true;
+				verify_token: true;
+				verify_token_last_sen_at: true;
+			};
+		};
+	};
+}>;
+
+// DTO
+export interface StaffGetAllDto extends StaffResponse {
+	user: UserResponse;
+}
+
+// Response API
+export interface StaffGetAllResponse {
+	data: StaffGetAllDto[];
+	pagination: PaginationResponse;
+}
+
+export interface StaffGetOneResponse extends StaffResponse {
+	
+}
