@@ -75,12 +75,11 @@ const authenticatedResetPassword = async (req: CustomeRequest, res: Response, ne
 
 const authorizedRoles = (...roles: string[]) => {
 	return (req: CustomeRequest, res: Response, next: NextFunction) => {
-		const token = req.cookies.jwt
+		const token = req.user
 
-		const validToken = isTokenValid({token})
-		if (!validToken.role) throw new UnauthenticatedError("unauthorized to access this route");
+		if (!token) throw new UnauthenticatedError("unauthorized to access this route");
 
-		if (!roles.includes(validToken.role)) {
+		if (!roles.includes(token.role)) {
 			throw new UnauthenticatedError("Unauthorized to access this route");
 		}
 

@@ -82,11 +82,10 @@ const authenticatedResetPassword = (req, res, next) => __awaiter(void 0, void 0,
 exports.authenticatedResetPassword = authenticatedResetPassword;
 const authorizedRoles = (...roles) => {
     return (req, res, next) => {
-        const token = req.cookies.jwt;
-        const validToken = (0, helpers_1.isTokenValid)({ token });
-        if (!validToken.role)
+        const token = req.user;
+        if (!token)
             throw new unauthenticated_1.UnauthenticatedError("unauthorized to access this route");
-        if (!roles.includes(validToken.role)) {
+        if (!roles.includes(token.role)) {
             throw new unauthenticated_1.UnauthenticatedError("Unauthorized to access this route");
         }
         next();
