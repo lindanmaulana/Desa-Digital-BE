@@ -40,6 +40,10 @@ export interface SocialAssistanceRecipientGetOneRequest {
 	id: string;
 }
 
+export interface SocialAssistanceRecipientUpdateRequest {
+	status: Status
+}
+
 // Raw Prisma
 type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
 	select: {

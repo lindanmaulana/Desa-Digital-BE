@@ -13,6 +13,13 @@ export declare const SocialAssistanceRecipientValidation: {
         account_number: z.ZodString;
         account_name: z.ZodString;
     }, z.core.$strip>;
+    UPDATE: z.ZodObject<{
+        status: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
+            PENDING: "PENDING";
+            APPROVED: "APPROVED";
+            REJECTED: "REJECTED";
+        }>>;
+    }, z.core.$strip>;
     GETALL: z.ZodObject<{
         keyword: z.ZodOptional<z.ZodString>;
         page: z.ZodOptional<z.ZodString>;
@@ -27,4 +34,5 @@ export declare const SocialAssistanceRecipientValidation: {
     }, z.core.$strip>;
 };
 export type TypeSocialAssistanceRecipientCreateSchema = z.infer<typeof SocialAssistanceRecipientValidation.CREATE>;
+export type TypeSocialAssistanceRecipientUpdateSchema = z.infer<typeof SocialAssistanceRecipientValidation.UPDATE>;
 //# sourceMappingURL=social-assistance-recipient.validation.d.ts.map

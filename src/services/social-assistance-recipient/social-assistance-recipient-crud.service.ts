@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Status } from "@prisma/client";
 import { prismaClient } from "../../db";
 import { logger } from "../../logging";
 import {
@@ -7,7 +7,11 @@ import {
 	SocialAssistanceRecipientGetAllResponse,
 	SocialAssistanceRecipientGetOneRequest,
 	SocialAssistanceRecipientGetOneResponse,
+	SocialAssistanceRecipientResponse,
+	SocialAssistanceRecipientUpdateRequest
 } from "../../models/social-assistance-recipient.model";
+import { HeadOfFamilyRepository } from "../../repositories";
+import { ImageRepository } from "../../repositories/image.repository";
 import { SocialAssistanceRecipientRepository } from "../../repositories/social-assistance-recipient.repository";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
 import { TokenUser } from "../../types/token.type";
@@ -16,10 +20,9 @@ import { getPagination } from "../../utils/helpers/get-pagination";
 import { toSocialAssistanceRecipientResponse } from "../../utils/responses/social-assistance-recipient.response";
 import { SocialAssistanceRecipientValidation } from "../../utils/validations";
 import { validation } from "../../utils/validations/validation";
-import { HeadOfFamilyRepository } from "../../repositories";
 
 export const SocialAssistanceRecipientCrudService = {
-	create: async (req: SocialAssistanceRecipientCreateRequest, context: TokenUser) => {
+	create: async (req: SocialAssistanceRecipientCreateRequest, context: TokenUser): Promise<SocialAssistanceRecipientResponse> => {
 		logger.info(`Social assistance recipient create requested by User ID: ${context.user_id} with role ${context.role}`)
 		const validateFields = validation.validate(SocialAssistanceRecipientValidation.CREATE, req);
 		if (validateFields.amount <= 0) throw new BadrequestError("Nominal bantuan tidak valid!");
@@ -34,33 +37,89 @@ export const SocialAssistanceRecipientCrudService = {
 		const current = new Prisma.Decimal(checkSocialAssistance.amount);
 		const reqAmount = new Prisma.Decimal(validateFields.amount);
 		const availableBalance = current.minus(reqAmount);
-		
+
 		if (current.lt(reqAmount)) throw new BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia");
 
-		const result = await prismaClient.$transaction(async (tx) => {
-			const newSocialAssistanceRecipient = await tx.socialAssistanceRecipient.create({
-				data: {
-					...validateFields,
-					head_of_family_id: checkHeadOfFamily.id
-				},
-			});
+		// const result = await prismaClient.$transaction(async (tx) => {
+		// 	const newSocialAssistanceRecipient = await tx.socialAssistanceRecipient.create({
+		// 		data: {
+		// 			...validateFields,
+		// 			head_of_family_id: checkHeadOfFamily.id
+		// 		},
+		// 	});
 
-			const reduceBalanceSocialAssistance = await tx.socialAssistance.update({
-				where: {
-					id: newSocialAssistanceRecipient.social_assistance_id,
-				},
+		// 	const reduceBalanceSocialAssistance = await tx.socialAssistance.update({
+		// 		where: {
+		// 			id: newSocialAssistanceRecipient.social_assistance_id,
+		// 		},
 
-				data: {
-					amount: availableBalance,
-					is_active: availableBalance.gt(0),
-				},
-			});
+		// 		data: {
+		// 			amount: availableBalance,
+		// 			is_active: availableBalance.gt(0),
+		// 		},
+		// 	});
 
-			return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
-		});
+		// 	return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
+		// });
+
+		const result = await SocialAssistanceRecipientRepository.create(checkHeadOfFamily.id, validateFields)
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengajukan bantuan, please try again later.");
 
-		return toSocialAssistanceRecipientResponse.response(result.newSocialAssistanceRecipient);
+		return toSocialAssistanceRecipientResponse.response(result);
+	},
+
+	update: async (id: string, req: SocialAssistanceRecipientUpdateRequest, context: TokenUser): Promise<SocialAssistanceRecipientResponse> => {
+		logger.info(`Social assistance recipient update requested by User ID: ${context.user_id} with role: ${context.role}`)
+		const validateFields = validation.validate(SocialAssistanceRecipientValidation.UPDATE, req)
+
+		// cek social-assistance-recipient
+		const checkSocialAssistanceRecipient = await SocialAssistanceRecipientRepository.findById(id)
+		if (!checkSocialAssistanceRecipient) throw new NotfoundError("Mohon maaf, bantuan sosial tidak tersedia")
+		if (checkSocialAssistanceRecipient.status !== Status.PENDING || validateFields.status === Status.PENDING) throw new BadrequestError("Mohon maaf, perubahan status bantuan sosial tidak valid. Harap cek kembali datanya.")
+
+		// cek jika ini bukan di tolak maka harus masuk ke pengecekan bukti image
+		if (validateFields.status !== Status.REJECTED) {
+			const checkImageSocialAssistanceRecipient = await ImageRepository.findByIdSocialAssistanceRecipient(checkSocialAssistanceRecipient.id)
+			if (!checkImageSocialAssistanceRecipient) throw new BadrequestError("Mohon maaf, untuk segera mengupload bukti pemberian bansos terlebih dahulu sebelum menyelesaikan penerimaan bantuan sosial ini.")
+		}
+
+		const checkSocialAssistance = await SocialAssistanceRepository.findById(checkSocialAssistanceRecipient.social_assistance_id)
+		if (!checkSocialAssistance) throw new NotfoundError("Mohon maaf, bantuan sosial tidak tersedia.")
+
+		const currentAmountSocialAssistance = new Prisma.Decimal(checkSocialAssistance.amount)
+		const currentAmountSocialAssistanceRecipient = new Prisma.Decimal(checkSocialAssistanceRecipient.amount)
+		const availableAmountSocialAssistance = currentAmountSocialAssistance.minus(currentAmountSocialAssistanceRecipient)
+
+		if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient)) throw new BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia.")
+
+		const result = await prismaClient.$transaction(async (tx) => {
+			const resultSocialAssistanceRecipient = await tx.socialAssistanceRecipient.update({
+				where: {
+					id: checkSocialAssistanceRecipient.id
+				},
+
+				data: {
+					status: validateFields.status
+				}
+			})
+
+			const resultSocialAssistance = await tx.socialAssistance.update({
+				where: {
+					id: checkSocialAssistance.id
+				},
+
+				data: {
+					amount: availableAmountSocialAssistance,
+					is_active: availableAmountSocialAssistance.gt(0)
+				}
+			})
+
+			return {resultSocialAssistanceRecipient, resultSocialAssistance}
+		})
+
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengubah penerima bantuan sosial.")
+
+		return toSocialAssistanceRecipientResponse.response(result.resultSocialAssistanceRecipient)
 	},
 
 	getAll: async (req: SocialAssistanceRecipientGetAllRequest, context: TokenUser): Promise<SocialAssistanceRecipientGetAllResponse> => {

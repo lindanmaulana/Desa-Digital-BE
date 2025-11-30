@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { TypeSocialAssistanceRecipientCreateSchema } from "../utils/validations";
+import { TypeSocialAssistanceRecipientCreateSchema, TypeSocialAssistanceRecipientUpdateSchema } from "../utils/validations";
 export declare const SocialAssistanceRecipientRepository: {
     findAll: (args: Prisma.SocialAssistanceRecipientFindManyArgs) => Promise<({
         head_of_family: {
@@ -102,7 +102,20 @@ export declare const SocialAssistanceRecipientRepository: {
     }) | null>;
     findCountBySocialAssistanceId: (id: string) => Promise<number>;
     findCount: (args: Prisma.SocialAssistanceRecipientCountArgs) => Promise<number>;
-    create: (req: TypeSocialAssistanceRecipientCreateSchema, headOfFamilyId: string) => Promise<{
+    create: (headOfFamilyId: string, req: TypeSocialAssistanceRecipientCreateSchema) => Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        amount: Prisma.Decimal;
+        social_assistance_id: string;
+        head_of_family_id: string;
+        reason: string;
+        bank: import("@prisma/client").$Enums.Bank;
+        account_number: string;
+        account_name: string;
+        status: import("@prisma/client").$Enums.Status;
+    }>;
+    updateStatus: (id: string, req: TypeSocialAssistanceRecipientUpdateSchema) => Promise<{
         id: string;
         created_at: Date;
         updated_at: Date;

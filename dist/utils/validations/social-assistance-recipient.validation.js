@@ -15,6 +15,9 @@ exports.SocialAssistanceRecipientValidation = {
         account_number: zod_1.default.string().min(10, "Nomor rekening bank harus terdiri dari minimal 10 digit.").max(16, "Nomor rekening tidak boleh melebihi 16 digit. Mohon cek kembali bank penerbit"),
         account_name: zod_1.default.string().nonempty({ error: "Nama akun tidak boleh kosong!" }),
     }),
+    UPDATE: zod_1.default.object({
+        status: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT))
+    }),
     GETALL: zod_1.default.object({
         keyword: zod_1.default.string().optional(),
         page: zod_1.default.string().optional(),

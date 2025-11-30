@@ -123,7 +123,7 @@ exports.SocialAssistanceRecipientRepository = {
     findCount: (args) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.count(args);
     }),
-    create: (req, headOfFamilyId) => __awaiter(void 0, void 0, void 0, function* () {
+    create: (headOfFamilyId, req) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.create({
             data: {
                 social_assistance_id: req.social_assistance_id,
@@ -133,6 +133,16 @@ exports.SocialAssistanceRecipientRepository = {
                 bank: req.bank,
                 account_number: req.account_number,
                 account_name: req.account_name
+            }
+        });
+    }),
+    updateStatus: (id, req) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistanceRecipient.update({
+            where: {
+                id: id
+            },
+            data: {
+                status: req.status
             }
         });
     })

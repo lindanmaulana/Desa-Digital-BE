@@ -271,7 +271,6 @@ model SocialAssistance {
   @@map("social_assistance")
 }
 
-
 model SocialAssistanceRecipient {
   id String @id @default(uuid())
   social_assistance_id String

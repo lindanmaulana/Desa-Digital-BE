@@ -13,6 +13,8 @@ exports.SocialAssistanceRecipientCrudService = void 0;
 const client_1 = require("@prisma/client");
 const db_1 = require("../../db");
 const logging_1 = require("../../logging");
+const repositories_1 = require("../../repositories");
+const image_repository_1 = require("../../repositories/image.repository");
 const social_assistance_recipient_repository_1 = require("../../repositories/social-assistance-recipient.repository");
 const social_assistance_repository_1 = require("../../repositories/social-assistance.repository");
 const errors_1 = require("../../utils/errors");
@@ -20,7 +22,6 @@ const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const social_assistance_recipient_response_1 = require("../../utils/responses/social-assistance-recipient.response");
 const validations_1 = require("../../utils/validations");
 const validation_1 = require("../../utils/validations/validation");
-const repositories_1 = require("../../repositories");
 exports.SocialAssistanceRecipientCrudService = {
     create: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.logger.info(`Social assistance recipient create requested by User ID: ${context.user_id} with role ${context.role}`);
@@ -40,24 +41,75 @@ exports.SocialAssistanceRecipientCrudService = {
         const availableBalance = current.minus(reqAmount);
         if (current.lt(reqAmount))
             throw new errors_1.BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia");
-        const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
-            const newSocialAssistanceRecipient = yield tx.socialAssistanceRecipient.create({
-                data: Object.assign(Object.assign({}, validateFields), { head_of_family_id: checkHeadOfFamily.id }),
-            });
-            const reduceBalanceSocialAssistance = yield tx.socialAssistance.update({
-                where: {
-                    id: newSocialAssistanceRecipient.social_assistance_id,
-                },
-                data: {
-                    amount: availableBalance,
-                    is_active: availableBalance.gt(0),
-                },
-            });
-            return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
-        }));
+        // const result = await prismaClient.$transaction(async (tx) => {
+        // 	const newSocialAssistanceRecipient = await tx.socialAssistanceRecipient.create({
+        // 		data: {
+        // 			...validateFields,
+        // 			head_of_family_id: checkHeadOfFamily.id
+        // 		},
+        // 	});
+        // 	const reduceBalanceSocialAssistance = await tx.socialAssistance.update({
+        // 		where: {
+        // 			id: newSocialAssistanceRecipient.social_assistance_id,
+        // 		},
+        // 		data: {
+        // 			amount: availableBalance,
+        // 			is_active: availableBalance.gt(0),
+        // 		},
+        // 	});
+        // 	return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
+        // });
+        const result = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.create(checkHeadOfFamily.id, validateFields);
         if (!result)
             throw new errors_1.InternalServerError("Terjadi kesalahan saat mengajukan bantuan, please try again later.");
-        return social_assistance_recipient_response_1.toSocialAssistanceRecipientResponse.response(result.newSocialAssistanceRecipient);
+        return social_assistance_recipient_response_1.toSocialAssistanceRecipientResponse.response(result);
+    }),
+    update: (id, req, context) => __awaiter(void 0, void 0, void 0, function* () {
+        logging_1.logger.info(`Social assistance recipient update requested by User ID: ${context.user_id} with role: ${context.role}`);
+        const validateFields = validation_1.validation.validate(validations_1.SocialAssistanceRecipientValidation.UPDATE, req);
+        // cek social-assistance-recipient
+        const checkSocialAssistanceRecipient = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.findById(id);
+        if (!checkSocialAssistanceRecipient)
+            throw new errors_1.NotfoundError("Mohon maaf, bantuan sosial tidak tersedia");
+        if (checkSocialAssistanceRecipient.status !== client_1.Status.PENDING || validateFields.status === client_1.Status.PENDING)
+            throw new errors_1.BadrequestError("Mohon maaf, perubahan status bantuan sosial tidak valid. Harap cek kembali datanya.");
+        // cek jika ini bukan di tolak maka harus masuk ke pengecekan bukti image
+        if (validateFields.status !== client_1.Status.REJECTED) {
+            const checkImageSocialAssistanceRecipient = yield image_repository_1.ImageRepository.findByIdSocialAssistanceRecipient(checkSocialAssistanceRecipient.id);
+            if (!checkImageSocialAssistanceRecipient)
+                throw new errors_1.BadrequestError("Mohon maaf, untuk segera mengupload bukti pemberian bansos terlebih dahulu sebelum menyelesaikan penerimaan bantuan sosial ini.");
+        }
+        const checkSocialAssistance = yield social_assistance_repository_1.SocialAssistanceRepository.findById(checkSocialAssistanceRecipient.social_assistance_id);
+        if (!checkSocialAssistance)
+            throw new errors_1.NotfoundError("Mohon maaf, bantuan sosial tidak tersedia.");
+        const currentAmountSocialAssistance = new client_1.Prisma.Decimal(checkSocialAssistance.amount);
+        const currentAmountSocialAssistanceRecipient = new client_1.Prisma.Decimal(checkSocialAssistanceRecipient.amount);
+        const availableAmountSocialAssistance = currentAmountSocialAssistance.minus(currentAmountSocialAssistanceRecipient);
+        if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient))
+            throw new errors_1.BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia.");
+        const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+            const resultSocialAssistanceRecipient = yield tx.socialAssistanceRecipient.update({
+                where: {
+                    id: checkSocialAssistanceRecipient.id
+                },
+                data: {
+                    status: validateFields.status
+                }
+            });
+            const resultSocialAssistance = yield tx.socialAssistance.update({
+                where: {
+                    id: checkSocialAssistance.id
+                },
+                data: {
+                    amount: availableAmountSocialAssistance,
+                    is_active: availableAmountSocialAssistance.gt(0)
+                }
+            });
+            return { resultSocialAssistanceRecipient, resultSocialAssistance };
+        }));
+        if (!result)
+            throw new errors_1.InternalServerError("Terjadi kesalahan saat mengubah penerima bantuan sosial.");
+        return social_assistance_recipient_response_1.toSocialAssistanceRecipientResponse.response(result.resultSocialAssistanceRecipient);
     }),
     getAll: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.logger.info(`Social assistance recipient list requested by User ID: ${context.user_id} with role: ${context.role}`, { query: req });

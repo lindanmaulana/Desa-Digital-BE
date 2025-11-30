@@ -30,6 +30,23 @@ exports.SocialAssistanceRecipientController = {
             next(err);
         }
     }),
+    update: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reqToken = req.user;
+            const reqParams = req.params;
+            const reqBody = req.body;
+            const result = yield social_assistance_recipient_crud_service_1.SocialAssistanceRecipientCrudService.update(reqParams.id, reqBody, reqToken);
+            res.status(http_status_codes_1.StatusCodes.OK).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.OK,
+                message: "Pengajuan bantuan sosial diubah",
+                data: result,
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    }),
     getSocialAssistanceRecipients: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reqToken = req.cookies;
@@ -37,7 +54,7 @@ exports.SocialAssistanceRecipientController = {
             const result = yield social_assistance_recipient_crud_service_1.SocialAssistanceRecipientCrudService.getAll(reqQuery, reqToken);
             res.status(http_status_codes_1.StatusCodes.OK).json({
                 status: "success",
-                code: http_status_codes_1.StatusCodes.CREATED,
+                code: http_status_codes_1.StatusCodes.OK,
                 message: response_message_type_1.RESPONSE_MESSAGE.success.read,
                 data: result.data,
                 pagination: result.pagination,
@@ -54,7 +71,7 @@ exports.SocialAssistanceRecipientController = {
             const result = yield social_assistance_recipient_crud_service_1.SocialAssistanceRecipientCrudService.getOne(reqParams, reqToken);
             res.status(http_status_codes_1.StatusCodes.OK).json({
                 status: "success",
-                code: http_status_codes_1.StatusCodes.CREATED,
+                code: http_status_codes_1.StatusCodes.OK,
                 message: response_message_type_1.RESPONSE_MESSAGE.success.read,
                 data: result,
             });

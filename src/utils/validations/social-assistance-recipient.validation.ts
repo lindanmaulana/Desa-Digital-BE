@@ -1,5 +1,5 @@
 import z from "zod";
-import { VALID_BANK, VALID_SORT } from "./validation";
+import { VALID_BANK, VALID_SORT, VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT } from "./validation";
 
 export const SocialAssistanceRecipientValidation = {
 	CREATE: z.object({
@@ -9,6 +9,10 @@ export const SocialAssistanceRecipientValidation = {
 		bank: z.string().transform((v) => v.toUpperCase()).pipe(z.enum(VALID_BANK)),
 		account_number: z.string().min(10, "Nomor rekening bank harus terdiri dari minimal 10 digit.").max(16, "Nomor rekening tidak boleh melebihi 16 digit. Mohon cek kembali bank penerbit"),
 		account_name: z.string().nonempty({error: "Nama akun tidak boleh kosong!"}),
+	}),
+
+	UPDATE: z.object({
+		status: z.string().transform((val) => val.toUpperCase()).pipe(z.enum(VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT))
 	}),
 
 	GETALL: z.object({
@@ -24,3 +28,4 @@ export const SocialAssistanceRecipientValidation = {
 }
 
 export type TypeSocialAssistanceRecipientCreateSchema = z.infer<typeof SocialAssistanceRecipientValidation.CREATE>
+export type TypeSocialAssistanceRecipientUpdateSchema = z.infer<typeof SocialAssistanceRecipientValidation.UPDATE>

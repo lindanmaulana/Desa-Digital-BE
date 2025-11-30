@@ -4,6 +4,7 @@ export declare const VALID_MARITAL: readonly ["MARRIED", "SINGLE"];
 export declare const VALID_RELATION: readonly ["HUSBAND", "WIFE", "CHILD"];
 export declare const VALID_ROLE: readonly ["ADMIN", "HEAD_OF_FAMILY", "RESIDENT", "STAFF"];
 export declare const VALID_CATEGORY_SOCIAL_ASSISTANCE: readonly ["CASH", "HEALTH", "STAPLE", "SUBSIDIZED_FUEL"];
+export declare const VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT: readonly ["APPROVED", "PENDING", "REJECTED"];
 export declare const VALID_BANK: readonly ["BCA", "BNI", "BRI", "MANDIRI"];
 export declare const VALID_SORT: readonly ["asc", "desc"];
 export declare class validation {

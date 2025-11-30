@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client"
 import { prismaClient } from "../db"
-import { TypeSocialAssistanceRecipientCreateSchema } from "../utils/validations"
+import { TypeSocialAssistanceRecipientCreateSchema, TypeSocialAssistanceRecipientUpdateSchema } from "../utils/validations"
 
 export const SocialAssistanceRecipientRepository = {
 	findAll: async (args: Prisma.SocialAssistanceRecipientFindManyArgs) => {
@@ -122,7 +122,7 @@ export const SocialAssistanceRecipientRepository = {
 		return prismaClient.socialAssistanceRecipient.count(args)
 	},
 
-	create: async (req: TypeSocialAssistanceRecipientCreateSchema, headOfFamilyId: string) => {
+	create: async (headOfFamilyId: string, req: TypeSocialAssistanceRecipientCreateSchema) => {
 		return prismaClient.socialAssistanceRecipient.create({
 			data: {
 				social_assistance_id: req.social_assistance_id,
@@ -132,6 +132,18 @@ export const SocialAssistanceRecipientRepository = {
 				bank: req.bank,
 				account_number: req.account_number,
 				account_name: req.account_name
+			}
+		})
+	},
+
+	updateStatus: async (id: string, req: TypeSocialAssistanceRecipientUpdateSchema) => {
+		return prismaClient.socialAssistanceRecipient.update({
+			where: {
+				id: id
+			},
+
+			data: {
+				status: req.status
 			}
 		})
 	}

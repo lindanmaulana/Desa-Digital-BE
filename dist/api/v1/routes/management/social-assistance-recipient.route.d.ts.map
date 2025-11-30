@@ -1,1 +1,1 @@
-{"version":3,"file":"social-assistance-recipient.route.d.ts","sourceRoot":"","sources":["../../../../../src/api/v1/routes/management/social-assistance-recipient.route.ts"],"names":[],"mappings":"AAMA,QAAA,MAAM,wCAAwC,4CAAW,CAAA;AAIzD,eAAe,wCAAwC,CAAA"}
+{"version":3,"file":"social-assistance-recipient.route.d.ts","sourceRoot":"","sources":["../../../../../src/api/v1/routes/management/social-assistance-recipient.route.ts"],"names":[],"mappings":"AAMA,QAAA,MAAM,wCAAwC,4CAAW,CAAA;AAKzD,eAAe,wCAAwC,CAAA"}

@@ -32,6 +32,9 @@ export interface SocialAssistanceRecipientGetAllRequest {
 export interface SocialAssistanceRecipientGetOneRequest {
     id: string;
 }
+export interface SocialAssistanceRecipientUpdateRequest {
+    status: Status;
+}
 type HeadOfFamilyDTO = Prisma.HeadOfFamilyGetPayload<{
     select: {
         id: true;
