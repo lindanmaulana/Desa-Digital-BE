@@ -113,18 +113,6 @@ exports.SocialAssistanceRecipientRepository = {
             }
         });
     }),
-    // 	  id String @id @default(uuid())
-    //   thumbnail String? @db.VarChar()
-    //   name String @db.VarChar()
-    //   category CategorySocialAssistance
-    //   amount Decimal @db.Decimal(10, 2)
-    //   provider String @db.VarChar()
-    //   description String? @db.Text
-    //   is_active Boolean @db.Boolean @default(false)
-    //   created_at DateTime @default(now())
-    //   updated_at DateTime @updatedAt
-    //   social_assistance_recipient SocialAssistanceRecipient[]
-    //   image Images?
     findCountBySocialAssistanceId: (id) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.count({
             where: {
@@ -134,6 +122,19 @@ exports.SocialAssistanceRecipientRepository = {
     }),
     findCount: (args) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.count(args);
+    }),
+    create: (req, headOfFamilyId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistanceRecipient.create({
+            data: {
+                social_assistance_id: req.social_assistance_id,
+                head_of_family_id: headOfFamilyId,
+                amount: req.amount,
+                reason: req.reason,
+                bank: req.bank,
+                account_number: req.account_number,
+                account_name: req.account_name
+            }
+        });
     })
 };
 //# sourceMappingURL=social-assistance-recipient.repository.js.map

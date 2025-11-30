@@ -1,12 +1,12 @@
 import { Router } from "express"
 import authRoute from "../routes/auth.routes"
 import adminRoute from "./admin"
-import headOfFamilyRoute from "./admin/head-of-family.route"
 import commonRoute from "./common"
 import managementRoute from "./management"
 import socialAssistanceRoutePublic from "./social-assistance.route"
 import staffRoute from "./staff"
 import villageProfileRoutePublic from "./village-profile.route"
+import headOfFamilyRoute from "./head-of-family"
 
 const apiRoute = Router()
 
@@ -18,6 +18,7 @@ const apiRoute = Router()
 	apiRoute.use("/management", managementRoute)
 
 	apiRoute.use("/head-of-families", headOfFamilyRoute)
+
 	apiRoute.use("/social-assistances", socialAssistanceRoutePublic)
 	apiRoute.use("/village-profiles", villageProfileRoutePublic)
 

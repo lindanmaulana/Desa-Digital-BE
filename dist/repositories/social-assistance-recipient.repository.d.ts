@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { TypeSocialAssistanceRecipientCreateSchema } from "../utils/validations";
 export declare const SocialAssistanceRecipientRepository: {
     findAll: (args: Prisma.SocialAssistanceRecipientFindManyArgs) => Promise<({
         head_of_family: {
@@ -26,6 +27,7 @@ export declare const SocialAssistanceRecipientRepository: {
         reason: string;
         bank: import("@prisma/client").$Enums.Bank;
         account_number: string;
+        account_name: string;
         status: import("@prisma/client").$Enums.Status;
     })[]>;
     findById: (id: string) => Promise<{
@@ -38,6 +40,7 @@ export declare const SocialAssistanceRecipientRepository: {
         reason: string;
         bank: import("@prisma/client").$Enums.Bank;
         account_number: string;
+        account_name: string;
         status: import("@prisma/client").$Enums.Status;
     } | null>;
     findDetailById: (id: string) => Promise<({
@@ -94,9 +97,23 @@ export declare const SocialAssistanceRecipientRepository: {
         reason: string;
         bank: import("@prisma/client").$Enums.Bank;
         account_number: string;
+        account_name: string;
         status: import("@prisma/client").$Enums.Status;
     }) | null>;
     findCountBySocialAssistanceId: (id: string) => Promise<number>;
     findCount: (args: Prisma.SocialAssistanceRecipientCountArgs) => Promise<number>;
+    create: (req: TypeSocialAssistanceRecipientCreateSchema, headOfFamilyId: string) => Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        amount: Prisma.Decimal;
+        social_assistance_id: string;
+        head_of_family_id: string;
+        reason: string;
+        bank: import("@prisma/client").$Enums.Bank;
+        account_number: string;
+        account_name: string;
+        status: import("@prisma/client").$Enums.Status;
+    }>;
 };
 //# sourceMappingURL=social-assistance-recipient.repository.d.ts.map

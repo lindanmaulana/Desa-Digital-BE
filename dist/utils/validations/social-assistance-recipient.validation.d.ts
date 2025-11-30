@@ -2,7 +2,6 @@ import z from "zod";
 export declare const SocialAssistanceRecipientValidation: {
     CREATE: z.ZodObject<{
         social_assistance_id: z.ZodString;
-        head_of_family_id: z.ZodString;
         amount: z.ZodCoercedNumber<unknown>;
         reason: z.ZodString;
         bank: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>, z.ZodEnum<{
@@ -12,7 +11,7 @@ export declare const SocialAssistanceRecipientValidation: {
             MANDIRI: "MANDIRI";
         }>>;
         account_number: z.ZodString;
-        proof: z.ZodString;
+        account_name: z.ZodString;
     }, z.core.$strip>;
     GETALL: z.ZodObject<{
         keyword: z.ZodOptional<z.ZodString>;
@@ -27,4 +26,5 @@ export declare const SocialAssistanceRecipientValidation: {
         id: z.ZodString;
     }, z.core.$strip>;
 };
+export type TypeSocialAssistanceRecipientCreateSchema = z.infer<typeof SocialAssistanceRecipientValidation.CREATE>;
 //# sourceMappingURL=social-assistance-recipient.validation.d.ts.map

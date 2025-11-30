@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client"
 import { prismaClient } from "../db"
+import { TypeSocialAssistanceRecipientCreateSchema } from "../utils/validations"
 
 export const SocialAssistanceRecipientRepository = {
 	findAll: async (args: Prisma.SocialAssistanceRecipientFindManyArgs) => {
@@ -109,21 +110,6 @@ export const SocialAssistanceRecipientRepository = {
 		})
 	},
 
-// 	  id String @id @default(uuid())
-//   thumbnail String? @db.VarChar()
-//   name String @db.VarChar()
-//   category CategorySocialAssistance
-//   amount Decimal @db.Decimal(10, 2)
-//   provider String @db.VarChar()
-//   description String? @db.Text
-//   is_active Boolean @db.Boolean @default(false)
-
-//   created_at DateTime @default(now())
-//   updated_at DateTime @updatedAt
-
-//   social_assistance_recipient SocialAssistanceRecipient[]
-//   image Images?
-
 	findCountBySocialAssistanceId: async (id: string) => {
 		return prismaClient.socialAssistanceRecipient.count({
 			where: {
@@ -134,5 +120,19 @@ export const SocialAssistanceRecipientRepository = {
 
 	findCount: async (args: Prisma.SocialAssistanceRecipientCountArgs) => {
 		return prismaClient.socialAssistanceRecipient.count(args)
+	},
+
+	create: async (req: TypeSocialAssistanceRecipientCreateSchema, headOfFamilyId: string) => {
+		return prismaClient.socialAssistanceRecipient.create({
+			data: {
+				social_assistance_id: req.social_assistance_id,
+				head_of_family_id: headOfFamilyId,
+				amount: req.amount,
+				reason: req.reason,
+				bank: req.bank,
+				account_number: req.account_number,
+				account_name: req.account_name
+			}
+		})
 	}
 }

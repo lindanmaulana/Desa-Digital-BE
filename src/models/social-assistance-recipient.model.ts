@@ -11,6 +11,7 @@ export interface SocialAssistanceRecipientResponse {
 	reason: string;
 	bank: Bank;
 	account_number: string;
+	account_name: string
 	status: Status;
 
 	created_at: Date;
@@ -25,6 +26,7 @@ export interface SocialAssistanceRecipientCreateRequest {
 	reason: string;
 	bank: Bank;
 	acount_number: number;
+	account_name: string;
 }
 
 export interface SocialAssistanceRecipientGetAllRequest {

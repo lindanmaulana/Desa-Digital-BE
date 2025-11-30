@@ -55,6 +55,7 @@ export declare class HeadOfFamilyRepository {
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
+            account_name: string;
             status: import("@prisma/client").$Enums.Status;
         }[];
     } & {
@@ -100,6 +101,7 @@ export declare class HeadOfFamilyRepository {
             reason: string;
             bank: import("@prisma/client").$Enums.Bank;
             account_number: string;
+            account_name: string;
             status: import("@prisma/client").$Enums.Status;
         }[];
     } & {

@@ -39,7 +39,7 @@ export class SocialAssistanceValidation {
 	})
 
 	static readonly UPDATE = this.INDEX.partial()
-	
+
 	static readonly DELETE = z.object({
 		id: z.string().nonempty({error: "Id tidak boleh kosong!"})
 	})

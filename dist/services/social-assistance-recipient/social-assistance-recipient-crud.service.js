@@ -10,18 +10,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceRecipientCrudService = void 0;
+const client_1 = require("@prisma/client");
+const db_1 = require("../../db");
 const logging_1 = require("../../logging");
 const social_assistance_recipient_repository_1 = require("../../repositories/social-assistance-recipient.repository");
+const social_assistance_repository_1 = require("../../repositories/social-assistance.repository");
 const errors_1 = require("../../utils/errors");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const social_assistance_recipient_response_1 = require("../../utils/responses/social-assistance-recipient.response");
 const validations_1 = require("../../utils/validations");
 const validation_1 = require("../../utils/validations/validation");
+const repositories_1 = require("../../repositories");
 exports.SocialAssistanceRecipientCrudService = {
-    create: (req) => __awaiter(void 0, void 0, void 0, function* () {
+    create: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
+        logging_1.logger.info(`Social assistance recipient create requested by User ID: ${context.user_id} with role ${context.role}`);
         const validateFields = validation_1.validation.validate(validations_1.SocialAssistanceRecipientValidation.CREATE, req);
-        if (validateFields.amount && validateFields.amount < 0)
+        if (validateFields.amount <= 0)
             throw new errors_1.BadrequestError("Nominal bantuan tidak valid!");
+        const checkHeadOfFamily = yield repositories_1.HeadOfFamilyRepository.findByUserId(context.user_id);
+        if (!checkHeadOfFamily)
+            throw new errors_1.NotfoundError("Mohon maaf data pengguna pengajuan tidak terdaftar.");
+        const checkSocialAssistance = yield social_assistance_repository_1.SocialAssistanceRepository.findById(validateFields.social_assistance_id);
+        if (!checkSocialAssistance)
+            throw new errors_1.NotfoundError("Mohon maaf, bantuan sosial yang anda ajukan tidak tersedia.");
+        if (!checkSocialAssistance.amount.gt(0) || !checkSocialAssistance.is_active)
+            throw new errors_1.BadrequestError("Mohon maaf, kuota penerima bantuan sosial saat ini telah terpenuhi.");
+        const current = new client_1.Prisma.Decimal(checkSocialAssistance.amount);
+        const reqAmount = new client_1.Prisma.Decimal(validateFields.amount);
+        const availableBalance = current.minus(reqAmount);
+        if (current.lt(reqAmount))
+            throw new errors_1.BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia");
+        const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+            const newSocialAssistanceRecipient = yield tx.socialAssistanceRecipient.create({
+                data: Object.assign(Object.assign({}, validateFields), { head_of_family_id: checkHeadOfFamily.id }),
+            });
+            const reduceBalanceSocialAssistance = yield tx.socialAssistance.update({
+                where: {
+                    id: newSocialAssistanceRecipient.social_assistance_id,
+                },
+                data: {
+                    amount: availableBalance,
+                    is_active: availableBalance.gt(0),
+                },
+            });
+            return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
+        }));
+        if (!result)
+            throw new errors_1.InternalServerError("Terjadi kesalahan saat mengajukan bantuan, please try again later.");
+        return social_assistance_recipient_response_1.toSocialAssistanceRecipientResponse.response(result.newSocialAssistanceRecipient);
     }),
     getAll: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.logger.info(`Social assistance recipient list requested by User ID: ${context.user_id} with role: ${context.role}`, { query: req });

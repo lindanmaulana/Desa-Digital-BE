@@ -7,6 +7,5 @@ import { SocialAssistanceRecipientController } from "../../controllers/social-as
 const socialAssistanceRecipientManagementRoute = Router()
 
 	socialAssistanceRecipientManagementRoute.get("/", authenticatedUser, authorizedRoles(UserRole.ADMIN, UserRole.STAFF), adminRateLimit, SocialAssistanceRecipientController.getSocialAssistanceRecipients)
-	socialAssistanceRecipientManagementRoute.get("/:id", authenticatedUser, authorizedRoles(UserRole.ADMIN, UserRole.STAFF), adminRateLimit, SocialAssistanceRecipientController.getByIdSocialAssistanceRecipient)
 
 export default socialAssistanceRecipientManagementRoute

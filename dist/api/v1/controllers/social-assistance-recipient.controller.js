@@ -14,6 +14,22 @@ const http_status_codes_1 = require("http-status-codes");
 const social_assistance_recipient_crud_service_1 = require("../../../services/social-assistance-recipient/social-assistance-recipient-crud.service");
 const response_message_type_1 = require("../../../utils/response-message.type");
 exports.SocialAssistanceRecipientController = {
+    create: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reqToken = req.user;
+            const reqBody = req.body;
+            const result = yield social_assistance_recipient_crud_service_1.SocialAssistanceRecipientCrudService.create(reqBody, reqToken);
+            res.status(http_status_codes_1.StatusCodes.CREATED).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.CREATED,
+                message: "Pengajuan bantuan berhasil, tunggu konfirmasi dari admin desa",
+                data: result,
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    }),
     getSocialAssistanceRecipients: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reqToken = req.cookies;
@@ -31,7 +47,7 @@ exports.SocialAssistanceRecipientController = {
             next(err);
         }
     }),
-    getByIdSocialAssistanceRecipient: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    getSocialAssistanceRecipientById: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reqParams = req.params;
             const reqToken = req.cookies;
@@ -46,6 +62,6 @@ exports.SocialAssistanceRecipientController = {
         catch (err) {
             next(err);
         }
-    })
+    }),
 };
 //# sourceMappingURL=social-assistance-recipient.controller.js.map

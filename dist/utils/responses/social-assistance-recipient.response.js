@@ -11,6 +11,7 @@ exports.toSocialAssistanceRecipientResponse = {
             reason: socialAssistanceRecipient.reason,
             bank: socialAssistanceRecipient.bank,
             account_number: socialAssistanceRecipient.account_number,
+            account_name: socialAssistanceRecipient.account_name,
             status: socialAssistanceRecipient.status,
             created_at: socialAssistanceRecipient.created_at,
             updated_at: socialAssistanceRecipient.updated_at
@@ -25,6 +26,7 @@ exports.toSocialAssistanceRecipientResponse = {
             reason: socialAssistanceRecipient.reason,
             bank: socialAssistanceRecipient.bank,
             account_number: socialAssistanceRecipient.account_number,
+            account_name: socialAssistanceRecipient.account_name,
             status: socialAssistanceRecipient.status,
             head_of_family: {
                 id: socialAssistanceRecipient.head_of_family.id,
@@ -54,6 +56,7 @@ exports.toSocialAssistanceRecipientResponse = {
             reason: socialAssistanceRecipient.reason,
             bank: socialAssistanceRecipient.bank,
             account_number: socialAssistanceRecipient.account_number,
+            account_name: socialAssistanceRecipient.account_name,
             status: socialAssistanceRecipient.status,
             social_assistance: {
                 id: socialAssistanceRecipient.social_assistance.id,

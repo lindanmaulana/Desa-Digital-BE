@@ -88,4 +88,3 @@ const authorizedRoles = (...roles: string[]) => {
 };
 
 export { authenticatedResetPassword, authenticatedUser, authenticatedVerifyAccount, authorizedRoles };
-

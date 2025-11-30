@@ -21,7 +21,7 @@ export const SocialAssistanceCrudService = {
 				amount: validateFields.amount,
 				provider: validateFields.provider,
 				description: validateFields.description,
-				is_active: validateFields.is_active
+				is_active: validateFields.is_active,
 			},
 		})
 
