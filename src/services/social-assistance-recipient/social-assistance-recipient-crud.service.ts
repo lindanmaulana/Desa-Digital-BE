@@ -16,6 +16,7 @@ import { SocialAssistanceRecipientRepository } from "../../repositories/social-a
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
 import { TokenUser } from "../../types/token.type";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
+import { formatCurrencyToIdr } from "../../utils/helpers/formatCurrency";
 import { getPagination } from "../../utils/helpers/get-pagination";
 import { toSocialAssistanceRecipientResponse } from "../../utils/responses/social-assistance-recipient.response";
 import { SocialAssistanceRecipientValidation } from "../../utils/validations";
@@ -24,6 +25,7 @@ import { validation } from "../../utils/validations/validation";
 export const SocialAssistanceRecipientCrudService = {
 	create: async (req: SocialAssistanceRecipientCreateRequest, context: TokenUser): Promise<SocialAssistanceRecipientResponse> => {
 		logger.info(`Social assistance recipient create requested by User ID: ${context.user_id} with role ${context.role}`)
+
 		const validateFields = validation.validate(SocialAssistanceRecipientValidation.CREATE, req);
 		if (validateFields.amount <= 0) throw new BadrequestError("Nominal bantuan tidak valid!");
 
@@ -32,35 +34,17 @@ export const SocialAssistanceRecipientCrudService = {
 
 		const checkSocialAssistance = await SocialAssistanceRepository.findById(validateFields.social_assistance_id);
 		if (!checkSocialAssistance) throw new NotfoundError("Mohon maaf, bantuan sosial yang anda ajukan tidak tersedia.");
+		// validasi ini belum di test
 		if (!checkSocialAssistance.amount.gt(0) || !checkSocialAssistance.is_active) throw new BadrequestError("Mohon maaf, kuota penerima bantuan sosial saat ini telah terpenuhi.")
 
-		const current = new Prisma.Decimal(checkSocialAssistance.amount);
+		const checkSocialAssistanceRecipient = await SocialAssistanceRecipientRepository.findByHeadOfFamilyId(checkHeadOfFamily.id, checkSocialAssistance.id)
+		if (checkSocialAssistanceRecipient) throw new BadrequestError("Mohon maaf, anda telah melakukan pengajuan untuk bantuan sosial ini.")
+
+		const currentAmount = new Prisma.Decimal(checkSocialAssistance.amount);
 		const reqAmount = new Prisma.Decimal(validateFields.amount);
-		const availableBalance = current.minus(reqAmount);
 
-		if (current.lt(reqAmount)) throw new BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia");
-
-		// const result = await prismaClient.$transaction(async (tx) => {
-		// 	const newSocialAssistanceRecipient = await tx.socialAssistanceRecipient.create({
-		// 		data: {
-		// 			...validateFields,
-		// 			head_of_family_id: checkHeadOfFamily.id
-		// 		},
-		// 	});
-
-		// 	const reduceBalanceSocialAssistance = await tx.socialAssistance.update({
-		// 		where: {
-		// 			id: newSocialAssistanceRecipient.social_assistance_id,
-		// 		},
-
-		// 		data: {
-		// 			amount: availableBalance,
-		// 			is_active: availableBalance.gt(0),
-		// 		},
-		// 	});
-
-		// 	return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
-		// });
+		const currentAmountIdr = formatCurrencyToIdr(currentAmount)
+		if (currentAmount.lt(reqAmount)) throw new BadrequestError(`Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia yaitu ${currentAmountIdr}`);
 
 		const result = await SocialAssistanceRecipientRepository.create(checkHeadOfFamily.id, validateFields)
 		if (!result) throw new InternalServerError("Terjadi kesalahan saat mengajukan bantuan, please try again later.");

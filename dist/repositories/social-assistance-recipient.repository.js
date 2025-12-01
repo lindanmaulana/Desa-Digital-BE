@@ -123,6 +123,14 @@ exports.SocialAssistanceRecipientRepository = {
     findCount: (args) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.count(args);
     }),
+    findByHeadOfFamilyId: (headOfFamilyId, socialAssistanceId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.socialAssistanceRecipient.findFirst({
+            where: {
+                head_of_family_id: headOfFamilyId,
+                social_assistance_id: socialAssistanceId
+            }
+        });
+    }),
     create: (headOfFamilyId, req) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.socialAssistanceRecipient.create({
             data: {

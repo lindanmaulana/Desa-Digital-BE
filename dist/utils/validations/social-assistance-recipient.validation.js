@@ -9,7 +9,7 @@ const validation_1 = require("./validation");
 exports.SocialAssistanceRecipientValidation = {
     CREATE: zod_1.default.object({
         social_assistance_id: zod_1.default.string().nonempty({ error: "Bantuan sosial tidak boleh kosong!" }),
-        amount: zod_1.default.coerce.number({ error: "Nominal harus berupa angka" }).int().positive().min(1, "Nominal pengajuan tidak boleh kosong!"),
+        amount: zod_1.default.coerce.number({ error: "Nominal harus berupa angka" }).int({ error: "Nominal pengajuan harus berupa angka" }).positive({ error: "Nominal pengajuan tidak valid" }).min(1, "Nominal pengajuan tidak boleh kosong!"),
         reason: zod_1.default.string().nonempty({ error: "Alasan tidak boleh kosong!" }),
         bank: zod_1.default.string().transform((v) => v.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_BANK)),
         account_number: zod_1.default.string().min(10, "Nomor rekening bank harus terdiri dari minimal 10 digit.").max(16, "Nomor rekening tidak boleh melebihi 16 digit. Mohon cek kembali bank penerbit"),

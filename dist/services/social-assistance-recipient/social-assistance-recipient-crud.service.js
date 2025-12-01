@@ -18,6 +18,7 @@ const image_repository_1 = require("../../repositories/image.repository");
 const social_assistance_recipient_repository_1 = require("../../repositories/social-assistance-recipient.repository");
 const social_assistance_repository_1 = require("../../repositories/social-assistance.repository");
 const errors_1 = require("../../utils/errors");
+const formatCurrency_1 = require("../../utils/helpers/formatCurrency");
 const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const social_assistance_recipient_response_1 = require("../../utils/responses/social-assistance-recipient.response");
 const validations_1 = require("../../utils/validations");
@@ -36,29 +37,14 @@ exports.SocialAssistanceRecipientCrudService = {
             throw new errors_1.NotfoundError("Mohon maaf, bantuan sosial yang anda ajukan tidak tersedia.");
         if (!checkSocialAssistance.amount.gt(0) || !checkSocialAssistance.is_active)
             throw new errors_1.BadrequestError("Mohon maaf, kuota penerima bantuan sosial saat ini telah terpenuhi.");
-        const current = new client_1.Prisma.Decimal(checkSocialAssistance.amount);
+        const checkSocialAssistanceRecipient = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.findByHeadOfFamilyId(checkHeadOfFamily.id, checkSocialAssistance.id);
+        if (checkSocialAssistanceRecipient)
+            throw new errors_1.BadrequestError("Mohon maaf, anda telah melakukan pengajuan untuk bantuan sosial ini.");
+        const currentAmount = new client_1.Prisma.Decimal(checkSocialAssistance.amount);
         const reqAmount = new client_1.Prisma.Decimal(validateFields.amount);
-        const availableBalance = current.minus(reqAmount);
-        if (current.lt(reqAmount))
-            throw new errors_1.BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia");
-        // const result = await prismaClient.$transaction(async (tx) => {
-        // 	const newSocialAssistanceRecipient = await tx.socialAssistanceRecipient.create({
-        // 		data: {
-        // 			...validateFields,
-        // 			head_of_family_id: checkHeadOfFamily.id
-        // 		},
-        // 	});
-        // 	const reduceBalanceSocialAssistance = await tx.socialAssistance.update({
-        // 		where: {
-        // 			id: newSocialAssistanceRecipient.social_assistance_id,
-        // 		},
-        // 		data: {
-        // 			amount: availableBalance,
-        // 			is_active: availableBalance.gt(0),
-        // 		},
-        // 	});
-        // 	return { newSocialAssistanceRecipient, reduceBalanceSocialAssistance };
-        // });
+        const currentAmountIdr = (0, formatCurrency_1.formatCurrencyToIdr)(currentAmount);
+        if (currentAmount.lt(reqAmount))
+            throw new errors_1.BadrequestError(`Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia yaitu ${currentAmountIdr}`);
         const result = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.create(checkHeadOfFamily.id, validateFields);
         if (!result)
             throw new errors_1.InternalServerError("Terjadi kesalahan saat mengajukan bantuan, please try again later.");

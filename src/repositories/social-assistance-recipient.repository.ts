@@ -122,6 +122,15 @@ export const SocialAssistanceRecipientRepository = {
 		return prismaClient.socialAssistanceRecipient.count(args)
 	},
 
+	findByHeadOfFamilyId: async (headOfFamilyId: string, socialAssistanceId: string) => {
+		return prismaClient.socialAssistanceRecipient.findFirst({
+			where: {
+				head_of_family_id: headOfFamilyId,
+				social_assistance_id: socialAssistanceId
+			}
+		})
+	},
+
 	create: async (headOfFamilyId: string, req: TypeSocialAssistanceRecipientCreateSchema) => {
 		return prismaClient.socialAssistanceRecipient.create({
 			data: {

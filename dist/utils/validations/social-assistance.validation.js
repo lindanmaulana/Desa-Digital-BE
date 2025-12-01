@@ -22,7 +22,7 @@ SocialAssistanceValidation.INDEX = zod_1.default.object({
     thumbnail: zod_1.default.string().nullable(),
     name: zod_1.default.string().nonempty({ error: "Nama tidak boleh kosong" }),
     category: zod_1.default.string().transform((val) => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_CATEGORY_SOCIAL_ASSISTANCE)),
-    amount: zod_1.default.coerce.number({ error: "Nominal harus berupa angka" }).int().positive().min(1, "Nominal bantuan tidak boleh kosong"),
+    amount: zod_1.default.coerce.number({ error: "Nominal harus berupa angka" }).int({ error: "Nominal bantuan harus berupa angka" }).positive({ error: "Nominal bantuan tidak valid" }).min(1, "Nominal bantuan tidak boleh kosong"),
     provider: zod_1.default.string().nonempty({ error: "Nama pemberi bantuan tidak boleh kosong" }),
     description: zod_1.default.string().nullable(),
     is_active: _a.IS_ACTIVE

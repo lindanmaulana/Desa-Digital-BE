@@ -102,6 +102,19 @@ export declare const SocialAssistanceRecipientRepository: {
     }) | null>;
     findCountBySocialAssistanceId: (id: string) => Promise<number>;
     findCount: (args: Prisma.SocialAssistanceRecipientCountArgs) => Promise<number>;
+    findByHeadOfFamilyId: (headOfFamilyId: string, socialAssistanceId: string) => Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        amount: Prisma.Decimal;
+        social_assistance_id: string;
+        head_of_family_id: string;
+        reason: string;
+        bank: import("@prisma/client").$Enums.Bank;
+        account_number: string;
+        account_name: string;
+        status: import("@prisma/client").$Enums.Status;
+    } | null>;
     create: (headOfFamilyId: string, req: TypeSocialAssistanceRecipientCreateSchema) => Promise<{
         id: string;
         created_at: Date;
