@@ -13,11 +13,11 @@ exports.ImageController = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const image_service_1 = require("../../../services/image/image.service");
 exports.ImageController = {
-    socialAssistanceUpload: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    uploadImageSocialAssistance: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const reqFile = req.file;
             const reqParams = req.params;
-            const result = yield image_service_1.ImageService.uploadSocialAssistanceImage(reqParams, reqFile);
+            const reqFile = req.file;
+            const result = yield image_service_1.ImageService.uploadImageSocialAssistance(reqParams, reqFile);
             res.status(http_status_codes_1.StatusCodes.CREATED).json({
                 status: "success",
                 code: http_status_codes_1.StatusCodes.CREATED,
@@ -29,5 +29,21 @@ exports.ImageController = {
             next(err);
         }
     }),
+    updateSocialAssistance: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reqParams = req.params;
+            const reqFile = req.file;
+            const result = yield image_service_1.ImageService.updateImageSocialAssistance(reqParams, reqFile);
+            res.status(http_status_codes_1.StatusCodes.OK).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.OK,
+                message: "Update gambar berhasil.",
+                data: result,
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    })
 };
 //# sourceMappingURL=image.controller.js.map

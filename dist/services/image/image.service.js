@@ -23,6 +23,7 @@ const helpers_1 = require("../../utils/helpers");
 const image_response_1 = require("../../utils/responses/image.response");
 const validations_1 = require("../../utils/validations");
 const image_validation_1 = require("../../utils/validations/image.validation");
+const fileHelpers_1 = require("../../utils/helpers/fileHelpers");
 const path_1 = __importDefault(require("path"));
 exports.ImageService = {
     // upload: async (file?: Express.Multer.File, req: ImageCreateRequest): Promise<ImageResponse> => {
@@ -63,7 +64,7 @@ exports.ImageService = {
     // 	// }
     // 	// const result = await ImageRepository.create(newImage);
     // },
-    uploadSocialAssistanceImage: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
+    uploadImageSocialAssistance: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validations_1.validation.validate(image_validation_1.ImageValidation.UPLOAD_SOCIAL_ASSISTANCE, req);
         if (!file)
             throw new errors_1.NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
@@ -101,5 +102,39 @@ exports.ImageService = {
         }
         return image_response_1.toImageResponse.ImageSocialAssistanceResponse(result);
     }),
+    updateImageSocialAssistance: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
+        const validatedFields = validations_1.validation.validate(image_validation_1.ImageValidation.UPLOAD_SOCIAL_ASSISTANCE, req);
+        if (!file)
+            throw new errors_1.NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
+        const checkFile = yield (0, fileHelpers_1.fileExists)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+        if (!checkFile)
+            throw new errors_1.NotfoundError("File gambar tidak ditemukan pada server. Silahkan unggah ulang gambar bantuan sosial.");
+        const checkSocialAssistance = yield social_assistance_repository_1.SocialAssistanceRepository.findById(validatedFields.id);
+        if (!checkSocialAssistance) {
+            const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+            if (!deleteImageResult)
+                logging_1.logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path_1.default.join(images_1.BASEPATHIMAGE, images_1.SOCIALASSISTANCE_PATH, file.filename)}`);
+            throw new errors_1.NotfoundError("Bantuan sosial tidak tersedia.");
+        }
+        const checkImageSocialAssistance = yield image_repository_1.ImageRepository.findBySocialAssistanceId(checkSocialAssistance.id);
+        if (!checkImageSocialAssistance) {
+            const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+            if (!deleteImageResult)
+                logging_1.logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path_1.default.join(images_1.BASEPATHIMAGE, images_1.SOCIALASSISTANCE_PATH, file.filename)}`);
+            throw new errors_1.NotfoundError("Gambar bantuan sosial tidak ditemukan, silahkan lakukan upload gambar terlebih dahulu.");
+        }
+        const imageUpdatePayload = {
+            id: checkImageSocialAssistance.id,
+            path: images_1.SOCIALASSISTANCE_PATH,
+            filename: file.filename
+        };
+        const result = yield image_repository_1.ImageRepository.update(imageUpdatePayload);
+        if (!result)
+            throw new errors_1.InternalServerError("Terjadi kesalahan saat upload ulang gambar bantuan sosial, please try again later.");
+        const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, checkImageSocialAssistance.filename);
+        if (!deleteImageResult)
+            logging_1.logger.error(`Gagal menghapus gambar bantuan sosial lama dengan nama file - : ${checkImageSocialAssistance.filename}`);
+        return image_response_1.toImageResponse.ImageSocialAssistanceResponse(result);
+    })
 };
 //# sourceMappingURL=image.service.js.map

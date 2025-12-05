@@ -1,5 +1,5 @@
 import { prismaClient } from "../db"
-import { TypeImageCreateSchema } from "../utils/validations/image.validation"
+import { TypeImageCreateSchema, TypeImageUpdateSchema } from "../utils/validations/image.validation"
 
 export const ImageRepository = {
 	create: async (req: TypeImageCreateSchema) => {
@@ -59,6 +59,19 @@ export const ImageRepository = {
 		return prismaClient.images.findFirst({
 			where: {
 				social_assistance_recipient_id: id
+			}
+		})
+	},
+
+	update: async (req: TypeImageUpdateSchema) => {
+		return prismaClient.images.update({
+			where: {
+				id: req.id
+			},
+
+			data: {
+				path: req.path,
+				filename: req.filename
 			}
 		})
 	}

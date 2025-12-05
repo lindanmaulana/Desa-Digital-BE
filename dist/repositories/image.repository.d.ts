@@ -1,4 +1,4 @@
-import { TypeImageCreateSchema } from "../utils/validations/image.validation";
+import { TypeImageCreateSchema, TypeImageUpdateSchema } from "../utils/validations/image.validation";
 export declare const ImageRepository: {
     create: (req: TypeImageCreateSchema) => Promise<{
         id: string;
@@ -85,5 +85,19 @@ export declare const ImageRepository: {
         development_id: string | null;
         entity_type: import("@prisma/client").$Enums.Entity;
     } | null>;
+    update: (req: TypeImageUpdateSchema) => Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string | null;
+        social_assistance_id: string | null;
+        filename: string;
+        path: string;
+        profile_id: string | null;
+        social_assistance_recipient_id: string | null;
+        event_id: string | null;
+        development_id: string | null;
+        entity_type: import("@prisma/client").$Enums.Entity;
+    }>;
 };
 //# sourceMappingURL=image.repository.d.ts.map

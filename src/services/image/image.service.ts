@@ -8,7 +8,7 @@ import { BadrequestError, InternalServerError, NotfoundError } from "../../utils
 import { deleteImage } from "../../utils/helpers";
 import { toImageResponse } from "../../utils/responses/image.response";
 import { validation } from "../../utils/validations";
-import { ImageValidation, TypeImageCreateSchema } from "../../utils/validations/image.validation";
+import { ImageValidation, TypeImageCreateSchema, TypeImageUpdateSchema } from "../../utils/validations/image.validation";
 import { fileExists } from "../../utils/helpers/fileHelpers";
 import path from "path";
 
@@ -62,7 +62,7 @@ export const ImageService = {
 	// 	// const result = await ImageRepository.create(newImage);
 	// },
 
-	uploadSocialAssistanceImage: async (req: ImageUploadSocialAssistanceRequest, file?: Express.Multer.File): Promise<ImageResponse> => {
+	uploadImageSocialAssistance: async (req: ImageUploadSocialAssistanceRequest, file?: Express.Multer.File): Promise<ImageResponse> => {
 		const validateFields = validation.validate(ImageValidation.UPLOAD_SOCIAL_ASSISTANCE, req);
 		if (!file) throw new NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
 
@@ -104,4 +104,40 @@ export const ImageService = {
 
 		return toImageResponse.ImageSocialAssistanceResponse(result)
 	},
+
+	updateImageSocialAssistance: async (req: ImageUploadSocialAssistanceRequest, file?: Express.Multer.File): Promise<ImageResponse> => {
+		const validatedFields = validation.validate(ImageValidation.UPLOAD_SOCIAL_ASSISTANCE, req)
+		if (!file) throw new NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
+
+		const checkFile = await fileExists(SOCIALASSISTANCE_PATH, file.filename)
+		if (!checkFile) throw new NotfoundError("File gambar tidak ditemukan pada server. Silahkan unggah ulang gambar bantuan sosial.");
+
+		const checkSocialAssistance = await SocialAssistanceRepository.findById(validatedFields.id)
+		if (!checkSocialAssistance) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+			throw new NotfoundError("Bantuan sosial tidak tersedia.")
+		}
+
+		const checkImageSocialAssistance = await ImageRepository.findBySocialAssistanceId(checkSocialAssistance.id)
+		if (!checkImageSocialAssistance) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+			throw new NotfoundError("Gambar bantuan sosial tidak ditemukan, silahkan lakukan upload gambar terlebih dahulu.")
+		}
+
+		const imageUpdatePayload: TypeImageUpdateSchema = {
+			id: checkImageSocialAssistance.id,
+			path: SOCIALASSISTANCE_PATH,
+			filename: file.filename
+		}
+
+		const result = await ImageRepository.update(imageUpdatePayload)
+		if (!result) throw new InternalServerError("Terjadi kesalahan saat upload ulang gambar bantuan sosial, please try again later.")
+
+		const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, checkImageSocialAssistance.filename)
+		if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial lama dengan nama file - : ${checkImageSocialAssistance.filename}`)
+
+		return toImageResponse.ImageSocialAssistanceResponse(result)
+	}
 };

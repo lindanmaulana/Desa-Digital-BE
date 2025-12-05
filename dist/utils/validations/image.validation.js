@@ -24,4 +24,8 @@ const ExtendImageCreateSchema = exports.ImageValidation.CREATE.extend({
     filename: zod_1.default.string().nonempty({ error: "Nama file tidak boleh kosong." }),
     entity: zod_1.default.string().transform(val => val.toUpperCase()).pipe(zod_1.default.enum(validation_1.VALID_ENTITY_IMAGE))
 });
+const ExtendImageUpdateSchema = exports.ImageValidation.UPLOAD_SOCIAL_ASSISTANCE.extend({
+    path: zod_1.default.string().nonempty({ error: "Nama path tidak boleh kosong." }),
+    filename: zod_1.default.string().nonempty({ error: "Nama file tidak boleh kosong." }),
+});
 //# sourceMappingURL=image.validation.js.map

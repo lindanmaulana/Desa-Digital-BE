@@ -22,4 +22,10 @@ const ExtendImageCreateSchema = ImageValidation.CREATE.extend({
 	entity: z.string().transform(val => val.toUpperCase()).pipe(z.enum(VALID_ENTITY_IMAGE))
 })
 
+const ExtendImageUpdateSchema = ImageValidation.UPLOAD_SOCIAL_ASSISTANCE.extend({
+	path: z.string().nonempty({error: "Nama path tidak boleh kosong."}),
+	filename: z.string().nonempty({error: "Nama file tidak boleh kosong."}),
+})
+
 export type TypeImageCreateSchema = z.infer<typeof ExtendImageCreateSchema>
+export type TypeImageUpdateSchema = z.infer<typeof ExtendImageUpdateSchema>

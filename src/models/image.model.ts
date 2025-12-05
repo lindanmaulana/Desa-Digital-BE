@@ -31,6 +31,10 @@ export interface ImageUploadSocialAssistanceRequest {
 	id: string
 }
 
+export interface ImageReuploadSocialAssistanceRequest {
+	id: string
+}
+
 // Raw Prisma
 export type ImageSocialAssistanceGetOnePayload = Prisma.ImagesGetPayload<{
 	select: {

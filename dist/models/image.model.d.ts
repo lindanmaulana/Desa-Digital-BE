@@ -24,6 +24,9 @@ export interface ImageCreateRequest {
 export interface ImageUploadSocialAssistanceRequest {
     id: string;
 }
+export interface ImageReuploadSocialAssistanceRequest {
+    id: string;
+}
 export type ImageSocialAssistanceGetOnePayload = Prisma.ImagesGetPayload<{
     select: {
         id: true;

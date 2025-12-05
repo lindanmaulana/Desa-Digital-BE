@@ -65,6 +65,17 @@ exports.ImageRepository = {
                 social_assistance_recipient_id: id
             }
         });
+    }),
+    update: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.update({
+            where: {
+                id: req.id
+            },
+            data: {
+                path: req.path,
+                filename: req.filename
+            }
+        });
     })
 };
 //# sourceMappingURL=image.repository.js.map

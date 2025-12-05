@@ -9,7 +9,8 @@ import uploadMiddleware from "../../../../middlewares/multer";
 
 const socialAssistanceRouteStaff = Router()
 
-	socialAssistanceRouteStaff.post("/:id/image/upload", authenticatedUser, authorizedRoles(UserRole.STAFF), setDynamicUploadPath(SOCIALASSISTANCE_PATH), uploadMiddleware.single("social-assistances"), adminRateLimit, ImageController.socialAssistanceUpload)
+	socialAssistanceRouteStaff.post("/:id/image/upload", authenticatedUser, authorizedRoles(UserRole.STAFF), setDynamicUploadPath(SOCIALASSISTANCE_PATH), uploadMiddleware.single("social-assistances"), adminRateLimit, ImageController.uploadImageSocialAssistance)
+	socialAssistanceRouteStaff.put("/:id/image/update", authenticatedUser, authorizedRoles(UserRole.STAFF), setDynamicUploadPath(SOCIALASSISTANCE_PATH), uploadMiddleware.single("social-assistances"), adminRateLimit, ImageController.updateSocialAssistance)
 	socialAssistanceRouteStaff.delete("/:id/delete", authenticatedUser, authorizedRoles(UserRole.STAFF), adminRateLimit, SocialAssistanceController.delete)
 
 export default socialAssistanceRouteStaff

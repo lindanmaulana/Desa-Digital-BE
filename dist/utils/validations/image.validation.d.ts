@@ -30,6 +30,12 @@ declare const ExtendImageCreateSchema: z.ZodObject<{
         PROFILE: "PROFILE";
     }>>;
 }, z.core.$strip>;
+declare const ExtendImageUpdateSchema: z.ZodObject<{
+    id: z.ZodString;
+    path: z.ZodString;
+    filename: z.ZodString;
+}, z.core.$strip>;
 export type TypeImageCreateSchema = z.infer<typeof ExtendImageCreateSchema>;
+export type TypeImageUpdateSchema = z.infer<typeof ExtendImageUpdateSchema>;
 export {};
 //# sourceMappingURL=image.validation.d.ts.map
