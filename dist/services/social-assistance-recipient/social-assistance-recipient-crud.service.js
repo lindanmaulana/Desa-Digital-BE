@@ -35,6 +35,7 @@ exports.SocialAssistanceRecipientCrudService = {
         const checkSocialAssistance = yield social_assistance_repository_1.SocialAssistanceRepository.findById(validateFields.social_assistance_id);
         if (!checkSocialAssistance)
             throw new errors_1.NotfoundError("Mohon maaf, bantuan sosial yang anda ajukan tidak tersedia.");
+        // validasi ini belum di test
         if (!checkSocialAssistance.amount.gt(0) || !checkSocialAssistance.is_active)
             throw new errors_1.BadrequestError("Mohon maaf, kuota penerima bantuan sosial saat ini telah terpenuhi.");
         const checkSocialAssistanceRecipient = yield social_assistance_recipient_repository_1.SocialAssistanceRecipientRepository.findByHeadOfFamilyId(checkHeadOfFamily.id, checkSocialAssistance.id);
@@ -71,8 +72,9 @@ exports.SocialAssistanceRecipientCrudService = {
         const currentAmountSocialAssistance = new client_1.Prisma.Decimal(checkSocialAssistance.amount);
         const currentAmountSocialAssistanceRecipient = new client_1.Prisma.Decimal(checkSocialAssistanceRecipient.amount);
         const availableAmountSocialAssistance = currentAmountSocialAssistance.minus(currentAmountSocialAssistanceRecipient);
+        const currentAmountIdr = (0, formatCurrency_1.formatCurrencyToIdr)(currentAmountSocialAssistance);
         if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient))
-            throw new errors_1.BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia.");
+            throw new errors_1.BadrequestError(`Mohon maaf, Nominal pengajuan melebihi sisa bantuan sosial yang tersedia yaitu ${currentAmountIdr}.`);
         const result = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const resultSocialAssistanceRecipient = yield tx.socialAssistanceRecipient.update({
                 where: {

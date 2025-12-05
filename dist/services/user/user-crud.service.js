@@ -8,15 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserCrudService = void 0;
 const client_1 = require("@prisma/client");
 const db_1 = require("../../db");
 const user_repository_1 = require("../../repositories/user.repository");
-const index_1 = __importDefault(require("../../utils/const/index"));
 const errors_1 = require("../../utils/errors");
 const generate_uuid_1 = require("../../utils/helpers/generate-uuid");
 const create_token_verify_account_1 = require("../../utils/helpers/jwt/create-token-verify-account");
@@ -25,6 +21,7 @@ const validation_1 = require("../../utils/validations/validation");
 const email_service_1 = require("../utilities/email.service");
 const responses_1 = require("../../utils/responses");
 const helpers_1 = require("../../utils/helpers");
+const images_1 = require("../../utils/const/images");
 exports.UserCrudService = {
     registerStaffAccount: (req) => __awaiter(void 0, void 0, void 0, function* () {
         const validateFields = validation_1.validation.validate(user_validation_1.UserValidation.REGISTERSTAFF, req);
@@ -63,7 +60,7 @@ exports.UserCrudService = {
                 data: {
                     user_id: newUser.id,
                     filename: "profile-user-default.png",
-                    path: index_1.default.images.USERPATH,
+                    path: images_1.USER_PATH,
                     entity_type: "USER",
                 },
             });
@@ -118,7 +115,7 @@ exports.UserCrudService = {
                 data: {
                     user_id: newUser.id,
                     filename: "profile-user-default.png",
-                    path: index_1.default.images.USERPATH,
+                    path: images_1.USER_PATH,
                     entity_type: "USER",
                 },
             });

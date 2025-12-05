@@ -12,10 +12,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageRepository = void 0;
 const db_1 = require("../db");
 exports.ImageRepository = {
+    create: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.create({
+            data: {
+                path: req.path,
+                filename: req.filename,
+                entity_type: req.entity,
+            }
+        });
+    }),
+    createBySocialAssistance: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.create({
+            data: {
+                social_assistance_id: req.social_assistance_id,
+                path: req.path,
+                filename: req.filename,
+                entity_type: req.entity,
+            }
+        });
+    }),
     findById: (id) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.findUnique({
             where: {
                 id: id
+            }
+        });
+    }),
+    findCountByProfileId: (profileId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.count({
+            where: {
+                profile_id: profileId
+            }
+        });
+    }),
+    findByUserId: (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.findFirst({
+            where: {
+                user_id: userId
+            }
+        });
+    }),
+    findBySocialAssistanceId: (socialAssistanceId) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.findFirst({
+            where: {
+                social_assistance_id: socialAssistanceId
             }
         });
     }),

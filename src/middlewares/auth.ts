@@ -1,12 +1,11 @@
-import { NextFunction, Response } from "express";
-import { CustomeRequest } from "../types/express.type";
+import { NextFunction, Request, Response } from "express";
 import { TokenResetPassword, TokenUser, TokenVerifyAccount } from "../types/token.type";
 import { ForbiddenError } from "../utils/errors";
 import { UnauthenticatedError } from "../utils/errors/unauthenticated";
 import { isTokenValid } from "../utils/helpers";
 
 
-const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextFunction) => {
+const authenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const token = req.cookies.jwt
 		if (!token) throw new UnauthenticatedError("Authenticated invalid")
@@ -30,7 +29,7 @@ const authenticatedUser = async (req: CustomeRequest, res: Response, next: NextF
 	}
 }
 
-const authenticatedVerifyAccount = async (req: CustomeRequest, res: Response, next: NextFunction) => {
+const authenticatedVerifyAccount = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
@@ -52,7 +51,7 @@ const authenticatedVerifyAccount = async (req: CustomeRequest, res: Response, ne
 	}
 }
 
-const authenticatedResetPassword = async (req: CustomeRequest, res: Response, next: NextFunction) => {
+const authenticatedResetPassword = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const token = req.cookies.jwt
 		if(!token) throw new UnauthenticatedError("Authentication token is missing or malformed.")
@@ -74,7 +73,7 @@ const authenticatedResetPassword = async (req: CustomeRequest, res: Response, ne
 }
 
 const authorizedRoles = (...roles: string[]) => {
-	return (req: CustomeRequest, res: Response, next: NextFunction) => {
+	return (req: Request, res: Response, next: NextFunction) => {
 		const token = req.user
 
 		if (!token) throw new UnauthenticatedError("unauthorized to access this route");
@@ -88,3 +87,4 @@ const authorizedRoles = (...roles: string[]) => {
 };
 
 export { authenticatedResetPassword, authenticatedUser, authenticatedVerifyAccount, authorizedRoles };
+

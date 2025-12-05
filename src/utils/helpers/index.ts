@@ -1,10 +1,10 @@
 import { comparePassword } from "./compare-password";
-import { createJwt, isTokenValid } from "./jwt/create-jwt";
-import { createTokenUser } from "./jwt/create-token-user";
-import fileHelpers from "./file-helpers";
+import { deleteImage } from "./fileHelpers";
 import { generateOtp } from "./generate-otp";
 import { getPagination } from "./get-pagination";
 import { hashPassword } from "./hash-password";
+import { createJwt, isTokenValid } from "./jwt/create-jwt";
+import { createTokenUser } from "./jwt/create-token-user";
 import { toUserRole } from "./to-user-role";
 
-export { createJwt, isTokenValid, createTokenUser, generateOtp, toUserRole, hashPassword, comparePassword, getPagination, fileHelpers };
+export { comparePassword, createJwt, createTokenUser, deleteImage, generateOtp, getPagination, hashPassword, isTokenValid, toUserRole };

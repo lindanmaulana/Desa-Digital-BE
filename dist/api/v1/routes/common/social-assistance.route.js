@@ -4,8 +4,8 @@ const express_1 = require("express");
 const auth_1 = require("../../../../middlewares/auth");
 const rateLimit_1 = require("../../../../middlewares/rateLimit");
 const controllers_1 = require("../../controllers");
-const socialAssistanceCommonRoute = (0, express_1.Router)();
-socialAssistanceCommonRoute.get("/", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.SocialAssistanceController.getSocialAssistances);
-socialAssistanceCommonRoute.get("/:id", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.SocialAssistanceController.getSocialAssistanceById);
-exports.default = socialAssistanceCommonRoute;
+const socialAssistanceRouteCommon = (0, express_1.Router)();
+socialAssistanceRouteCommon.get("/", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.SocialAssistanceController.getSocialAssistances);
+socialAssistanceRouteCommon.get("/:id", auth_1.authenticatedUser, rateLimit_1.publicRateLimit, controllers_1.SocialAssistanceController.getSocialAssistanceById);
+exports.default = socialAssistanceRouteCommon;
 //# sourceMappingURL=social-assistance.route.js.map

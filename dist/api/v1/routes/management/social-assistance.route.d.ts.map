@@ -1,1 +1,1 @@
-{"version":3,"file":"social-assistance.route.d.ts","sourceRoot":"","sources":["../../../../../src/api/v1/routes/management/social-assistance.route.ts"],"names":[],"mappings":"AAKA,QAAA,MAAM,+BAA+B,4CAAW,CAAA;AAKhD,eAAe,+BAA+B,CAAA"}
+{"version":3,"file":"social-assistance.route.d.ts","sourceRoot":"","sources":["../../../../../src/api/v1/routes/management/social-assistance.route.ts"],"names":[],"mappings":"AAKA,QAAA,MAAM,+BAA+B,4CAAW,CAAA;AAIhD,eAAe,+BAA+B,CAAA"}

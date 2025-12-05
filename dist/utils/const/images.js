@@ -1,11 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PROFILE_PATH = exports.EVENT_PATH = exports.DEVELOPMENT_PATH = exports.SOCIALASSISTANCERECIPIENT_PATH = exports.SOCIALASSISTANCE_PATH = exports.USER_PATH = exports.BASEPATHIMAGE = exports.DEFAULT_USER_IMAGE = void 0;
 const DEFAULT_USER_IMAGE = "/images/users/profile-user-default.png";
-const BASEPATHIMAGE = "/images/";
-const USERPATH = "users";
+exports.DEFAULT_USER_IMAGE = DEFAULT_USER_IMAGE;
+const BASEPATHIMAGE = "images";
+exports.BASEPATHIMAGE = BASEPATHIMAGE;
+const USER_PATH = "users";
+exports.USER_PATH = USER_PATH;
 const SOCIALASSISTANCE_PATH = "social-assistances";
+exports.SOCIALASSISTANCE_PATH = SOCIALASSISTANCE_PATH;
+const SOCIALASSISTANCERECIPIENT_PATH = "social-assistances";
+exports.SOCIALASSISTANCERECIPIENT_PATH = SOCIALASSISTANCERECIPIENT_PATH;
 const DEVELOPMENT_PATH = "developments";
+exports.DEVELOPMENT_PATH = DEVELOPMENT_PATH;
 const EVENT_PATH = "events";
-const PROFILE_PATH = "profiles";
-exports.default = { DEFAULT_USER_IMAGE, BASEPATHIMAGE, USERPATH, SOCIALASSISTANCE_PATH, DEVELOPMENT_PATH, EVENT_PATH, PROFILE_PATH };
+exports.EVENT_PATH = EVENT_PATH;
+const PROFILE_PATH = "village-profiles";
+exports.PROFILE_PATH = PROFILE_PATH;
 //# sourceMappingURL=images.js.map

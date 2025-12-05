@@ -1,18 +1,20 @@
 import { Request } from "express"
+import fs from "fs"
 import multer, { FileFilterCallback } from "multer"
 import path from "path"
-import fs from "fs"
+import { CustomeRequest } from "../types/express.type"
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const targetDir = (req as any).uploadPath || "temp"
+		const entityName = (req as CustomeRequest).uploadPath
+		const targetDir = entityName ? entityName : "temp"
+
 		const fullPath = path.join(__dirname, "../../public", "images", targetDir)
 
 		if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, {recursive: true})
 
 		cb(null, fullPath)
 	},
-
 
 	filename: (req, file, cb) => {
 		const fileExtension = path.extname(file.originalname)
@@ -41,6 +43,5 @@ const uploadMiddleware = multer({
     },
     fileFilter
 })
-
 
 export default uploadMiddleware

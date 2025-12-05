@@ -18,6 +18,7 @@ import { validation } from "../../utils/validations/validation";
 import { EmailService } from "../utilities/email.service";
 import { toUserResponse } from "../../utils/responses";
 import { generateOtp, getPagination, hashPassword } from "../../utils/helpers";
+import { USER_PATH } from "../../utils/const/images";
 
 export const UserCrudService = {
 	registerStaffAccount: async (req: RegisterStaffRequest): Promise<UserResponse> => {
@@ -61,7 +62,7 @@ export const UserCrudService = {
 				data: {
 					user_id: newUser.id,
 					filename: "profile-user-default.png",
-					path: CONSTS.images.USERPATH,
+					path: USER_PATH,
 					entity_type: "USER",
 				},
 			});
@@ -125,7 +126,7 @@ export const UserCrudService = {
 				data: {
 					user_id: newUser.id,
 					filename: "profile-user-default.png",
-					path: CONSTS.images.USERPATH,
+					path: USER_PATH,
 					entity_type: "USER",
 				},
 			});

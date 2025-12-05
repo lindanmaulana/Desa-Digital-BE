@@ -73,8 +73,8 @@ export const SocialAssistanceRecipientCrudService = {
 		const currentAmountSocialAssistance = new Prisma.Decimal(checkSocialAssistance.amount)
 		const currentAmountSocialAssistanceRecipient = new Prisma.Decimal(checkSocialAssistanceRecipient.amount)
 		const availableAmountSocialAssistance = currentAmountSocialAssistance.minus(currentAmountSocialAssistanceRecipient)
-
-		if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient)) throw new BadrequestError("Mohon maaf, Nominal pengajuan anda melebihi sisa bantuan sosial yang tersedia.")
+		const currentAmountIdr = formatCurrencyToIdr(currentAmountSocialAssistance)
+		if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient)) throw new BadrequestError(`Mohon maaf, Nominal pengajuan melebihi sisa bantuan sosial yang tersedia yaitu ${currentAmountIdr}.`)
 
 		const result = await prismaClient.$transaction(async (tx) => {
 			const resultSocialAssistanceRecipient = await tx.socialAssistanceRecipient.update({

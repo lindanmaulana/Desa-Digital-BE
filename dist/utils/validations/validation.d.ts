@@ -7,6 +7,8 @@ export declare const VALID_CATEGORY_SOCIAL_ASSISTANCE: readonly ["CASH", "HEALTH
 export declare const VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT: readonly ["APPROVED", "PENDING", "REJECTED"];
 export declare const VALID_BANK: readonly ["BCA", "BNI", "BRI", "MANDIRI"];
 export declare const VALID_SORT: readonly ["asc", "desc"];
+export declare const VALID_ENTITY_IMAGE: readonly ["USER", "PROFILE", "SOCIAL_ASSISTANCE", "SOCIAL_ASSISTANCE_RECIPIENT", "EVENT", "DEVELOPMENT"];
+export declare const VALID_IMAGE_PATH: readonly ["users", "profiles", "social-assistances", "social-assistance-recipients", "events", "developments"];
 export declare class validation {
     static validate<T extends z.ZodType<any, any, any>>(schema: T, data: unknown): z.infer<T>;
 }

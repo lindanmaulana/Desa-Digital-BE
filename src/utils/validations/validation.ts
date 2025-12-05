@@ -1,4 +1,4 @@
-import { Bank, CategorySocialAssistance, Gender, Marital, Relation, Status, UserRole } from "@prisma/client";
+import { Bank, CategorySocialAssistance, Entity, Gender, Marital, Relation, Status, UserRole } from "@prisma/client";
 import z from "zod";
 
 export const VALID_GENDER = [Gender.MALE, Gender.FEMALE] as const
@@ -9,6 +9,8 @@ export const VALID_CATEGORY_SOCIAL_ASSISTANCE = [CategorySocialAssistance.CASH, 
 export const VALID_STATUS_SOCIAL_ASSISTANCE_RECIPIENT = [Status.APPROVED, Status.PENDING, Status.REJECTED] as const
 export const VALID_BANK = [Bank.BCA, Bank.BNI, Bank.BRI, Bank.MANDIRI] as const
 export const VALID_SORT = ["asc", "desc"] as const
+export const VALID_ENTITY_IMAGE = [Entity.USER, Entity.PROFILE, Entity.SOCIAL_ASSISTANCE, Entity.SOCIAL_ASSISTANCE_RECIPIENT, Entity.EVENT, Entity.DEVELOPMENT] as const
+export const VALID_IMAGE_PATH = ["users", "profiles", "social-assistances", "social-assistance-recipients", "events", "developments"] as const
 
 export class validation {
     static validate<T extends z.ZodType<any, any, any>>(schema: T, data: unknown): z.infer<T>{

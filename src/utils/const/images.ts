@@ -1,9 +1,10 @@
 const DEFAULT_USER_IMAGE = "/images/users/profile-user-default.png"
-const BASEPATHIMAGE = "/images/"
-const USERPATH = "users"
+const BASEPATHIMAGE = "images"
+const USER_PATH = "users"
 const SOCIALASSISTANCE_PATH = "social-assistances"
+const SOCIALASSISTANCERECIPIENT_PATH = "social-assistances"
 const DEVELOPMENT_PATH = "developments"
 const EVENT_PATH = "events"
-const PROFILE_PATH = "profiles"
+const PROFILE_PATH = "village-profiles"
 
-export default {DEFAULT_USER_IMAGE, BASEPATHIMAGE, USERPATH, SOCIALASSISTANCE_PATH, DEVELOPMENT_PATH, EVENT_PATH, PROFILE_PATH}
+export {DEFAULT_USER_IMAGE, BASEPATHIMAGE, USER_PATH, SOCIALASSISTANCE_PATH, SOCIALASSISTANCERECIPIENT_PATH, DEVELOPMENT_PATH, EVENT_PATH, PROFILE_PATH}
