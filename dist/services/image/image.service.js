@@ -135,6 +135,44 @@ exports.ImageService = {
         if (!deleteImageResult)
             logging_1.logger.error(`Gagal menghapus gambar bantuan sosial lama dengan nama file - : ${checkImageSocialAssistance.filename}`);
         return image_response_1.toImageResponse.ImageSocialAssistanceResponse(result);
-    })
+    }),
+    uploadImageSocialAssistanceRecipient: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
+        const validateFields = validations_1.validation.validate(image_validation_1.ImageValidation.UPLOAD_SOCIAL_ASSISTANCE, req);
+        if (!file)
+            throw new errors_1.NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
+        const checkSocialAssistance = yield social_assistance_repository_1.SocialAssistanceRepository.findById(validateFields.id);
+        if (!checkSocialAssistance) {
+            const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+            if (!deleteImageResult)
+                logging_1.logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path_1.default.join(images_1.BASEPATHIMAGE, images_1.SOCIALASSISTANCE_PATH, file.filename)}`);
+            throw new errors_1.NotfoundError("Bantuan sosial tidak tersedia.");
+        }
+        const checkImageSocialAssistance = yield image_repository_1.ImageRepository.findBySocialAssistanceId(checkSocialAssistance.id);
+        if (checkImageSocialAssistance) {
+            const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+            if (!deleteImageResult)
+                logging_1.logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path_1.default.join(images_1.BASEPATHIMAGE, images_1.SOCIALASSISTANCE_PATH, file.filename)}`);
+            throw new errors_1.BadrequestError("Gagal upload gambar bantuan sosial, maksimum 1 gambar untuk 1 bantuan sosial.");
+        }
+        const imagePayload = {
+            path: images_1.SOCIALASSISTANCE_PATH,
+            filename: file.filename,
+            user_id: null,
+            profile_id: null,
+            social_assistance_id: checkSocialAssistance.id,
+            social_assistance_recipient_id: null,
+            event_id: null,
+            development_id: null,
+            entity: client_1.Entity.SOCIAL_ASSISTANCE,
+        };
+        const result = yield image_repository_1.ImageRepository.createBySocialAssistance(imagePayload);
+        if (!result) {
+            const deleteImageResult = yield (0, helpers_1.deleteImage)(images_1.SOCIALASSISTANCE_PATH, file.filename);
+            if (!deleteImageResult)
+                logging_1.logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path_1.default.join(images_1.BASEPATHIMAGE, images_1.SOCIALASSISTANCE_PATH, file.filename)}`);
+            throw new errors_1.InternalServerError("Terjadi kesalahan saat upload image, please try again later.");
+        }
+        return image_response_1.toImageResponse.ImageSocialAssistanceResponse(result);
+    }),
 };
 //# sourceMappingURL=image.service.js.map

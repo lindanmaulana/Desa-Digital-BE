@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime/library.js";
+import { Decimal } from "@prisma/client/runtime/client";
 
 export interface VillageProfileResponse {
 	id: string;

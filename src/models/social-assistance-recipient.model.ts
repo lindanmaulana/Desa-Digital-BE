@@ -1,6 +1,6 @@
 import { Bank, Entity, Prisma, Status } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
 import { PaginationResponse } from "./pagination.model";
+import { Decimal } from "@prisma/client/runtime/client";
 
 // Model main
 export interface SocialAssistanceRecipientResponse {

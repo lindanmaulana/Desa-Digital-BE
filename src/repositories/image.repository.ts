@@ -55,7 +55,7 @@ export const ImageRepository = {
 		})
 	},
 
-	findByIdSocialAssistanceRecipient: async (id: string) => {
+	findByIdSocialAssistanceRecipientId: async (id: string) => {
 		return prismaClient.images.findFirst({
 			where: {
 				social_assistance_recipient_id: id

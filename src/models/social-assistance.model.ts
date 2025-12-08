@@ -1,5 +1,5 @@
 import { CategorySocialAssistance, Prisma } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
+import { Decimal } from "@prisma/client/runtime/client";
 import { ImageResponse } from "./image.model";
 import { PaginationResponse } from "./pagination.model";
 

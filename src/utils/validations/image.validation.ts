@@ -13,6 +13,10 @@ export const ImageValidation = {
 
 	UPLOAD_SOCIAL_ASSISTANCE: z.object({
 		id: z.string().nonempty({error: "Id bantuan sosial tidak boleh kosong."})
+	}),
+
+	UPLOAD_SOCIAL_ASSISTANCE_RECIPIENT: z.object({
+		id: z.string().nonempty({error: "ID penerima bantuan sosial tidak boleh kosong."})
 	})
 }
 

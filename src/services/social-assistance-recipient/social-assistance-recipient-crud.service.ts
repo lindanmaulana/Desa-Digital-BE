@@ -1,5 +1,4 @@
 import { Prisma, Status } from "@prisma/client";
-import { prismaClient } from "../../db";
 import { logger } from "../../logging";
 import {
 	SocialAssistanceRecipientCreateRequest,
@@ -21,6 +20,7 @@ import { getPagination } from "../../utils/helpers/get-pagination";
 import { toSocialAssistanceRecipientResponse } from "../../utils/responses/social-assistance-recipient.response";
 import { SocialAssistanceRecipientValidation } from "../../utils/validations";
 import { validation } from "../../utils/validations/validation";
+import { prismaClient } from "../../db";
 
 export const SocialAssistanceRecipientCrudService = {
 	create: async (req: SocialAssistanceRecipientCreateRequest, context: TokenUser): Promise<SocialAssistanceRecipientResponse> => {
@@ -63,7 +63,7 @@ export const SocialAssistanceRecipientCrudService = {
 
 		// cek jika ini bukan di tolak maka harus masuk ke pengecekan bukti image
 		if (validateFields.status !== Status.REJECTED) {
-			const checkImageSocialAssistanceRecipient = await ImageRepository.findByIdSocialAssistanceRecipient(checkSocialAssistanceRecipient.id)
+			const checkImageSocialAssistanceRecipient = await ImageRepository.findByIdSocialAssistanceRecipientId(checkSocialAssistanceRecipient.id)
 			if (!checkImageSocialAssistanceRecipient) throw new BadrequestError("Mohon maaf, untuk segera mengupload bukti pemberian bansos terlebih dahulu sebelum menyelesaikan penerimaan bantuan sosial ini.")
 		}
 
@@ -76,7 +76,7 @@ export const SocialAssistanceRecipientCrudService = {
 		const currentAmountIdr = formatCurrencyToIdr(currentAmountSocialAssistance)
 		if (currentAmountSocialAssistance.lt(currentAmountSocialAssistanceRecipient)) throw new BadrequestError(`Mohon maaf, Nominal pengajuan melebihi sisa bantuan sosial yang tersedia yaitu ${currentAmountIdr}.`)
 
-		const result = await prismaClient.$transaction(async (tx) => {
+		const result = await prismaClient.$transaction(async (tx: Prisma.TransactionClient) => {
 			const resultSocialAssistanceRecipient = await tx.socialAssistanceRecipient.update({
 				where: {
 					id: checkSocialAssistanceRecipient.id

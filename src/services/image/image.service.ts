@@ -1,9 +1,9 @@
 import { Entity } from "@prisma/client";
 import { logger } from "../../logging";
-import { ImageResponse, ImageUploadSocialAssistanceRequest } from "../../models/image.model";
+import { ImageResponse, ImageUploadSocialAssistanceRecipientRequest, ImageUploadSocialAssistanceRequest } from "../../models/image.model";
 import { ImageRepository } from "../../repositories/image.repository";
 import { SocialAssistanceRepository } from "../../repositories/social-assistance.repository";
-import { BASEPATHIMAGE, SOCIALASSISTANCE_PATH } from "../../utils/const/images";
+import { BASEPATHIMAGE, SOCIALASSISTANCE_PATH, SOCIALASSISTANCERECIPIENT_PATH } from "../../utils/const/images";
 import { BadrequestError, InternalServerError, NotfoundError } from "../../utils/errors";
 import { deleteImage } from "../../utils/helpers";
 import { toImageResponse } from "../../utils/responses/image.response";
@@ -11,6 +11,7 @@ import { validation } from "../../utils/validations";
 import { ImageValidation, TypeImageCreateSchema, TypeImageUpdateSchema } from "../../utils/validations/image.validation";
 import { fileExists } from "../../utils/helpers/fileHelpers";
 import path from "path";
+import { SocialAssistanceRecipientRepository } from "../../repositories/social-assistance-recipient.repository";
 
 export const ImageService = {
 	// upload: async (file?: Express.Multer.File, req: ImageCreateRequest): Promise<ImageResponse> => {
@@ -139,5 +140,56 @@ export const ImageService = {
 		if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial lama dengan nama file - : ${checkImageSocialAssistance.filename}`)
 
 		return toImageResponse.ImageSocialAssistanceResponse(result)
-	}
+	},
+
+	uploadImageSocialAssistanceRecipient: async (req: ImageUploadSocialAssistanceRecipientRequest, file?: Express.Multer.File): Promise<ImageResponse> => {
+		const validateFields = validation.validate(ImageValidation.UPLOAD_SOCIAL_ASSISTANCE_RECIPIENT, req);
+		if (!file) throw new NotfoundError("Field, 'image' wajib diisi. Silahkan unggah file gambarnya.");
+
+		const checkSocialAssistanceRecipient = await SocialAssistanceRecipientRepository.findById(validateFields.id)
+		if (!checkSocialAssistanceRecipient) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCERECIPIENT_PATH, file.filename)
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar penerima bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+
+			throw new NotfoundError("Data penerima bantuan sosial tidak tersedia.")
+		}
+
+		const checkSocialAssistance = await SocialAssistanceRepository.findById(checkSocialAssistanceRecipient.social_assistance_id)
+		if (!checkSocialAssistance) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+
+			throw new NotfoundError("Data bantuan sosial tidak tersedia.")
+		}
+
+		const checkImageSocialAssistance = await ImageRepository.findBySocialAssistanceId(checkSocialAssistance.id)
+		if (checkImageSocialAssistance) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+
+			throw new BadrequestError("Gagal upload gambar bantuan sosial, maksimum 1 gambar untuk 1 bantuan sosial.")
+		}
+
+		const imagePayload: TypeImageCreateSchema = {
+			path: SOCIALASSISTANCERECIPIENT_PATH,
+			filename: file.filename,
+			user_id: null,
+			profile_id: null,
+			social_assistance_id: null,
+			social_assistance_recipient_id: checkSocialAssistanceRecipient.id,
+			event_id: null,
+			development_id: null,
+			entity: Entity.SOCIAL_ASSISTANCE_RECIPIENT,
+		}
+
+		const result = await ImageRepository.createBySocialAssistance(imagePayload)
+		if (!result) {
+			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+
+			throw new InternalServerError("Terjadi kesalahan saat upload image, please try again later.")
+		}
+
+		return toImageResponse.ImageSocialAssistanceResponse(result)
+	},
 };

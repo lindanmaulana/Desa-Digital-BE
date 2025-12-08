@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 export declare const prismaClient: PrismaClient<{
+    adapter: PrismaPg;
     log: ({
         emit: "event";
         level: "query";
@@ -13,5 +15,5 @@ export declare const prismaClient: PrismaClient<{
         emit: "event";
         level: "warn";
     })[];
-}, "error" | "info" | "query" | "warn", import("@prisma/client/runtime/library").DefaultArgs>;
+}, "error" | "info" | "query" | "warn", $Extensions.DefaultArgs>;
 //# sourceMappingURL=db.d.ts.map
