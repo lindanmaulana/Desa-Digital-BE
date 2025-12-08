@@ -1,5 +1,5 @@
-import { prismaClient } from "../db"
-import { TypeImageCreateSchema, TypeImageUpdateSchema } from "../utils/validations/image.validation"
+import { prismaClient } from "../db";
+import { TypeImageCreateSchema, TypeImageUpdateSchema } from "../utils/validations/image.validation";
 
 export const ImageRepository = {
 	create: async (req: TypeImageCreateSchema) => {
@@ -8,8 +8,8 @@ export const ImageRepository = {
 				path: req.path,
 				filename: req.filename,
 				entity_type: req.entity,
-			}
-		})
+			},
+		});
 	},
 
 	createBySocialAssistance: async (req: TypeImageCreateSchema) => {
@@ -19,60 +19,71 @@ export const ImageRepository = {
 				path: req.path,
 				filename: req.filename,
 				entity_type: req.entity,
-			}
-		})
+			},
+		});
+	},
+
+	createBySocialAssistanceRecipient: async (req: TypeImageCreateSchema) => {
+		return prismaClient.images.create({
+			data: {
+				social_assistance_recipient_id: req.social_assistance_recipient_id,
+				path: req.path,
+				filename: req.filename,
+				entity_type: req.entity,
+			},
+		});
 	},
 
 	findById: async (id: string) => {
 		return prismaClient.images.findUnique({
 			where: {
-				id: id
-			}
-		})
+				id: id,
+			},
+		});
 	},
 
 	findCountByProfileId: async (profileId: string) => {
 		return prismaClient.images.count({
 			where: {
-				profile_id: profileId
-			}
-		})
+				profile_id: profileId,
+			},
+		});
 	},
 
 	findByUserId: async (userId: string) => {
 		return prismaClient.images.findFirst({
 			where: {
-				user_id: userId
-			}
-		})
+				user_id: userId,
+			},
+		});
 	},
 
 	findBySocialAssistanceId: async (socialAssistanceId: string) => {
 		return prismaClient.images.findFirst({
 			where: {
-				social_assistance_id: socialAssistanceId
-			}
-		})
+				social_assistance_id: socialAssistanceId,
+			},
+		});
 	},
 
 	findByIdSocialAssistanceRecipientId: async (id: string) => {
 		return prismaClient.images.findFirst({
 			where: {
-				social_assistance_recipient_id: id
-			}
-		})
+				social_assistance_recipient_id: id,
+			},
+		});
 	},
 
 	update: async (req: TypeImageUpdateSchema) => {
 		return prismaClient.images.update({
 			where: {
-				id: req.id
+				id: req.id,
 			},
 
 			data: {
 				path: req.path,
-				filename: req.filename
-			}
-		})
-	}
-}
+				filename: req.filename,
+			},
+		});
+	},
+};

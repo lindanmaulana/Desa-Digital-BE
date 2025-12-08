@@ -157,15 +157,15 @@ export const ImageService = {
 		const checkSocialAssistance = await SocialAssistanceRepository.findById(checkSocialAssistanceRecipient.social_assistance_id)
 		if (!checkSocialAssistance) {
 			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
-			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar penerima bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
 
 			throw new NotfoundError("Data bantuan sosial tidak tersedia.")
 		}
 
-		const checkImageSocialAssistance = await ImageRepository.findBySocialAssistanceId(checkSocialAssistance.id)
-		if (checkImageSocialAssistance) {
+		const checkImageSocialAssistanceRecipient = await ImageRepository.findByIdSocialAssistanceRecipientId(checkSocialAssistance.id)
+		if (checkImageSocialAssistanceRecipient) {
 			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
-			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar penerima bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
 
 			throw new BadrequestError("Gagal upload gambar bantuan sosial, maksimum 1 gambar untuk 1 bantuan sosial.")
 		}
@@ -182,10 +182,10 @@ export const ImageService = {
 			entity: Entity.SOCIAL_ASSISTANCE_RECIPIENT,
 		}
 
-		const result = await ImageRepository.createBySocialAssistance(imagePayload)
+		const result = await ImageRepository.createBySocialAssistanceRecipient(imagePayload)
 		if (!result) {
 			const deleteImageResult = await deleteImage(SOCIALASSISTANCE_PATH, file.filename);
-			if (!deleteImageResult) logger.error(`Gagal menghapus gambar bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
+			if (!deleteImageResult) logger.error(`Gagal menghapus gambar penerima bantuan sosial yang tidak terpakai pada path: ${path.join(BASEPATHIMAGE, SOCIALASSISTANCE_PATH, file.filename)}`)
 
 			throw new InternalServerError("Terjadi kesalahan saat upload image, please try again later.")
 		}

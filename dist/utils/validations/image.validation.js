@@ -17,6 +17,9 @@ exports.ImageValidation = {
     }),
     UPLOAD_SOCIAL_ASSISTANCE: zod_1.default.object({
         id: zod_1.default.string().nonempty({ error: "Id bantuan sosial tidak boleh kosong." })
+    }),
+    UPLOAD_SOCIAL_ASSISTANCE_RECIPIENT: zod_1.default.object({
+        id: zod_1.default.string().nonempty({ error: "ID penerima bantuan sosial tidak boleh kosong." })
     })
 };
 const ExtendImageCreateSchema = exports.ImageValidation.CREATE.extend({

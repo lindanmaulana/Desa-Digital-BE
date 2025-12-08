@@ -13,6 +13,7 @@ exports.errorMiddleware = void 0;
 const client_1 = require("@prisma/client");
 const http_status_codes_1 = require("http-status-codes");
 const zod_1 = require("zod");
+const logging_1 = require("../logging");
 const errors_1 = require("../utils/errors");
 const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let statusCodes = http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR;
@@ -36,9 +37,8 @@ const errorMiddleware = (error, request, res, next) => __awaiter(void 0, void 0,
             responseData.type_error = error.type_error;
     }
     else if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-        console.log("Prisma client Error");
+        logging_1.logger.error("Prisma client Error");
         statusCodes = http_status_codes_1.StatusCodes.NOT_FOUND;
-        errors = `Database error ${error.message}`;
     }
     res.status(statusCodes).json(responseData);
 });

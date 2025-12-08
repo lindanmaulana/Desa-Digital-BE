@@ -11,6 +11,9 @@ export declare const ImageValidation: {
     UPLOAD_SOCIAL_ASSISTANCE: z.ZodObject<{
         id: z.ZodString;
     }, z.core.$strip>;
+    UPLOAD_SOCIAL_ASSISTANCE_RECIPIENT: z.ZodObject<{
+        id: z.ZodString;
+    }, z.core.$strip>;
 };
 declare const ExtendImageCreateSchema: z.ZodObject<{
     profile_id: z.ZodNullable<z.ZodString>;

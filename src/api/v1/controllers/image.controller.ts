@@ -36,5 +36,22 @@ export const ImageController = {
 		} catch (err) {
 			next(err)
 		}
-	}
+	},
+
+	uploadImageSocialAssistanceRecipient: async (req: CustomeRequest, res: Response, next: NextFunction) => {
+		try {
+			const reqParams = req.params as {id: string};
+			const reqFile = req.file;
+
+			const result = await ImageService.uploadImageSocialAssistanceRecipient(reqParams, reqFile);
+			res.status(StatusCodes.CREATED).json({
+				status: "success",
+				code: StatusCodes.CREATED,
+				message: "Upload gambar berhasil.",
+				data: result,
+			});
+		} catch (err) {
+			next(err)
+		}
+	},
 };

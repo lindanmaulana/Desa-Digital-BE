@@ -15,5 +15,5 @@ export declare const prismaClient: PrismaClient<{
         emit: "event";
         level: "warn";
     })[];
-}, "error" | "info" | "query" | "warn", $Extensions.DefaultArgs>;
+}, "error" | "info" | "query" | "warn", import("@prisma/client/runtime/client").DefaultArgs>;
 //# sourceMappingURL=db.d.ts.map

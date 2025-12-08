@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocialAssistanceRecipientCrudService = void 0;
 const client_1 = require("@prisma/client");
-const db_1 = require("../../db");
 const logging_1 = require("../../logging");
 const repositories_1 = require("../../repositories");
 const image_repository_1 = require("../../repositories/image.repository");
@@ -23,6 +22,7 @@ const get_pagination_1 = require("../../utils/helpers/get-pagination");
 const social_assistance_recipient_response_1 = require("../../utils/responses/social-assistance-recipient.response");
 const validations_1 = require("../../utils/validations");
 const validation_1 = require("../../utils/validations/validation");
+const db_1 = require("../../db");
 exports.SocialAssistanceRecipientCrudService = {
     create: (req, context) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.logger.info(`Social assistance recipient create requested by User ID: ${context.user_id} with role ${context.role}`);
@@ -62,7 +62,7 @@ exports.SocialAssistanceRecipientCrudService = {
             throw new errors_1.BadrequestError("Mohon maaf, perubahan status bantuan sosial tidak valid. Harap cek kembali datanya.");
         // cek jika ini bukan di tolak maka harus masuk ke pengecekan bukti image
         if (validateFields.status !== client_1.Status.REJECTED) {
-            const checkImageSocialAssistanceRecipient = yield image_repository_1.ImageRepository.findByIdSocialAssistanceRecipient(checkSocialAssistanceRecipient.id);
+            const checkImageSocialAssistanceRecipient = yield image_repository_1.ImageRepository.findByIdSocialAssistanceRecipientId(checkSocialAssistanceRecipient.id);
             if (!checkImageSocialAssistanceRecipient)
                 throw new errors_1.BadrequestError("Mohon maaf, untuk segera mengupload bukti pemberian bansos terlebih dahulu sebelum menyelesaikan penerimaan bantuan sosial ini.");
         }

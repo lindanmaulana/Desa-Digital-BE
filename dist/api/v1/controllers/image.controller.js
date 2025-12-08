@@ -44,6 +44,22 @@ exports.ImageController = {
         catch (err) {
             next(err);
         }
-    })
+    }),
+    uploadImageSocialAssistanceRecipient: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reqParams = req.params;
+            const reqFile = req.file;
+            const result = yield image_service_1.ImageService.uploadImageSocialAssistanceRecipient(reqParams, reqFile);
+            res.status(http_status_codes_1.StatusCodes.CREATED).json({
+                status: "success",
+                code: http_status_codes_1.StatusCodes.CREATED,
+                message: "Upload gambar berhasil.",
+                data: result,
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    }),
 };
 //# sourceMappingURL=image.controller.js.map

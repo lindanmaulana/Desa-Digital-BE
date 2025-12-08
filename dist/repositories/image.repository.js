@@ -18,7 +18,7 @@ exports.ImageRepository = {
                 path: req.path,
                 filename: req.filename,
                 entity_type: req.entity,
-            }
+            },
         });
     }),
     createBySocialAssistance: (req) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,54 +28,64 @@ exports.ImageRepository = {
                 path: req.path,
                 filename: req.filename,
                 entity_type: req.entity,
-            }
+            },
+        });
+    }),
+    createBySocialAssistanceRecipient: (req) => __awaiter(void 0, void 0, void 0, function* () {
+        return db_1.prismaClient.images.create({
+            data: {
+                social_assistance_recipient_id: req.social_assistance_recipient_id,
+                path: req.path,
+                filename: req.filename,
+                entity_type: req.entity,
+            },
         });
     }),
     findById: (id) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.findUnique({
             where: {
-                id: id
-            }
+                id: id,
+            },
         });
     }),
     findCountByProfileId: (profileId) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.count({
             where: {
-                profile_id: profileId
-            }
+                profile_id: profileId,
+            },
         });
     }),
     findByUserId: (userId) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.findFirst({
             where: {
-                user_id: userId
-            }
+                user_id: userId,
+            },
         });
     }),
     findBySocialAssistanceId: (socialAssistanceId) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.findFirst({
             where: {
-                social_assistance_id: socialAssistanceId
-            }
+                social_assistance_id: socialAssistanceId,
+            },
         });
     }),
-    findByIdSocialAssistanceRecipient: (id) => __awaiter(void 0, void 0, void 0, function* () {
+    findByIdSocialAssistanceRecipientId: (id) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.findFirst({
             where: {
-                social_assistance_recipient_id: id
-            }
+                social_assistance_recipient_id: id,
+            },
         });
     }),
     update: (req) => __awaiter(void 0, void 0, void 0, function* () {
         return db_1.prismaClient.images.update({
             where: {
-                id: req.id
+                id: req.id,
             },
             data: {
                 path: req.path,
-                filename: req.filename
-            }
+                filename: req.filename,
+            },
         });
-    })
+    }),
 };
 //# sourceMappingURL=image.repository.js.map

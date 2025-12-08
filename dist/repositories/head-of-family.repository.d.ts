@@ -1,11 +1,151 @@
 import { Prisma } from "@prisma/client";
 export declare class HeadOfFamilyRepository {
-    static findById(id: string): Promise<any>;
-    static findByUserId(userId: string): Promise<any>;
-    static findAll(args: Prisma.HeadOfFamilyFindManyArgs): Promise<$Public.PrismaPromise<T>>;
-    static findDetailById(id: string): Promise<any>;
-    static findCount(args: Prisma.HeadOfFamilyCountArgs): Promise<$Public.PrismaPromise<T>>;
-    static update(args: Prisma.HeadOfFamilyUpdateArgs): Promise<$Result.GetResult<Prisma.$HeadOfFamilyPayload<ExtArgs>, T, "update", GlobalOmitOptions>>;
-    static deleteUserById(id: string): Promise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>>;
+    static findById(id: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    } | null>;
+    static findByUserId(userId: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    } | null>;
+    static findAll(args: Prisma.HeadOfFamilyFindManyArgs): Promise<({
+        user: {
+            image: {
+                id: string;
+                created_at: Date;
+                updated_at: Date;
+                user_id: string | null;
+                filename: string;
+                path: string;
+                entity_type: import("@prisma/client").$Enums.Entity;
+            } | null;
+        } & {
+            name: string;
+            id: string;
+            email: string;
+            role: import("@prisma/client").$Enums.UserRole;
+            is_active: boolean;
+            is_first_login: boolean;
+            created_at: Date;
+            updated_at: Date;
+        };
+        social_assistance_recipient: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            amount: Prisma.Decimal;
+            social_assistance_id: string;
+            head_of_family_id: string;
+            reason: string;
+            bank: import("@prisma/client").$Enums.Bank;
+            account_number: string;
+            account_name: string;
+            status: import("@prisma/client").$Enums.Status;
+        }[];
+    } & {
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    })[]>;
+    static findDetailById(id: string): Promise<({
+        user: {
+            image: {
+                id: string;
+                created_at: Date;
+                updated_at: Date;
+                user_id: string | null;
+                filename: string;
+                path: string;
+                entity_type: import("@prisma/client").$Enums.Entity;
+            } | null;
+        } & {
+            name: string;
+            id: string;
+            email: string;
+            role: import("@prisma/client").$Enums.UserRole;
+            is_active: boolean;
+            is_first_login: boolean;
+            created_at: Date;
+            updated_at: Date;
+        };
+        social_assistance_recipient: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            amount: Prisma.Decimal;
+            social_assistance_id: string;
+            head_of_family_id: string;
+            reason: string;
+            bank: import("@prisma/client").$Enums.Bank;
+            account_number: string;
+            account_name: string;
+            status: import("@prisma/client").$Enums.Status;
+        }[];
+    } & {
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    }) | null>;
+    static findCount(args: Prisma.HeadOfFamilyCountArgs): Promise<number>;
+    static update(args: Prisma.HeadOfFamilyUpdateArgs): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        user_id: string;
+        identity_number: string | null;
+        gender: import("@prisma/client").$Enums.Gender;
+        date_of_birth: Date | null;
+        phone_number: string | null;
+        occupation: string | null;
+        marital_status: import("@prisma/client").$Enums.Marital;
+    }>;
+    static deleteUserById(id: string): Promise<{
+        name: string;
+        id: string;
+        email: string;
+        password: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        otp: string | null;
+        otp_purpose: import("@prisma/client").$Enums.UserOtpPurpose | null;
+        otp_last_sen_at: Date | null;
+        verify_token: string | null;
+        verify_token_last_sen_at: Date | null;
+        reset_token: string | null;
+        reset_token_last_sen_at: Date | null;
+        is_active: boolean;
+        is_first_login: boolean;
+        created_at: Date;
+        updated_at: Date;
+    }>;
 }
 //# sourceMappingURL=head-of-family.repository.d.ts.map

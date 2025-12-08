@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ZodError } from "zod";
+import { logger } from "../logging";
 import { CustomAPIError } from "../utils/errors";
 
 export const errorMiddleware = async (error: Error, request: Request, res: Response, next: NextFunction) => {
@@ -28,10 +29,9 @@ export const errorMiddleware = async (error: Error, request: Request, res: Respo
 		if (error.type_error) responseData.type_error = error.type_error
 
 	} else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-		console.log("Prisma client Error");
+		logger.error("Prisma client Error");
 
 		statusCodes = StatusCodes.NOT_FOUND;
-		errors = `Database error ${error.message}`;
 	}
 
 	res.status(statusCodes).json(responseData);
